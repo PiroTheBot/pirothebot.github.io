@@ -70,3 +70,9 @@ nav a:hover {
     border-color: #555;
     background: #1a1a1a;
 }
+
+footer {
+    margin-top: 3rem;
+    font-size: 0.8rem;
+    color: #555;
+}

@@ -102,10 +102,10 @@ h1 {
 .pulse {
     width: 8px;
     height: 8px;
-    min-width: 8px;
     background: var(--accent);
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
+    transform: translateY(1px);
 }
 
 @keyframes pulse {

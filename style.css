@@ -94,10 +94,9 @@ h1 {
     color: var(--dim);
     font-size: 0.8rem;
     margin-bottom: 3rem;
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
     border: 1px solid #222;
     border-radius: 20px;
-    min-width: 120px;
 }
 
 .pulse {
@@ -106,7 +105,6 @@ h1 {
     background: var(--accent);
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
-    transform: translateY(1px);
 }
 
 @keyframes pulse {

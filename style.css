@@ -94,9 +94,10 @@ h1 {
     color: var(--dim);
     font-size: 0.8rem;
     margin-bottom: 3rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0;
     border: 1px solid #222;
     border-radius: 20px;
+    min-width: 120px;
 }
 
 .pulse {

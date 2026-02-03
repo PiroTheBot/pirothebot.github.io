@@ -89,10 +89,10 @@ h1 {
 .status {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     color: var(--dim);
     font-size: 0.8rem;
-    line-height: 1;
     margin-bottom: 3rem;
     padding: 0.5rem 1rem;
     border: 1px solid #222;
@@ -102,6 +102,7 @@ h1 {
 .pulse {
     width: 8px;
     height: 8px;
+    min-width: 8px;
     background: var(--accent);
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;

@@ -105,6 +105,7 @@ h1 {
     background: var(--accent);
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
+    margin-bottom: 1px;
 }
 
 @keyframes pulse {

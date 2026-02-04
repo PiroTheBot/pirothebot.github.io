@@ -13,9 +13,9 @@ theme: {
 extend: {
 colors: {
 primary: '#00FF88',
-bg: { main: '#0D0D0D', card: '#1A1A1A', code: '#111' },
-text: { primary: '#FFFFFF', muted: '#888888' },
-border: { subtle: '#333333' }
+bg: { dark: '#050505', main: '#0D0D0D', card: '#141414', code: '#0A0A0A' },
+text: { primary: '#FFFFFF', secondary: '#A3A3A3', muted: '#525252' },
+border: { subtle: '#262626', light: '#404040' }
 },
 fontFamily: {
 sans: ['Inter', 'sans-serif'],
@@ -26,50 +26,54 @@ mono: ['JetBrains Mono', 'monospace']
 }
 </script>
 <style>
-body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6}
+body{font-family:'Inter',sans-serif;background:#050505;color:#fff;line-height:1.7}
 code{font-family:'JetBrains Mono',monospace}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#0D0D0D}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
-.keyword{color:#a78bfa}.type{color:#60a5fa}.function{color:#22d3ee}.variable{color:#fbbf24}
+.keyword{color:#a78bfa}.type{color:#60a5fa}.function{color:#22d3ee}.variable{color:#fbbf24}.comment{color:#525252}
 </style>
 </head>
-<body class="bg-bg-main text-text-primary">
+<body class="bg-bg-dark text-text-primary">
 <!-- Progress -->
-<div class="fixed top-0 left-0 w-full h-0.5 bg-bg-card z-50">
+<div class="fixed top-0 left-0 w-full h-0.5 bg-bg-main z-50">
 <div id="progress" class="h-full bg-primary transition-all duration-100" style="width:0"></div>
 </div>
 
 <!-- Header -->
-<header class="border-b border-border-subtle py-4">
+<header class="border-b border-border-subtle py-4 sticky top-0 bg-bg-dark/80 backdrop-blur-sm">
 <div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
-<a href="/learning/category/design-patterns.html" class="text-text-muted hover:text-primary transition-colors text-sm">← Design Patterns</a>
-<span class="text-xs text-text-muted">Learning Corner</span>
+<a href="/learning/category/design-patterns.html" class="text-text-secondary hover:text-white transition-colors text-sm font-medium flex items-center gap-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+Design Patterns
+</a>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary rounded-full"></span>
+<span class="text-text-muted text-xs">Learning Corner</span>
+</div>
 </div>
 </header>
 
 <!-- Hero -->
-<section class="py-16 px-6">
+<section class="py-16 px-6 border-b border-border-subtle">
 <div class="max-w-4xl mx-auto">
-<span class="inline-block px-3 py-1 bg-primary/20 text-primary text-xs font-medium rounded-full mb-4">Beginner</span>
-<h1 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight">The Repository Pattern</h1>
-<p class="text-text-muted text-lg">Abstract database access in your applications</p>
-<div class="flex items-center gap-4 mt-4 text-text-muted text-sm">
-<span>10 min read</span>
-<span>•</span>
-<span>Layman → Intermediate</span>
+<div class="flex items-center gap-3 mb-4">
+<span class="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">Beginner</span>
+<span class="text-text-muted text-sm">10 min read</span>
 </div>
+<h1 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight">The Repository Pattern</h1>
+<p class="text-text-secondary text-lg">Abstract database access in your applications</p>
 </div>
 </section>
 
 <!-- Content -->
-<main class="max-w-4xl mx-auto px-6 pb-16">
+<main class="max-w-4xl mx-auto px-6 py-12">
 <!-- What -->
-<section class="mb-12">
-<h2 class="text-xl font-semibold mb-6">What is it?</h2>
-<div class="bg-bg-card border border-border-subtle rounded-lg p-6 mb-6">
-<p class="text-text-muted mb-4">The Repository Pattern is a layer between your application and the database. It gives you a clean, object-oriented interface for data access.</p>
-<div class="bg-bg-code rounded-lg p-4">
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-6 text-white">What is it?</h2>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+<p class="text-text-secondary mb-6">The Repository Pattern is a layer between your application and the database. It gives you a clean, object-oriented interface for data access.</p>
+<div class="bg-bg-code rounded-lg p-6 border border-border-subtle">
 <svg viewBox="0 0 400 120" class="w-full h-auto max-w-lg mx-auto">
 <ellipse cx="50" cy="30" rx="25" ry="8" fill="none" stroke="#333" stroke-width="2"/>
 <path d="M25 30 Q25 50, 50 50 Q75 50, 75 30" fill="none" stroke="#333" stroke-width="2"/>
@@ -91,44 +95,44 @@ code{font-family:'JetBrains Mono',monospace}
 </section>
 
 <!-- Why -->
-<section class="mb-12">
-<h2 class="text-xl font-semibold mb-6">Why use it?</h2>
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-6 text-white">Why use it?</h2>
 <div class="grid md:grid-cols-2 gap-4">
-<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
-<h3 class="font-medium mb-2">Single Source</h3>
-<p class="text-text-muted text-sm">All data access logic in one place</p>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+<h3 class="font-medium mb-2 text-white">Single Source</h3>
+<p class="text-text-secondary text-sm">All data access logic in one place</p>
 </div>
-<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
-<h3 class="font-medium mb-2">Testability</h3>
-<p class="text-text-muted text-sm">Swap real DB for mock data in tests</p>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+<h3 class="font-medium mb-2 text-white">Testability</h3>
+<p class="text-text-secondary text-sm">Swap real DB for mock data in tests</p>
 </div>
-<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
-<h3 class="font-medium mb-2">Database Independence</h3>
-<p class="text-text-muted text-sm">Switch databases without rewriting code</p>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+<h3 class="font-medium mb-2 text-white">Database Independence</h3>
+<p class="text-text-secondary text-sm">Switch databases without rewriting code</p>
 </div>
-<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
-<h3 class="font-medium mb-2">Clean Architecture</h3>
-<p class="text-text-muted text-sm">No SQL scattered in your application</p>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+<h3 class="font-medium mb-2 text-white">Clean Architecture</h3>
+<p class="text-text-secondary text-sm">No SQL scattered in your application</p>
 </div>
 </div>
 </section>
 
 <!-- When -->
-<section class="mb-12">
-<h2 class="text-xl font-semibold mb-6">When to use it</h2>
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-6 text-white">When to use it</h2>
 <div class="grid md:grid-cols-2 gap-4">
-<div class="bg-bg-card border-l-4 border-primary rounded-r-lg p-5">
+<div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-5">
 <h3 class="font-medium text-primary mb-3">Use when:</h3>
-<ul class="space-y-2 text-text-muted text-sm">
+<ul class="space-y-2 text-text-secondary text-sm">
 <li>• Multiple data sources (DB, API, cache)</li>
 <li>• Need unit tests without database</li>
 <li>• Complex data access logic</li>
 <li>• Want database-agnostic code</li>
 </ul>
 </div>
-<div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-lg p-5">
+<div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-5">
 <h3 class="font-medium text-yellow-500 mb-3">Skip if:</h3>
-<ul class="space-y-2 text-text-muted text-sm">
+<ul class="space-y-2 text-text-secondary text-sm">
 <li>• Very simple CRUD operations</li>
 <li>• ORM already provides good abstraction</li>
 <li>• Rapid prototyping phase</li>
@@ -138,20 +142,20 @@ code{font-family:'JetBrains Mono',monospace}
 </section>
 
 <!-- How -->
-<section class="mb-12">
-<h2 class="text-xl font-semibold mb-6">How it works</h2>
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-6 text-white">How it works</h2>
 
 <div class="mb-8">
-<h3 class="text-lg font-medium mb-4">1. Define the interface</h3>
-<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm"><code><span class="keyword">interface</span> <span class="type">UserRepository</span> {
+<h3 class="text-base font-medium mb-4 text-text-secondary">1. Define the interface</h3>
+<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm border border-border-subtle"><code><span class="keyword">interface</span> <span class="type">UserRepository</span> {
     <span class="function">findById</span>(id: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">User</span>&gt;;
     <span class="function">save</span>(user: <span class="type">User</span>): <span class="type">Promise</span>&lt;<span class="type">void</span>&gt;;
 }</code></pre>
 </div>
 
 <div class="mb-8">
-<h3 class="text-lg font-medium mb-4">2. Implement it</h3>
-<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm"><code><span class="keyword">class</span> <span class="type">PostgresRepo</span> <span class="keyword">implements</span> <span class="type">UserRepository</span> {
+<h3 class="text-base font-medium mb-4 text-text-secondary">2. Implement it</h3>
+<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm border border-border-subtle"><code><span class="keyword">class</span> <span class="type">PostgresRepo</span> <span class="keyword">implements</span> <span class="type">UserRepository</span> {
     <span class="keyword">constructor</span>(<span class="variable">private</span> db: <span class="type">Database</span>) {}
     <span class="keyword">async</span> <span class="function">findById</span>(id) {
         <span class="keyword">return await</span> <span class="variable">this</span>.db.<span class="function">query</span>(...);
@@ -160,8 +164,8 @@ code{font-family:'JetBrains Mono',monospace}
 </div>
 
 <div>
-<h3 class="text-lg font-medium mb-4">3. Use in your code</h3>
-<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm"><code><span class="keyword">class</span> <span class="type">UserService</span> {
+<h3 class="text-base font-medium mb-4 text-text-secondary">3. Use in your code</h3>
+<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm border border-border-subtle"><code><span class="keyword">class</span> <span class="type">UserService</span> {
     <span class="keyword">constructor</span>(<span class="variable">private</span> repo: <span class="type">UserRepository</span>) {}
     <span class="keyword">async</span> <span class="function">register</span>(email) {
         <span class="keyword">const</span> exists = <span class="keyword">await</span> <span class="variable">this</span>.repo.<span class="function">findByEmail</span>(email);
@@ -171,9 +175,9 @@ code{font-family:'JetBrains Mono',monospace}
 </section>
 
 <!-- Architecture -->
-<section class="mb-12">
-<h2 class="text-xl font-semibold mb-6">Architecture</h2>
-<div class="bg-bg-card border border-border-subtle rounded-lg p-6">
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-6 text-white">Architecture</h2>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-6">
 <svg viewBox="0 0 500 100" class="w-full h-auto max-w-2xl mx-auto">
 <rect x="20" y="30" width="70" height="35" rx="4" fill="#3b82f6"/>
 <text x="55" y="53" text-anchor="middle" fill="white" font-size="9" font-weight="500">Controllers</text>
@@ -191,32 +195,38 @@ code{font-family:'JetBrains Mono',monospace}
 </section>
 
 <!-- Takeaways -->
-<section class="mb-12">
-<h2 class="text-xl font-semibold mb-6">Key Takeaways</h2>
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-6 text-white">Key Takeaways</h2>
 <ul class="space-y-3">
-<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-xl p-5">
 <span class="text-primary mt-0.5">✓</span>
-<div><strong class="font-medium">Abstraction</strong><p class="text-text-muted text-sm mt-1">Hides database complexity behind a clean interface</p></div>
+<div><strong class="font-medium text-white">Abstraction</strong><p class="text-text-secondary text-sm mt-1">Hides database complexity behind a clean interface</p></div>
 </li>
-<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-xl p-5">
 <span class="text-primary mt-0.5">✓</span>
-<div><strong class="font-medium">Single Responsibility</strong><p class="text-text-muted text-sm mt-1">One repository per entity/domain</p></div>
+<div><strong class="font-medium text-white">Single Responsibility</strong><p class="text-text-secondary text-sm mt-1">One repository per entity/domain</p></div>
 </li>
-<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-xl p-5">
 <span class="text-primary mt-0.5">✓</span>
-<div><strong class="font-medium">Testability</strong><p class="text-text-muted text-sm mt-1">Easy to mock in unit tests</p></div>
+<div><strong class="font-medium text-white">Testability</strong><p class="text-text-secondary text-sm mt-1">Easy to mock in unit tests</p></div>
 </li>
-<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-xl p-5">
 <span class="text-primary mt-0.5">✓</span>
-<div><strong class="font-medium">Flexibility</strong><p class="text-text-muted text-sm mt-1">Swap database implementations easily</p></div>
+<div><strong class="font-medium text-white">Flexibility</strong><p class="text-text-secondary text-sm mt-1">Swap database implementations easily</p></div>
 </li>
 </ul>
 </section>
 
 <!-- Nav -->
 <nav class="flex items-center justify-between py-6 border-t border-border-subtle">
-<a href="/learning/category/design-patterns.html" class="text-text-muted hover:text-primary transition-colors text-sm">← All Topics</a>
-<a href="#" class="text-text-muted hover:text-primary transition-colors text-sm">↑ Top</a>
+<a href="/learning/category/design-patterns.html" class="text-text-secondary hover:text-white transition-colors text-sm flex items-center gap-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+All Topics
+</a>
+<a href="#" class="text-text-secondary hover:text-white transition-colors text-sm flex items-center gap-2">
+Top
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+</a>
 </nav>
 </main>
 

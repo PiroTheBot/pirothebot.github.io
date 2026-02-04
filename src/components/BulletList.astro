@@ -17,11 +17,10 @@ const colorClasses = {
 const bulletColor = colorClasses[color];
 ---
 
-<ul class="bullet-list space-y-2 text-sm text-text-secondary">
+<ul class="bullet-list">
   {items.map((item) => (
     <li class="bullet-item">
-      <span class={`bullet ${bulletColor}`}>{bullet}</span>
-      <span class="bullet-text">{item}</span>
+      <span class={`bullet ${bulletColor}`} aria-hidden="true">{bullet}</span>{item}
     </li>
   ))}
 </ul>
@@ -31,24 +30,21 @@ const bulletColor = colorClasses[color];
     list-style: none;
     padding: 0;
     margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
   }
   
   .bullet-item {
-    display: flex;
-    align-items: baseline;
+    margin-bottom: 0.5rem;
     line-height: 1.5;
   }
   
-  .bullet {
-    flex-shrink: 0;
-    width: 1.25em;
-    text-align: center;
-    /* Ensure bullet sits on same baseline as text */
-    line-height: inherit;
+  .bullet-item:last-child {
+    margin-bottom: 0;
   }
   
-  .bullet-text {
-    flex: 1;
-    line-height: inherit;
+  .bullet {
+    display: inline;
+    margin-right: 0.5rem;
   }
 </style>

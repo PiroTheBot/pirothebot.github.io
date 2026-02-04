@@ -1,10 +1,11 @@
 ---
 interface Props {
   color?: 'primary' | 'red' | 'yellow' | 'muted';
+  bullet?: string;
   items: string[];
 }
 
-const { color = 'primary', items } = Astro.props;
+const { color = 'primary', bullet = '•', items } = Astro.props;
 
 const colorClasses = {
   primary: 'text-primary',
@@ -19,7 +20,7 @@ const bulletColor = colorClasses[color];
 <ul class="bullet-list space-y-2 text-sm text-text-secondary">
   {items.map((item) => (
     <li class="bullet-item">
-      <span class={`bullet ${bulletColor}`}>•</span>
+      <span class={`bullet ${bulletColor}`}>{bullet}</span>
       <span class="bullet-text">{item}</span>
     </li>
   ))}

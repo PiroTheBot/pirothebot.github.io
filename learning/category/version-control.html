@@ -5,37 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Version Control — Learning Corner</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script>
-tailwind.config = {theme: {extend: {colors: {primary:'#00FF88',warning:'#FFD93D',bg:{main:'#0D0D0D',card:'#1A1A1A'},text:{secondary:'#B0B0B0'},border:{subtle:'#333333'}},animation:{'float':'float 3s ease-in-out infinite','fade-up':'fadeUp 0.6s ease forwards'},keyframes:{float:{'0%,100%':{transform:'translateY(0)'},'50%':{transform:'translateY(-12px)'}},fadeUp:{'0%':{opacity:'0',transform:'translateY(30px)'},'100%':{opacity:'1',transform:'translateY(0)'}}}}}
+tailwind.config={theme:{extend:{colors:{primary:'#00FF88',warning:'#EAB308',bg:{main:'#0D0D0D',card:'#1A1A1A'},text:{primary:'#FFFFFF',muted:'#888888'},border:{subtle:'#333333'}},fontFamily:{sans:['Inter','sans-serif']}}}}
 </script>
-<style>
-body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-@keyframes fadeUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
-.animate-float{animation:float 3s ease-in-out infinite}
-.animate-fade-up{opacity:0;animation:fadeUp 0.6s ease forwards}
-</style>
+<style>body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#0D0D0D}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}</style>
 </head>
 <body class="bg-bg-main text-text-primary">
-<section class="py-16 px-6 text-center relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent"></div>
-<div class="max-w-4xl mx-auto relative">
-<a href="/learning/" class="inline-flex items-center gap-2 text-text-secondary hover:text-primary transition-colors mb-6 animate-fade-in" style="animation-delay:0ms;">← Learning Corner</a>
-<div class="text-6xl mb-6 animate-float">🔧</div>
-<h1 class="text-3xl md:text-4xl font-bold mb-4 animate-fade-up" style="animation-delay:100ms;">Version Control</h1>
-<p class="text-text-secondary mb-8 animate-fade-up" style="animation-delay:200ms;">Git, workflows, branching strategies, and collaboration</p>
-<span class="inline-block px-4 py-2 bg-warning/20 text-warning rounded-full font-medium mb-8 animate-fade-up" style="animation-delay:300ms;">Coming Soon</span>
-<div class="bg-bg-card rounded-xl p-8 border border-border-subtle max-w-md mx-auto animate-fade-up" style="animation-delay:400ms;">
-<h2 class="text-xl font-semibold text-primary mb-4">Topics we're working on:</h2>
-<ul class="text-left space-y-3 text-text-secondary">${['Git fundamentals and core concepts','Git worktrees and advanced workflows','Branching strategies (Git Flow, trunk-based)','Rebase vs Merge: When to use what','Collaboration patterns and code review'].map(x=>`<li class="flex items-center gap-2"><span class="text-primary">→</span>${x}</li>`).join('')}</ul>
+<header class="border-b border-border-subtle py-4">
+<div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
+<a href="/learning/" class="text-text-muted hover:text-primary transition-colors text-sm">← Learning Corner</a>
+</div>
+</header>
+<section class="py-16 px-6 text-center">
+<div class="max-w-4xl mx-auto">
+<h1 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight">Version Control</h1>
+<p class="text-text-muted text-lg">Git, workflows, branching strategies, and collaboration</p>
+<span class="inline-block mt-6 px-4 py-2 bg-warning/20 text-warning rounded-full text-sm font-medium">Coming Soon</span>
+<div class="mt-8 bg-bg-card border border-border-subtle rounded-lg p-6 max-w-md mx-auto text-left">
+<h2 class="font-medium text-primary mb-4">Topics:</h2>
+<ul class="space-y-2 text-text-muted text-sm">
+<li class="flex items-center gap-2"><span class="text-primary">→</span> Git fundamentals and core concepts</li>
+<li class="flex items-center gap-2"><span class="text-primary">→</span> Git worktrees and advanced workflows</li>
+<li class="flex items-center gap-2"><span class="text-primary">→</span> Branching strategies (Git Flow, trunk-based)</li>
+<li class="flex items-center gap-2"><span class="text-primary">→</span> Rebase vs Merge: When to use what</li>
+</ul>
 </div>
 </div>
 </section>
-<footer class="py-12 px-6 text-center border-t border-border-subtle"><a href="/learning/" class="inline-flex items-center gap-2 text-text-secondary hover:text-primary transition-colors animate-fade-up">← Back to Learning Corner</a></footer>
-<script>
-const o=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:.1});
-document.querySelectorAll('.animate-fade-up').forEach(e=>o.observe(e));
-</script>
+<footer class="py-12 px-6 border-t border-border-subtle text-center text-text-muted text-sm">
+<a href="/learning/" class="hover:text-primary transition-colors">← Back to Learning Corner</a>
+</footer>
 </body>
 </html>

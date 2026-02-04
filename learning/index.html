@@ -7,150 +7,154 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;family=JetBrains+Mono&display=swap" rel="stylesheet">
 <script>
 tailwind.config = {
 theme: {
 extend: {
 colors: {
 primary: '#00FF88',
-primaryDim: 'rgba(0,255,136,0.15)',
-primaryHover: '#00CC6A',
-bg: { main: '#0D0D0D', card: '#1A1A1A', code: '#0F0F0F', hover: '#252525' },
-text: { primary: '#FFFFFF', secondary: '#B0B0B0', muted: '#666666' },
-border: { subtle: '#333333', accent: '#00FF88' },
-success: '#00FF88',
-warning: '#FFD93D',
-error: '#FF6B6B',
+bg: { main: '#0D0D0D', card: '#1A1A1A', code: '#111' },
+text: { primary: '#FFFFFF', muted: '#888888' },
+border: { subtle: '#333333' }
 },
-fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-animation: {
-'float': 'float 3s ease-in-out infinite',
-'fade-up': 'fadeUp 0.6s ease forwards',
-'fade-in': 'fadeIn 0.5s ease forwards',
-'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
-'draw': 'draw 2s ease-out forwards',
-'slide-in-left': 'slideInLeft 0.5s ease forwards',
-'scale-in': 'scaleIn 0.4s ease forwards',
-},
-keyframes: {
-float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
-fadeUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-pulseGlow: { '0%, 100%': { boxShadow: '0 0 0 0 rgba(0,255,136,0.4)' }, '50%': { boxShadow: '0 0 20px 8px rgba(0,255,136,0)' } },
-draw: { '0%': { strokeDashoffset: '1000' }, '100%': { strokeDashoffset: '0' } },
-slideInLeft: { '0%': { opacity: '0', transform: 'translateX(-30px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
-scaleIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
-},
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+mono: ['JetBrains Mono', 'monospace']
+}
 }
 }
 }
 </script>
 <style>
-html { scroll-behavior: smooth; }
-body { font-family: 'Inter', sans-serif; background: #0D0D0D; color: #fff; line-height: 1.6; }
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #0D0D0D; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #444; }
-::selection { background: #00FF88; color: #0D0D0D; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-@keyframes fadeUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-@keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.4); } 50% { box-shadow: 0 0 20px 8px rgba(0,255,136,0); } }
-@keyframes draw { 0% { stroke-dashoffset: 1000; } 100% { stroke-dashoffset: 0; } }
-@keyframes slideInLeft { 0% { opacity: 0; transform: translateX(-30px); } 100% { opacity: 1; transform: translateX(0); } }
-@keyframes scaleIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
-.animate-fade-in { opacity: 0; animation: fadeIn 0.5s ease forwards; }
-.animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
-.animate-draw { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 2s ease-out forwards; }
-.animate-slide-in-left { opacity: 0; animation: slideInLeft 0.5s ease forwards; }
-.animate-scale-in { opacity: 0; animation: scaleIn 0.4s ease forwards; }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6}
+h1,h2,h3{font-weight:600;letter-spacing:-0.02em}
+code{font-family:'JetBrains Mono',monospace}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0D0D0D}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
 </style>
 </head>
 <body class="bg-bg-main text-text-primary min-h-screen">
+<!-- Header -->
+<header class="border-b border-border-subtle py-6">
+<div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+<a href="/" class="text-text-muted hover:text-primary transition-colors text-sm">← Piro</a>
+<span class="text-xs text-text-muted">Learning Corner</span>
+</div>
+</header>
+
 <!-- Hero -->
-<section class="relative py-20 px-6 overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent"></div>
-<div class="relative max-w-4xl mx-auto text-center">
-<div class="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-2xl mb-6 animate-float shadow-[0_0_40px_rgba(0,255,136,0.3)] shadow-primary/30">📚</div>
-<h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-up" style="animation-delay: 0ms;">Learning Corner</h1>
-<p class="text-text-secondary text-lg animate-fade-up" style="animation-delay: 150ms;">Visual guides to complex topics — from layman to expert</p>
+<section class="py-24 px-6">
+<div class="max-w-4xl mx-auto text-center">
+<h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Learning Corner</h1>
+<p class="text-text-muted text-lg max-w-xl mx-auto">Visual guides to technical topics. From concept to code.</p>
 </div>
 </section>
+
 <!-- Categories -->
 <section class="py-12 px-6">
-<div class="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-<a href="/learning/category/design-patterns.html" class="group relative bg-bg-card rounded-xl p-6 border border-border-subtle hover:border-primary transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,255,136,0.15)] hover:-translate-y-1 animate-fade-up" style="animation-delay: 0ms;">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">📐</div>
-<h3 class="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Design Patterns</h3>
-<p class="text-text-secondary text-sm">Time-tested solutions</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-primary/20 text-primary text-xs font-medium rounded-full">1 topic</span>
+<div class="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+<!-- Design Patterns -->
+<a href="/learning/category/design-patterns.html" class="group bg-bg-card border border-border-subtle rounded-lg p-6 transition-all duration-300 hover:border-primary/50">
+<div class="flex items-start justify-between mb-4">
+<span class="text-xs font-medium text-primary">1 topic</span>
+<svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+</div>
+<h3 class="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">Design Patterns</h3>
+<p class="text-text-muted text-sm">Time-tested solutions to common problems</p>
 </a>
-<a href="/learning/category/version-control.html" class="group relative bg-bg-card rounded-xl p-6 border border-border-subtle hover:border-warning transition-all duration-300 hover:shadow-[0_12px_40px_rgba(255,217,61,0.15)] hover:-translate-y-1 animate-fade-up" style="animation-delay: 100ms;">
-<div class="absolute top-0 left-0 right-0 h-1 bg-warning scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-warning mb-4 group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300">🔀</div>
-<h3 class="text-xl font-semibold mb-2 group-hover:text-warning transition-colors">Version Control</h3>
-<p class="text-text-secondary text-sm">Git, workflows</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs font-medium rounded-full">Coming soon</span>
+
+<!-- Version Control -->
+<a href="/learning/category/version-control.html" class="group bg-bg-card border border-border-subtle rounded-lg p-6 transition-all duration-300 hover:border-primary/50">
+<div class="flex items-start justify-between mb-4">
+<span class="text-xs font-medium text-text-muted">Coming soon</span>
+<svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+</div>
+<h3 class="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">Version Control</h3>
+<p class="text-text-muted text-sm">Git, workflows, branching strategies</p>
 </a>
-<a href="/learning/category/containers.html" class="group relative bg-bg-card rounded-xl p-6 border border-border-subtle hover:border-primary/50 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,255,136,0.1)] hover:-translate-y-1 animate-fade-up" style="animation-delay: 200ms;">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-all duration-300">📦</div>
-<h3 class="text-xl font-semibold mb-2">Containers</h3>
-<p class="text-text-secondary text-sm">Docker, K8s</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs font-medium rounded-full">Coming soon</span>
+
+<!-- Containers -->
+<a href="/learning/category/containers.html" class="group bg-bg-card border border-border-subtle rounded-lg p-6 transition-all duration-300 hover:border-primary/50">
+<div class="flex items-start justify-between mb-4">
+<span class="text-xs font-medium text-text-muted">Coming soon</span>
+<svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+</div>
+<h3 class="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">Containers</h3>
+<p class="text-text-muted text-sm">Docker, Docker Compose, Kubernetes</p>
 </a>
-<a href="/learning/category/infrastructure.html" class="group relative bg-bg-card rounded-xl p-6 border border-border-subtle hover:border-primary/50 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,255,136,0.1)] hover:-translate-y-1 animate-fade-up" style="animation-delay: 300ms;">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-all duration-300">🏗️</div>
-<h3 class="text-xl font-semibold mb-2">Infrastructure</h3>
-<p class="text-text-secondary text-sm">Terraform, IaC</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs font-medium rounded-full">Coming soon</span>
+
+<!-- Infrastructure -->
+<a href="/learning/category/infrastructure.html" class="group bg-bg-card border border-border-subtle rounded-lg p-6 transition-all duration-300 hover:border-primary/50">
+<div class="flex items-start justify-between mb-4">
+<span class="text-xs font-medium text-text-muted">Coming soon</span>
+<svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+</div>
+<h3 class="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">Infrastructure</h3>
+<p class="text-text-muted text-sm">Terraform, Pulumi, infrastructure as code</p>
 </a>
-<a href="/learning/category/cloud-platforms.html" class="group relative bg-bg-card rounded-xl p-6 border border-border-subtle hover:border-primary/50 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,255,136,0.1)] hover:-translate-y-1 animate-fade-up" style="animation-delay: 400ms;">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-all duration-300">☁️</div>
-<h3 class="text-xl font-semibold mb-2">Cloud Platforms</h3>
-<p class="text-text-secondary text-sm">AWS, GCP, Azure</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs font-medium rounded-full">Coming soon</span>
+
+<!-- Cloud Platforms -->
+<a href="/learning/category/cloud-platforms.html" class="group bg-bg-card border border-border-subtle rounded-lg p-6 transition-all duration-300 hover:border-primary/50">
+<div class="flex items-start justify-between mb-4">
+<span class="text-xs font-medium text-text-muted">Coming soon</span>
+<svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+</div>
+<h3 class="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">Cloud Platforms</h3>
+<p class="text-text-muted text-sm">AWS, GCP, Azure, multi-cloud</p>
 </a>
 </div>
 </section>
+
 <!-- Available Now -->
-<section class="py-12 px-6 bg-bg-card/30">
+<section class="py-16 px-6 border-t border-border-subtle">
 <div class="max-w-4xl mx-auto">
-<h2 class="text-2xl font-semibold mb-6 animate-fade-up" style="animation-delay: 500ms;">📚 Available Now</h2>
-<a href="/learning/topic/design-patterns/repository-pattern.html" class="group relative block bg-bg-card rounded-xl p-6 border border-border-subtle hover:border-primary transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,255,136,0.15)] animate-fade-up" style="animation-delay: 600ms;">
-<div class="flex items-start justify-between mb-3"><span class="px-3 py-1 bg-primary text-bg-main text-xs font-medium rounded-full shadow-[0_0_20px_rgba(0,255,136,0.4)]">Beginner</span></div>
-<h3 class="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Repository Pattern</h3>
-<p class="text-text-secondary text-sm mb-3">Abstract database access</p>
-<div class="flex items-center gap-4 text-text-muted text-sm"><span>⏱️ 10 min read</span><span>📈 Layman → Intermediate</span></div>
+<h2 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-6">Available Now</h2>
+<a href="/learning/topic/design-patterns/repository-pattern.html" class="group block bg-bg-card border border-border-subtle rounded-lg p-6 transition-all duration-300 hover:border-primary/50">
+<div class="flex items-center justify-between">
+<div>
+<span class="text-xs font-medium text-primary mb-2 block">Beginner</span>
+<h3 class="text-lg font-semibold group-hover:text-primary transition-colors">Repository Pattern</h3>
+<p class="text-text-muted text-sm mt-1">Abstract database access in your applications</p>
+</div>
+<span class="text-text-muted text-sm">10 min read →</span>
+</div>
 </a>
 </div>
 </section>
+
 <!-- How It Works -->
 <section class="py-16 px-6">
-<div class="max-w-4xl mx-auto text-center">
-<h2 class="text-2xl font-semibold mb-12 animate-fade-up" style="animation-delay: 700ms;">🎓 How This Works</h2>
+<div class="max-w-4xl mx-auto">
+<h2 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-8">How It Works</h2>
 <div class="grid md:grid-cols-4 gap-8">
-<div class="animate-fade-up" style="animation-delay: 700ms;"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold text-lg mx-auto mb-4 animate-pulse-glow">1</div><h3 class="font-semibold mb-2">Start Simple</h3><p class="text-text-secondary text-sm">Begin with analogies</p></div>
-<div class="animate-fade-up" style="animation-delay: 800ms;"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold text-lg mx-auto mb-4 animate-pulse-glow" style="animation-delay: 200ms;">2</div><h3 class="font-semibold mb-2">Visual Learning</h3><p class="text-text-secondary text-sm">Diagrams explain</p></div>
-<div class="animate-fade-up" style="animation-delay: 900ms;"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold text-lg mx-auto mb-4 animate-pulse-glow" style="animation-delay: 400ms;">3</div><h3 class="font-semibold mb-2">Build Up</h3><p class="text-text-secondary text-sm">Gradually technical</p></div>
-<div class="animate-fade-up" style="animation-delay: 1000ms;"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold text-lg mx-auto mb-4 animate-pulse-glow" style="animation-delay: 600ms;">4</div><h3 class="font-semibold mb-2">Real World</h3><p class="text-text-secondary text-sm">See in action</p></div>
+<div>
+<div class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary text-sm font-semibold mb-4">1</div>
+<h3 class="font-medium mb-2">Concepts</h3>
+<p class="text-text-muted text-sm">Understand the problem and solution</p>
+</div>
+<div>
+<div class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary text-sm font-semibold mb-4">2</div>
+<h3 class="font-medium mb-2">Diagrams</h3>
+<p class="text-text-muted text-sm">Visual explanations with flowcharts</p>
+</div>
+<div>
+<div class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary text-sm font-semibold mb-4">3</div>
+<h3 class="font-medium mb-2">Code</h3>
+<p class="text-text-muted text-sm">Real examples with explanations</p>
+</div>
+<div>
+<div class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary text-sm font-semibold mb-4">4</div>
+<h3 class="font-medium mb-2">Use Cases</h3>
+<p class="text-text-muted text-sm">When to apply, when to skip</p>
+</div>
 </div>
 </div>
 </section>
-<!-- Footer -->
-<footer class="py-12 px-6 text-center border-t border-border-subtle"><a href="/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Back to Piro</a></footer>
-<script>
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-document.querySelectorAll('.animate-fade-up').forEach(el => observer.observe(el));
-</script>
+
+<footer class="py-12 px-6 border-t border-border-subtle text-center text-text-muted text-sm">
+<a href="/" class="hover:text-primary transition-colors">Back to Piro</a>
+</footer>
 </body>
 </html>

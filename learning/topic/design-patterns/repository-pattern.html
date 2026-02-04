@@ -6,121 +6,225 @@
 <title>Repository Pattern — Learning Corner</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
 tailwind.config = {
 theme: {
 extend: {
-colors: { primary: '#00FF88', primaryDim: 'rgba(0,255,136,0.15)', primaryHover: '#00CC6A', bg: { main: '#0D0D0D', card: '#1A1A1A', code: '#0F0F0F' }, text: { primary: '#FFFFFF', secondary: '#B0B0B0', muted: '#666666' }, border: { subtle: '#333333', accent: '#00FF88' }, success: '#00FF88', warning: '#FFD93D' },
-fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-animation: {
-'float': 'float 3s ease-in-out infinite', 'fade-up': 'fadeUp 0.6s ease forwards', 'fade-in': 'fadeIn 0.5s ease forwards', 'pulse-glow': 'pulseGlow 2s ease-in-out infinite', 'draw': 'draw 2s ease-out forwards', 'slide-in-left': 'slideInLeft 0.5s ease forwards', 'scale-in': 'scaleIn 0.4s ease forwards',
+colors: {
+primary: '#00FF88',
+bg: { main: '#0D0D0D', card: '#1A1A1A', code: '#111' },
+text: { primary: '#FFFFFF', muted: '#888888' },
+border: { subtle: '#333333' }
 },
-keyframes: {
-float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
-fadeUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-pulseGlow: { '0%, 100%': { boxShadow: '0 0 0 0 rgba(0,255,136,0.4)' }, '50%': { boxShadow: '0 0 20px 8px rgba(0,255,136,0)' } },
-draw: { '0%': { strokeDashoffset: '1000' }, '100%': { strokeDashoffset: '0' } },
-slideInLeft: { '0%': { opacity: '0', transform: 'translateX(-30px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
-scaleIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+mono: ['JetBrains Mono', 'monospace']
+}
 }
 }
 }
 </script>
 <style>
-body { font-family: 'Inter', sans-serif; background: #0D0D0D; color: #fff; line-height: 1.6; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-@keyframes fadeUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.4); } 50% { box-shadow: 0 0 20px 8px rgba(0,255,136,0); } }
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
-.animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0D0D0D; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-::selection { background: #00FF88; color: #0D0D0D; }
+body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6}
+code{font-family:'JetBrains Mono',monospace}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0D0D0D}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+.keyword{color:#a78bfa}.type{color:#60a5fa}.function{color:#22d3ee}.variable{color:#fbbf24}
 </style>
 </head>
 <body class="bg-bg-main text-text-primary">
-<!-- Progress Bar -->
-<div class="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50"><div id="progress" class="h-full bg-primary transition-all duration-100" style="width: 0%"></div></div>
+<!-- Progress -->
+<div class="fixed top-0 left-0 w-full h-0.5 bg-bg-card z-50">
+<div id="progress" class="h-full bg-primary transition-all duration-100" style="width:0"></div>
+</div>
+
+<!-- Header -->
+<header class="border-b border-border-subtle py-4">
+<div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
+<a href="/learning/category/design-patterns.html" class="text-text-muted hover:text-primary transition-colors text-sm">← Design Patterns</a>
+<span class="text-xs text-text-muted">Learning Corner</span>
+</div>
+</header>
+
 <!-- Hero -->
-<section class="relative py-16 px-6 overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent"></div>
-<div class="relative max-w-4xl mx-auto">
-<a href="/learning/category/design-patterns.html" class="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors mb-6 animate-fade-in" style="animation-delay: 0ms;">← Design Patterns</a>
-<span class="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 text-primary text-sm font-medium rounded-full mb-4 animate-fade-up" style="animation-delay: 100ms;">Beginner</span>
-<h1 class="text-3xl md:text-4xl font-bold mb-4 animate-fade-up" style="animation-delay: 150ms;">The Repository Pattern</h1>
-<p class="text-text-secondary text-lg animate-fade-up" style="animation-delay: 200ms;">Understanding how to talk to databases the clean way</p>
-<div class="flex items-center gap-4 mt-6 text-text-muted text-sm animate-fade-up" style="animation-delay: 250ms;"><span>⏱️ 10 min read</span><span>📈 Layman → Intermediate</span></div>
+<section class="py-16 px-6">
+<div class="max-w-4xl mx-auto">
+<span class="inline-block px-3 py-1 bg-primary/20 text-primary text-xs font-medium rounded-full mb-4">Beginner</span>
+<h1 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight">The Repository Pattern</h1>
+<p class="text-text-muted text-lg">Abstract database access in your applications</p>
+<div class="flex items-center gap-4 mt-4 text-text-muted text-sm">
+<span>10 min read</span>
+<span>•</span>
+<span>Layman → Intermediate</span>
+</div>
 </div>
 </section>
+
 <!-- Content -->
-<div class="max-w-6xl mx-auto px-6 pb-16">
-<div class="lg:flex lg:gap-12">
-<!-- Main -->
-<div class="lg:flex-1 max-w-prose">
+<main class="max-w-4xl mx-auto px-6 pb-16">
 <!-- What -->
-<section id="what" class="mb-12 animate-fade-up" style="animation-delay: 300ms;">
-<h2 class="text-2xl font-semibold mb-6">❓ What is it?</h2>
-<div class="bg-bg-card rounded-xl p-6 mb-6">
-<h3 class="text-lg font-medium text-primary mb-4">The Library Analogy</h3>
-<div class="w-full max-w-lg mx-auto"><svg viewBox="0 0 400 160" class="w-full h-auto"><ellipse cx="50" cy="35" rx="30" ry="10" fill="none" stroke="#333" stroke-width="2"/><path d="M20 35 Q20 60, 50 60 Q80 60, 80 35" fill="none" stroke="#333" stroke-width="2"/><ellipse cx="50" cy="35" rx="30" ry="10" fill="rgba(0,255,136,0.1)"/><circle cx="20" cy="35" r="4" fill="#00FF88"/><circle cx="80" cy="35" r="4" fill="#00FF88"/><line x1="25" y1="35" x2="45" y2="25" stroke="#00FF88" stroke-width="2"/><line x1="75" y1="35" x2="55" y2="25" stroke="#00FF88" stroke-width="2"/><rect x="125" y="15" width="150" height="90" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/><circle cx="200" cy="40" r="12" fill="none" stroke="#00FF88" stroke-width="2"/><circle cx="200" cy="40" r="6" fill="#00FF88"/><text x="200" y="80" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">REPOSITORY</text><line x1="280" y1="60" x2="310" y2="50" stroke="#4DA6FF" stroke-width="2"/><rect x="315" y="30" width="60" height="50" rx="6" fill="#1a1a1a" stroke="#4DA6FF" stroke-width="2"/><text x="345" y="60" text-anchor="middle" fill="#888" font-size="9">Your Code</text></svg></div>
-<p class="text-text-secondary text-sm mt-4 text-center italic">The <strong class="text-primary">librarian (Repository)</strong> knows exactly where every book is.</p>
+<section class="mb-12">
+<h2 class="text-xl font-semibold mb-6">What is it?</h2>
+<div class="bg-bg-card border border-border-subtle rounded-lg p-6 mb-6">
+<p class="text-text-muted mb-4">The Repository Pattern is a layer between your application and the database. It gives you a clean, object-oriented interface for data access.</p>
+<div class="bg-bg-code rounded-lg p-4">
+<svg viewBox="0 0 400 120" class="w-full h-auto max-w-lg mx-auto">
+<ellipse cx="50" cy="30" rx="25" ry="8" fill="none" stroke="#333" stroke-width="2"/>
+<path d="M25 30 Q25 50, 50 50 Q75 50, 75 30" fill="none" stroke="#333" stroke-width="2"/>
+<ellipse cx="50" cy="30" rx="25" ry="8" fill="rgba(0,255,136,0.1)"/>
+<circle cx="25" cy="30" r="3" fill="#00FF88"/>
+<circle cx="75" cy="30" r="3" fill="#00FF88"/>
+<line x1="30" y1="30" x2="45" y2="22" stroke="#00FF88" stroke-width="2"/>
+<line x1="70" y1="30" x2="55" y2="22" stroke="#00FF88" stroke-width="2"/>
+<rect x="125" y="10" width="130" height="80" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+<circle cx="190" cy="35" r="10" fill="none" stroke="#00FF88" stroke-width="2"/>
+<circle cx="190" cy="35" r="4" fill="#00FF88"/>
+<text x="190" y="65" text-anchor="middle" fill="#00FF88" font-size="10" font-weight="600">REPOSITORY</text>
+<line x1="260" y1="50" x2="285" y2="45" stroke="#3b82f6" stroke-width="2"/>
+<rect x="290" y="30" width="50" height="40" rx="4" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+<text x="315" y="55" text-anchor="middle" fill="#888" font-size="8">Your Code</text>
+</svg>
 </div>
-<div class="bg-bg-code border border-border-subtle rounded-xl p-6"><h3 class="text-lg font-medium text-primary mb-3">Technical Definition</h3><p class="text-text-secondary">A <strong>Repository</strong> is a layer that mediates between your domain logic and the data access layer. It abstracts the database operations behind a collection-like interface.</p></div>
+</div>
 </section>
+
 <!-- Why -->
-<section id="why" class="mb-12 animate-fade-up" style="animation-delay: 400ms;">
-<h2 class="text-2xl font-semibold mb-6">💡 Why use it?</h2>
-<div class="grid md:grid-cols-2 gap-4">{[{i:'🛡️',t:'Single Source',d:'All data access logic in one place'},{i:'🧪',t:'Easier Testing',d:'Swap real DB for fake data'},{i:'🔄',t:'Database Independence',d:'Switch DBs without rewriting'},{i:'✨',t:'Cleaner Code',d:'No SQL mixed with app code'}].map((x,i)=>`<div class="bg-bg-card rounded-xl p-5 border border-border-subtle hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,255,136,0.1)] animate-fade-up" style="animation-delay: ${400 + i*50}ms;"><div class="text-2xl mb-3">${x.i}</div><h3 class="font-medium mb-2">${x.t}</h3><p class="text-text-secondary text-sm">${x.d}</p></div>`).join('')}</div>
+<section class="mb-12">
+<h2 class="text-xl font-semibold mb-6">Why use it?</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
+<h3 class="font-medium mb-2">Single Source</h3>
+<p class="text-text-muted text-sm">All data access logic in one place</p>
+</div>
+<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
+<h3 class="font-medium mb-2">Testability</h3>
+<p class="text-text-muted text-sm">Swap real DB for mock data in tests</p>
+</div>
+<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
+<h3 class="font-medium mb-2">Database Independence</h3>
+<p class="text-text-muted text-sm">Switch databases without rewriting code</p>
+</div>
+<div class="bg-bg-card border border-border-subtle rounded-lg p-5">
+<h3 class="font-medium mb-2">Clean Architecture</h3>
+<p class="text-text-muted text-sm">No SQL scattered in your application</p>
+</div>
+</div>
 </section>
+
 <!-- When -->
-<section id="when" class="mb-12 animate-fade-up" style="animation-delay: 600ms;">
-<h2 class="text-2xl font-semibold mb-6">⏰ When to use it?</h2>
-<div class="space-y-4">
-<div class="bg-bg-card rounded-xl p-6 border-l-4 border-success"><h3 class="font-medium text-success mb-3">✅ Use when:</h3><ul class="space-y-2">${['Multiple data sources','Need unit tests','Complex data access','Framework agnostic'].map(x=>`<li class="flex items-start gap-2 text-text-secondary text-sm"><span class="text-success mt-0.5">•</span>${x}</li>`).join('')}</ul></div>
-<div class="bg-bg-card rounded-xl p-6 border-l-4 border-warning"><h3 class="font-medium text-warning mb-3">⏳ Skip if:</h3><ul class="space-y-2">${['Very simple CRUD','ORM already abstracts','Rapid prototyping'].map(x=>`<li class="flex items-start gap-2 text-text-secondary text-sm"><span class="text-warning mt-0.5">•</span>${x}</li>`).join('')}</ul></div>
+<section class="mb-12">
+<h2 class="text-xl font-semibold mb-6">When to use it</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-bg-card border-l-4 border-primary rounded-r-lg p-5">
+<h3 class="font-medium text-primary mb-3">Use when:</h3>
+<ul class="space-y-2 text-text-muted text-sm">
+<li>• Multiple data sources (DB, API, cache)</li>
+<li>• Need unit tests without database</li>
+<li>• Complex data access logic</li>
+<li>• Want database-agnostic code</li>
+</ul>
+</div>
+<div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-lg p-5">
+<h3 class="font-medium text-yellow-500 mb-3">Skip if:</h3>
+<ul class="space-y-2 text-text-muted text-sm">
+<li>• Very simple CRUD operations</li>
+<li>• ORM already provides good abstraction</li>
+<li>• Rapid prototyping phase</li>
+</ul>
+</div>
 </div>
 </section>
+
 <!-- How -->
-<section id="how" class="mb-12 animate-fade-up" style="animation-delay: 800ms;">
-<h2 class="text-2xl font-semibold mb-6">🔧 How it works</h2>
-<div class="space-y-8">
-<!-- Step 1 -->
-<div class="flex gap-4"><div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold flex-shrink-0 animate-pulse-glow">1</div><div class="flex-1"><h3 class="text-lg font-medium mb-2">Define the Interface</h3><p class="text-text-secondary text-sm mb-4">Tell the world what operations you support</p><pre class="bg-bg-code rounded-xl p-4 overflow-x-auto text-sm"><code><span class="keyword">interface</span> <span class="type">UserRepository</span> {<br>&nbsp;&nbsp;<span class="function">findById</span>(id: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">User</span>&gt;;<br>&nbsp;&nbsp;<span class="function">save</span>(user: <span class="type">User</span>): <span class="type">Promise</span>&lt;<span class="type">void</span>&gt;;<br>}</code></pre></div></div>
-<!-- Step 2 -->
-<div class="flex gap-4"><div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold flex-shrink-0 animate-pulse-glow" style="animation-delay: 200ms;">2</div><div class="flex-1"><h3 class="text-lg font-medium mb-2">Implement It</h3><p class="text-text-secondary text-sm mb-4">Actually talk to the database</p><pre class="bg-bg-code rounded-xl p-4 overflow-x-auto text-sm"><code><span class="keyword">class</span> <span class="type">PostgresRepo</span> <span class="keyword">implements</span> <span class="type">UserRepository</span> {<br>&nbsp;&nbsp;<span class="keyword">constructor</span>(<span class="variable">private</span> db: <span class="type">Database</span>) {}<br>&nbsp;&nbsp;<span class="async">async</span> <span class="function">findById</span>(id) {<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="keyword">await</span> <span class="variable">this</span>.db.<span class="function">query</span>(...);<br>&nbsp;&nbsp;}<br>}</code></pre></div></div>
-<!-- Step 3 -->
-<div class="flex gap-4"><div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold flex-shrink-0 animate-pulse-glow" style="animation-delay: 400ms;">3</div><div class="flex-1"><h3 class="text-lg font-medium mb-2">Use in Your Code</h3><p class="text-text-secondary text-sm mb-4">Clean, testable business logic</p><pre class="bg-bg-code rounded-xl p-4 overflow-x-auto text-sm"><code><span class="keyword">class</span> <span class="type">UserService</span> {<br>&nbsp;&nbsp;<span class="keyword">constructor</span>(<span class="variable">private</span> repo: <span class="type">UserRepository</span>) {}<br>&nbsp;&nbsp;<span class="async">async</span> <span class="function">register</span>(email) {<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> exists = <span class="keyword">await</span> <span class="variable">this</span>.repo.<span class="function">findByEmail</span>(email);<br>&nbsp;&nbsp;}<br>}</code></pre></div></div>
+<section class="mb-12">
+<h2 class="text-xl font-semibold mb-6">How it works</h2>
+
+<div class="mb-8">
+<h3 class="text-lg font-medium mb-4">1. Define the interface</h3>
+<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm"><code><span class="keyword">interface</span> <span class="type">UserRepository</span> {
+    <span class="function">findById</span>(id: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">User</span>&gt;;
+    <span class="function">save</span>(user: <span class="type">User</span>): <span class="type">Promise</span>&lt;<span class="type">void</span>&gt;;
+}</code></pre>
+</div>
+
+<div class="mb-8">
+<h3 class="text-lg font-medium mb-4">2. Implement it</h3>
+<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm"><code><span class="keyword">class</span> <span class="type">PostgresRepo</span> <span class="keyword">implements</span> <span class="type">UserRepository</span> {
+    <span class="keyword">constructor</span>(<span class="variable">private</span> db: <span class="type">Database</span>) {}
+    <span class="keyword">async</span> <span class="function">findById</span>(id) {
+        <span class="keyword">return await</span> <span class="variable">this</span>.db.<span class="function">query</span>(...);
+    }
+}</code></pre>
+</div>
+
+<div>
+<h3 class="text-lg font-medium mb-4">3. Use in your code</h3>
+<pre class="bg-bg-code rounded-lg p-4 overflow-x-auto text-sm"><code><span class="keyword">class</span> <span class="type">UserService</span> {
+    <span class="keyword">constructor</span>(<span class="variable">private</span> repo: <span class="type">UserRepository</span>) {}
+    <span class="keyword">async</span> <span class="function">register</span>(email) {
+        <span class="keyword">const</span> exists = <span class="keyword">await</span> <span class="variable">this</span>.repo.<span class="function">findByEmail</span>(email);
+    }
+}</code></pre>
 </div>
 </section>
-<!-- Example -->
-<section id="example" class="mb-12 animate-fade-up" style="animation-delay: 1000ms;">
-<h2 class="text-2xl font-semibold mb-6">🌍 Real-World Example</h2>
-<p class="text-text-secondary mb-6"><strong>Scenario:</strong> E-commerce with users, products, orders</p>
-<div class="bg-bg-card rounded-xl p-6 mb-4"><svg viewBox="0 0 500 150" class="w-full h-auto"><rect x="20" y="50" width="80" height="40" rx="6" fill="#4DA6FF"/><text x="60" y="75" text-anchor="middle" fill="white" font-size="10" font-weight="500">Controllers</text><line x1="105" y1="70" x2="125" y2="70" stroke="#4DA6FF" stroke-width="2"/><rect x="130" y="50" width="80" height="40" rx="6" fill="#FFD93D"/><text x="170" y="75" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="500">Services</text><line x1="215" y1="70" x2="235" y2="70" stroke="#FFD93D" stroke-width="2"/><rect x="240" y="50" width="100" height="40" rx="6" fill="#00FF88"/><text x="290" y="75" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="500">Repositories</text><line x1="290" y1="95" x2="290" y2="115" stroke="#00FF88" stroke-width="2"/><ellipse cx="290" cy="135" rx="60" ry="20" fill="#1a1a1a" stroke="#333" stroke-width="2"/><text x="290" y="140" text-anchor="middle" fill="white" font-size="11">Database</text></svg></div>
-<p class="text-text-secondary">Each <strong class="text-primary">Service</strong> talks only to <strong class="text-primary">Repositories</strong>.</p>
+
+<!-- Architecture -->
+<section class="mb-12">
+<h2 class="text-xl font-semibold mb-6">Architecture</h2>
+<div class="bg-bg-card border border-border-subtle rounded-lg p-6">
+<svg viewBox="0 0 500 100" class="w-full h-auto max-w-2xl mx-auto">
+<rect x="20" y="30" width="70" height="35" rx="4" fill="#3b82f6"/>
+<text x="55" y="53" text-anchor="middle" fill="white" font-size="9" font-weight="500">Controllers</text>
+<line x1="95" y1="47" x2="115" y2="47" stroke="#3b82f6" stroke-width="2"/>
+<rect x="120" y="30" width="70" height="35" rx="4" fill="#fbbf24"/>
+<text x="155" y="53" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="500">Services</text>
+<line x1="195" y1="47" x2="215" y2="47" stroke="#fbbf24" stroke-width="2"/>
+<rect x="220" y="30" width="90" height="35" rx="4" fill="#00FF88"/>
+<text x="265" y="53" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="500">Repositories</text>
+<line x1="265" y1="70" x2="265" y2="90" stroke="#00FF88" stroke-width="2"/>
+<ellipse cx="265" cy="100" rx="50" ry="15" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+<text x="265" y="105" text-anchor="middle" fill="white" font-size="10">Database</text>
+</svg>
+</div>
 </section>
+
 <!-- Takeaways -->
-<section id="takeaways" class="animate-fade-up" style="animation-delay: 1100ms;">
-<h2 class="text-2xl font-semibold mb-6">🎯 Key Takeaways</h2><ul class="space-y-4">${[{t:'Abstraction',d:'Hides database complexity'},{t:'Single Responsibility',d:'One repo per entity'},{t:'Testability',d:'Mock the repository'},{t:'Flexibility',d:'Change databases easily'}].map(x=>`<li class="flex items-start gap-3 bg-bg-card rounded-xl p-4 border border-border-subtle animate-fade-up"><span class="text-success text-xl">✓</span><div><strong class="text-text-primary">${x.t}</strong><p class="text-text-secondary text-sm">${x.d}</p></div></li>`).join('')}</ul>
+<section class="mb-12">
+<h2 class="text-xl font-semibold mb-6">Key Takeaways</h2>
+<ul class="space-y-3">
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<span class="text-primary mt-0.5">✓</span>
+<div><strong class="font-medium">Abstraction</strong><p class="text-text-muted text-sm mt-1">Hides database complexity behind a clean interface</p></div>
+</li>
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<span class="text-primary mt-0.5">✓</span>
+<div><strong class="font-medium">Single Responsibility</strong><p class="text-text-muted text-sm mt-1">One repository per entity/domain</p></div>
+</li>
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<span class="text-primary mt-0.5">✓</span>
+<div><strong class="font-medium">Testability</strong><p class="text-text-muted text-sm mt-1">Easy to mock in unit tests</p></div>
+</li>
+<li class="flex items-start gap-3 bg-bg-card border border-border-subtle rounded-lg p-4">
+<span class="text-primary mt-0.5">✓</span>
+<div><strong class="font-medium">Flexibility</strong><p class="text-text-muted text-sm mt-1">Swap database implementations easily</p></div>
+</li>
+</ul>
 </section>
+
 <!-- Nav -->
-<div class="flex items-center justify-between py-6 border-t border-border-subtle mt-12 animate-fade-up" style="animation-delay: 1200ms;"><a href="/learning/category/design-patterns.html" class="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors">← All Categories</a><a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-primary transition-colors">↑ Back to Top</a></div>
-</div>
-</div>
-</div>
+<nav class="flex items-center justify-between py-6 border-t border-border-subtle">
+<a href="/learning/category/design-patterns.html" class="text-text-muted hover:text-primary transition-colors text-sm">← All Topics</a>
+<a href="#" class="text-text-muted hover:text-primary transition-colors text-sm">↑ Top</a>
+</nav>
+</main>
+
 <script>
-// Progress bar
-window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('progress').style.width=(s/h*100)+'%'});
-// Scroll reveal
-const o=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
-document.querySelectorAll('.animate-fade-up').forEach(e=>o.observe(e));
+window.addEventListener('scroll',()=>{
+const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;
+document.getElementById('progress').style.width=(s/h*100)+'%';
+});
 </script>
-<style>
-.keyword{color:#c084fc}.type{color:#93c5fd}.function{color:#67e8f9}.variable{color:#fcd34d}.async{color:#c084fc}</style>
 </body>
 </html>

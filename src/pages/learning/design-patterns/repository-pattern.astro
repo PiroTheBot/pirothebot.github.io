@@ -131,18 +131,9 @@ const rb = '}';
 {rb}</code></pre>
       </div>
       <ul class="mt-4 space-y-2 text-sm text-text-secondary">
-        <li class="flex items-start gap-2">
-          <span class="text-red-500 mt-1">•</span>
-          SQL mixed with business logic
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-red-500 mt-1">•</span>
-          Hard to test without real DB
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-red-500 mt-1">•</span>
-          Changing DB = rewrite everything
-        </li>
+        <li><span class="text-red-500 mr-2">•</span>SQL mixed with business logic</li>
+        <li><span class="text-red-500 mr-2">•</span>Hard to test without real DB</li>
+        <li><span class="text-red-500 mr-2">•</span>Changing DB = rewrite everything</li>
       </ul>
     </div>
     
@@ -163,18 +154,9 @@ const rb = '}';
 {rb}</code></pre>
       </div>
       <ul class="mt-4 space-y-2 text-sm text-text-secondary">
-        <li class="flex items-start gap-2">
-          <span class="text-primary mt-1">•</span>
-          Business logic stays clean
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-primary mt-1">•</span>
-          Easy to mock for tests
-        </li>
-        <li class="flex items-start gap-2">
-          <span class="text-primary mt-1">•</span>
-          Swap databases freely
-        </li>
+        <li><span class="text-primary mr-2">•</span>Business logic stays clean</li>
+        <li><span class="text-primary mr-2">•</span>Easy to mock for tests</li>
+        <li><span class="text-primary mr-2">•</span>Swap databases freely</li>
       </ul>
     </div>
   </div>
@@ -430,22 +412,10 @@ const rb = '}';
         <span class="text-lg">✓</span> Use when:
       </h3>
       <ul class="space-y-3 text-text-secondary text-sm">
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-          <span>Multiple data sources (DB + API + cache)</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-          <span>You need unit tests without database containers</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-          <span>Complex domain logic that shouldn't know about SQL</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
-          <span>Team is large and you want clear boundaries</span>
-        </li>
+        <li><span class="text-primary mr-2">•</span>Multiple data sources (DB + API + cache)</li>
+        <li><span class="text-primary mr-2">•</span>You need unit tests without database containers</li>
+        <li><span class="text-primary mr-2">•</span>Complex domain logic that shouldn't know about SQL</li>
+        <li><span class="text-primary mr-2">•</span>Team is large and you want clear boundaries</li>
       </ul>
     </div>
     
@@ -454,22 +424,10 @@ const rb = '}';
         <span class="text-lg">✗</span> Skip if:
       </h3>
       <ul class="space-y-3 text-text-secondary text-sm">
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
-          <span>Simple CRUD app with one database</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
-          <span>Prototyping / hackathon speed matters more</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
-          <span>Your ORM already provides good abstraction</span>
-        </li>
-        <li class="flex items-start gap-3">
-          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
-          <span>Solo project where abstraction is overhead</span>
-        </li>
+        <li><span class="text-yellow-500 mr-2">•</span>Simple CRUD app with one database</li>
+        <li><span class="text-yellow-500 mr-2">•</span>Prototyping / hackathon speed matters more</li>
+        <li><span class="text-yellow-500 mr-2">•</span>Your ORM already provides good abstraction</li>
+        <li><span class="text-yellow-500 mr-2">•</span>Solo project where abstraction is overhead</li>
       </ul>
     </div>
   </div>

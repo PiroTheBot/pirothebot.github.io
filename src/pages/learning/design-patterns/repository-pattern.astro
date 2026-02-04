@@ -1,5 +1,6 @@
 ---
 import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
 
 // Escape helper for code blocks
 const lb = '{';
@@ -130,11 +131,13 @@ const rb = '}';
     <span class="macro">sqlx::query!</span>(<span class="string">"SELECT * FROM..."</span>)
 {rb}</code></pre>
       </div>
-      <ul class="mt-4 space-y-2 text-sm text-text-secondary">
-        <li><span class="text-red-500 mr-2">•</span>SQL mixed with business logic</li>
-        <li><span class="text-red-500 mr-2">•</span>Hard to test without real DB</li>
-        <li><span class="text-red-500 mr-2">•</span>Changing DB = rewrite everything</li>
-      </ul>
+      <div class="mt-4">
+        <BulletList color="red" items={[
+          "SQL mixed with business logic",
+          "Hard to test without real DB",
+          "Changing DB = rewrite everything"
+        ]} />
+      </div>
     </div>
     
     <!-- With pattern -->
@@ -153,11 +156,13 @@ const rb = '}';
     repo.<span class="function">find_by_id</span>(id)
 {rb}</code></pre>
       </div>
-      <ul class="mt-4 space-y-2 text-sm text-text-secondary">
-        <li><span class="text-primary mr-2">•</span>Business logic stays clean</li>
-        <li><span class="text-primary mr-2">•</span>Easy to mock for tests</li>
-        <li><span class="text-primary mr-2">•</span>Swap databases freely</li>
-      </ul>
+      <div class="mt-4">
+        <BulletList color="primary" items={[
+          "Business logic stays clean",
+          "Easy to mock for tests",
+          "Swap databases freely"
+        ]} />
+      </div>
     </div>
   </div>
 </section>
@@ -411,24 +416,24 @@ const rb = '}';
       <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
         <span class="text-lg">✓</span> Use when:
       </h3>
-      <ul class="space-y-3 text-text-secondary text-sm">
-        <li><span class="text-primary mr-2">•</span>Multiple data sources (DB + API + cache)</li>
-        <li><span class="text-primary mr-2">•</span>You need unit tests without database containers</li>
-        <li><span class="text-primary mr-2">•</span>Complex domain logic that shouldn't know about SQL</li>
-        <li><span class="text-primary mr-2">•</span>Team is large and you want clear boundaries</li>
-      </ul>
+      <BulletList color="primary" items={[
+        "Multiple data sources (DB + API + cache)",
+        "You need unit tests without database containers",
+        "Complex domain logic that shouldn't know about SQL",
+        "Team is large and you want clear boundaries"
+      ]} />
     </div>
     
     <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-6 fade-in">
       <h3 class="font-medium text-yellow-500 mb-4 flex items-center gap-2">
         <span class="text-lg">✗</span> Skip if:
       </h3>
-      <ul class="space-y-3 text-text-secondary text-sm">
-        <li><span class="text-yellow-500 mr-2">•</span>Simple CRUD app with one database</li>
-        <li><span class="text-yellow-500 mr-2">•</span>Prototyping / hackathon speed matters more</li>
-        <li><span class="text-yellow-500 mr-2">•</span>Your ORM already provides good abstraction</li>
-        <li><span class="text-yellow-500 mr-2">•</span>Solo project where abstraction is overhead</li>
-      </ul>
+      <BulletList color="yellow" items={[
+        "Simple CRUD app with one database",
+        "Prototyping / hackathon speed matters more",
+        "Your ORM already provides good abstraction",
+        "Solo project where abstraction is overhead"
+      ]} />
     </div>
   </div>
 </section>

@@ -8,26 +8,24 @@
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <main>
-        <!-- Navigation -->
-        <nav class="top-nav">
+    <nav class="top-nav">
+        <div class="nav-left">
             <a href="../../" class="back-link">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
                 Learning Corner
             </a>
-            <span class="breadcrumb">Design Patterns</span>
-        </nav>
+        </div>
+        <span class="breadcrumb">Design Patterns</span>
+    </nav>
 
+    <main>
         <!-- Hero -->
-        <section class="hero">
+        <section class="hero reveal">
             <div class="hero-icon">
-                <svg viewBox="0 0 100 100" class="icon-large">
-                    <rect x="15" y="15" width="70" height="70" rx="8" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <path d="M30 40 L70 40 M30 55 L55 55" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="65" cy="70" r="15" fill="none" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="65" cy="70" r="7" fill="var(--accent)"/>
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l4.59-4.58L18 11l-6 6z"/>
                 </svg>
             </div>
             <h1>Design Patterns</h1>
@@ -35,14 +33,14 @@
         </section>
 
         <!-- Topics -->
-        <section class="topics-list">
-            <a href="repository-pattern/" class="topic-card">
-                <div class="topic-badge">Beginner</div>
+        <section class="reveal">
+            <a href="repository-pattern/" class="learning-card">
+                <span class="learning-badge">Beginner</span>
                 <h3>Repository Pattern</h3>
                 <p>Learn how to abstract database access for cleaner, testable code</p>
-                <div class="topic-meta">
+                <div class="learning-meta">
                     <span>⏱️ 10 min read</span>
-                    <span>From: Layman → Intermediate</span>
+                    <span>📈 Layman → Intermediate</span>
                 </div>
             </a>
         </section>
@@ -57,5 +55,16 @@
             </a>
         </footer>
     </main>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>

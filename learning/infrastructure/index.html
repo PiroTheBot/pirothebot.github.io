@@ -8,39 +8,33 @@
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <main>
-        <!-- Navigation -->
-        <nav class="top-nav">
+    <nav class="top-nav">
+        <div class="nav-left">
             <a href="../../" class="back-link">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
                 Learning Corner
             </a>
-            <span class="breadcrumb">Infrastructure</span>
-        </nav>
+        </div>
+        <span class="breadcrumb">Infrastructure</span>
+    </nav>
 
-        <!-- Hero -->
-        <section class="hero">
+    <main>
+        <section class="hero reveal">
             <div class="hero-icon">
-                <svg viewBox="0 0 100 100" class="icon-large">
-                    <rect x="15" y="35" width="70" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <rect x="25" y="20" width="50" height="15" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <line x1="50" y1="35" x2="50" y2="20" stroke="currentColor" stroke-width="2"/>
-                    <rect x="30" y="45" width="40" height="4" fill="currentColor" opacity="0.3"/>
-                    <rect x="30" y="53" width="35" height="4" fill="currentColor" opacity="0.3"/>
-                    <rect x="30" y="61" width="40" height="4" fill="currentColor" opacity="0.3"/>
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
                 </svg>
             </div>
             <h1>Infrastructure</h1>
             <p class="tagline">Terraform, Pulumi, and infrastructure as code</p>
         </section>
 
-        <!-- Coming Soon -->
-        <section class="card coming-soon">
+        <section class="card coming-soon-card reveal">
             <div class="icon">🔧</div>
             <h2>Coming Soon</h2>
-            <p>We're preparing in-depth guides about:</p>
+            <p>We're preparing visual guides about:</p>
             <ul>
                 <li>Terraform basics and HCL syntax</li>
                 <li>State management and backends</li>
@@ -50,7 +44,6 @@
             </ul>
         </section>
 
-        <!-- Footer -->
         <footer class="site-nav">
             <a href="../../" class="back-home">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -60,5 +53,14 @@
             </a>
         </footer>
     </main>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>

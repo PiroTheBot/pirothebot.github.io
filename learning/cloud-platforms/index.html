@@ -8,39 +8,33 @@
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <main>
-        <!-- Navigation -->
-        <nav class="top-nav">
+    <nav class="top-nav">
+        <div class="nav-left">
             <a href="../../" class="back-link">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
                 Learning Corner
             </a>
-            <span class="breadcrumb">Cloud Platforms</span>
-        </nav>
+        </div>
+        <span class="breadcrumb">Cloud Platforms</span>
+    </nav>
 
-        <!-- Hero -->
-        <section class="hero">
+    <main>
+        <section class="hero reveal">
             <div class="hero-icon">
-                <svg viewBox="0 0 100 100" class="icon-large">
-                    <ellipse cx="50" cy="40" rx="35" ry="20" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <path d="M15 40 Q15 65, 50 70 Q85 65, 85 40" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <ellipse cx="50" cy="40" rx="35" ry="20" fill="var(--accent-dim)" fill-opacity="0.2"/>
-                    <circle cx="35" cy="40" r="5" fill="var(--accent)"/>
-                    <circle cx="65" cy="35" r="5" fill="var(--accent)"/>
-                    <circle cx="50" cy="50" r="5" fill="var(--accent)"/>
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h.71C7.37 7.69 9.48 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3s-1.34 3-3 3z"/>
                 </svg>
             </div>
             <h1>Cloud Platforms</h1>
             <p class="tagline">AWS, GCP, Azure, and multi-cloud strategies</p>
         </section>
 
-        <!-- Coming Soon -->
-        <section class="card coming-soon">
+        <section class="card coming-soon-card reveal">
             <div class="icon">🔧</div>
             <h2>Coming Soon</h2>
-            <p>We're preparing in-depth guides about:</p>
+            <p>We're preparing visual guides about:</p>
             <ul>
                 <li>AWS core services (EC2, S3, Lambda, RDS)</li>
                 <li>GCP fundamentals (Compute, Storage, Cloud Functions)</li>
@@ -50,7 +44,6 @@
             </ul>
         </section>
 
-        <!-- Footer -->
         <footer class="site-nav">
             <a href="../../" class="back-home">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -60,5 +53,14 @@
             </a>
         </footer>
     </main>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>

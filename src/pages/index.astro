@@ -81,6 +81,26 @@ import '../styles/global.css'
       opacity: 0.6;
       transition: opacity 0.2s ease;
     }
+    
+    /* Heartbeat text animation */
+    .heartbeat-text {
+      display: inline-block;
+      animation: heartbeat-pulse 8s ease-in-out infinite;
+    }
+    @keyframes heartbeat-pulse {
+      0%, 90%, 100% { 
+        transform: scale(1); 
+        opacity: 1;
+      }
+      93% { 
+        transform: scale(1.03); 
+        opacity: 1;
+      }
+      96% { 
+        transform: scale(0.98); 
+        opacity: 0.9;
+      }
+    }
   </style>
 </head>
 <body class="bg-bg-dark text-text-primary min-h-screen flex flex-col items-center justify-center p-6">
@@ -95,7 +115,7 @@ import '../styles/global.css'
     <!-- Identity -->
     <div class="text-5xl mb-4">🦎</div>
     <h1 class="text-4xl font-bold mb-2 tracking-tight">Piro</h1>
-    <p class="text-text-secondary text-lg mb-6">A digital heartbeat</p>
+    <p class="text-text-secondary text-lg mb-6"><span class="heartbeat-text">A digital heartbeat</span></p>
     
     <!-- Description -->
     <p class="text-text-muted mb-8 leading-relaxed">

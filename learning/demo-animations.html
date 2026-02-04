@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animated Diagram Demo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#00FF88',
+bg: { dark: '#050505', main: '#0D0D0D', card: '#141414', code: '#0A0A0A' },
+text: { primary: '#FFFFFF', secondary: '#A3A3A3', muted: '#525252' },
+border: { subtle: '#262626', light: '#404040' }
+},
+fontFamily: {
+sans: ['Inter', 'sans-serif'],
+mono: ['JetBrains Mono', 'monospace']
+}
+}
+}
+}
+</script>
+<style>
+body{font-family:'Inter',sans-serif;background:#050505;color:#fff;line-height:1.6}
+code{font-family:'JetBrains Mono',monospace}
+
+/* Animated flow path */
+.flow-path {
+stroke-dasharray: 10 5;
+animation: flowAnimation 1s linear infinite;
+}
+@keyframes flowAnimation {
+from { stroke-dashoffset: 30; }
+to { stroke-dashoffset: 0; }
+}
+
+/* Pulsing dot */
+.pulse-dot {
+animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+0%, 100% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Moving data packet */
+.data-packet {
+animation: movePacket 3s ease-in-out infinite;
+}
+@keyframes movePacket {
+0% { offset-distance: 0%; opacity: 0; }
+10% { opacity: 1; }
+90% { opacity: 1; }
+100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Fade in sequence */
+.fade-sequence > * {
+opacity: 0;
+animation: fadeIn 0.5s ease forwards;
+}
+.fade-sequence > *:nth-child(1) { animation-delay: 0.2s; }
+.fade-sequence > *:nth-child(2) { animation-delay: 0.6s; }
+.fade-sequence > *:nth-child(3) { animation-delay: 1s; }
+.fade-sequence > *:nth-child(4) { animation-delay: 1.4s; }
+@keyframes fadeIn {
+to { opacity: 1; }
+}
+
+/* Typewriter effect */
+.typewriter {
+overflow: hidden;
+border-right: 2px solid #00FF88;
+animation: blink 0.7s step-end infinite, type 2s steps(20) 1s forwards;
+white-space: nowrap;
+max-width: 0;
+}
+@keyframes blink {
+50% { border-color: transparent; }
+}
+@keyframes type {
+to { max-width: 100%; }
+}
+
+/* Arrow drawing */
+.draw-arrow {
+stroke-dasharray: 100;
+stroke-dashoffset: 100;
+animation: drawLine 1s ease forwards;
+}
+.draw-arrow-1 { animation-delay: 0.3s; }
+.draw-arrow-2 { animation-delay: 1s; }
+.draw-arrow-3 { animation-delay: 1.7s; }
+@keyframes drawLine {
+to { stroke-dashoffset: 0; }
+}
+
+/* Hover glow effect */
+.hover-glow:hover {
+filter: drop-shadow(0 0 8px rgba(0,255,136,0.5));
+}
+
+/* Database query animation */
+.query-fade {
+animation: queryPulse 1.5s ease-in-out infinite;
+}
+@keyframes queryPulse {
+0%, 100% { opacity: 0.3; }
+50% { opacity: 1; }
+}
+
+/* Success checkmark animation */
+.check-animate {
+stroke-dasharray: 50;
+stroke-dashoffset: 50;
+animation: checkDraw 0.5s ease 0.5s forwards;
+}
+@keyframes checkDraw {
+to { stroke-dashoffset: 0; }
+}
+
+/* Staggered cards */
+.stagger-cards > * {
+opacity: 0;
+transform: translateY(20px);
+animation: staggerIn 0.4s ease forwards;
+}
+.stagger-cards > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-cards > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-cards > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-cards > *:nth-child(4) { animation-delay: 0.4s; }
+@keyframes staggerIn {
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* Rotating loader */
+.rotate-loader {
+animation: rotate 2s linear infinite;
+transform-origin: center;
+}
+@keyframes rotate {
+to { transform: rotate(360deg); }
+}
+
+/* Message bubble animation */
+.msg-bubble {
+animation: slideIn 0.3s ease forwards;
+opacity: 0;
+transform: translateX(-10px);
+}
+.msg-bubble-1 { animation-delay: 0.2s; }
+.msg-bubble-2 { animation-delay: 0.8s; }
+.msg-bubble-3 { animation-delay: 1.4s; }
+@keyframes slideIn {
+to { opacity: 1; transform: translateX(0); }
+}
+</style>
+</head>
+<body class="bg-bg-dark text-text-primary min-h-screen p-8">
+<div class="max-w-4xl mx-auto">
+<h1 class="text-3xl font-bold mb-8">Animated Diagram Examples</h1>
+
+<!-- Example 1: Data Flow -->
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-4">1. Data Flow Animation</h2>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-8">
+<svg viewBox="0 0 500 120" class="w-full h-auto">
+<!-- Database -->
+<rect x="20" y="35" width="80" height="50" rx="6" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+<ellipse cx="60" cy="35" rx="30" ry="10" fill="none" stroke="#333" stroke-width="2"/>
+<ellipse cx="60" cy="85" rx="30" ry="10" fill="none" stroke="#333" stroke-width="2"/>
+<line x1="30" y1="45" x2="30" y2="75" stroke="#333" stroke-width="2"/>
+<line x1="90" y1="45" x2="90" y2="75" stroke="#333" stroke-width="2"/>
+<text x="60" y="65" text-anchor="middle" fill="#888" font-size="11">DB</text>
+
+<!-- Arrow to Repository -->
+<path class="flow-path" d="M105 60 L145 60" stroke="#00FF88" stroke-width="2" fill="none"/>
+
+<!-- Repository -->
+<rect x="150" y="35" width="100" height="50" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+<circle cx="200" cy="50" r="8" fill="none" stroke="#00FF88" stroke-width="2"/>
+<circle cx="200" cy="50" r="4" fill="#00FF88"/>
+<text x="200" y="80" text-anchor="middle" fill="#00FF88" font-size="10">REPOSITORY</text>
+
+<!-- Arrow to Code -->
+<path class="flow-path" d="M255 60 L295 60" stroke="#3b82f6" stroke-width="2" fill="none"/>
+
+<!-- Code -->
+<rect x="300" y="35" width="80" height="50" rx="6" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+<rect x="310" y="45" width="60" height="6" rx="2" fill="#3b82f6" opacity="0.5"/>
+<rect x="310" y="55" width="40" height="6" rx="2" fill="#3b82f6" opacity="0.3"/>
+<text x="340" y="80" text-anchor="middle" fill="#3b82f6" font-size="10">YOUR CODE</text>
+
+<!-- Data packets -->
+<circle class="pulse-dot" cx="125" cy="60" r="4" fill="#00FF88"/>
+<circle class="pulse-dot" cx="275" cy="60" r="4" fill="#3b82f6" style="animation-delay: 0.5s"/>
+</svg>
+<p class="text-text-muted text-sm mt-4">CSS stroke-dasharray animation shows continuous data flow</p>
+</div>
+</section>
+
+<!-- Example 2: Step-by-Step Creation -->
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-4">2. Step-by-Step Creation</h2>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-8">
+<div class="flex items-center justify-between gap-4 stagger-cards">
+<!-- Step 1 -->
+<div class="flex-1 text-center">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
+<span class="text-primary font-bold">1</span>
+</div>
+<h3 class="font-medium text-sm">Define</h3>
+<p class="text-text-muted text-xs mt-1">Create interface</p>
+<pre class="bg-bg-code rounded p-2 mt-2 text-xs text-left"><code><span class="text-purple-400">interface</span> <span class="text-blue-400">Repo</span> {}</code></pre>
+</div>
+<!-- Arrow -->
+<svg class="w-8 h-8 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+<!-- Step 2 -->
+<div class="flex-1 text-center">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
+<span class="text-primary font-bold">2</span>
+</div>
+<h3 class="font-medium text-sm">Implement</h3>
+<p class="text-text-muted text-xs mt-1">Write concrete class</p>
+<pre class="bg-bg-code rounded p-2 mt-2 text-xs text-left"><code><span class="text-purple-400">class</span> <span class="text-blue-400">PgRepo</span> {}</code></pre>
+</div>
+<!-- Arrow -->
+<svg class="w-8 h-8 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+<!-- Step 3 -->
+<div class="flex-1 text-center">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
+<span class="text-primary font-bold">3</span>
+</div>
+<h3 class="font-medium text-sm">Inject</h3>
+<p class="text-text-muted text-xs mt-1">Use in service</p>
+<pre class="bg-bg-code rounded p-2 mt-2 text-xs text-left"><code><span class="text-purple-400">constructor</span>(<span class="text-green-400">repo</span>) {}</code></pre>
+</div>
+<!-- Arrow -->
+<svg class="w-8 h-8 text-text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+<!-- Step 4 -->
+<div class="flex-1 text-center">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
+<span class="text-primary font-bold">4</span>
+</div>
+<h3 class="font-medium text-sm">Use</h3>
+<p class="text-text-muted text-xs mt-1">Call methods</p>
+<pre class="bg-bg-code rounded p-2 mt-2 text-xs text-left"><code><span class="text-purple-400">await</span> repo.find()</code></pre>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Example 3: Query Animation -->
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-4">3. Query Flow with Status</h2>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-8">
+<svg viewBox="0 0 500 140" class="w-full h-auto">
+<!-- Service -->
+<rect x="20" y="50" width="80" height="40" rx="4" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+<text x="60" y="75" text-anchor="middle" fill="#fbbf24" font-size="9">SERVICE</text>
+
+<!-- Message bubble 1 -->
+<g class="msg-bubble msg-bubble-1">
+<rect x="110" y="35" width="80" height="30" rx="4" fill="#fbbf24"/>
+<text x="150" y="55" text-anchor="middle" fill="#0D0D0D" font-size="8">findById(123)</text>
+</g>
+
+<!-- Arrow 1 -->
+<path class="draw-arrow draw-arrow-1" d="M105 70 L155 70" stroke="#fbbf24" stroke-width="2" fill="none"/>
+
+<!-- Repository -->
+<rect x="160" y="50" width="90" height="40" rx="4" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+<circle cx="205" cy="60" r="6" fill="none" stroke="#00FF88" stroke-width="2"/>
+<circle cx="205" cy="60" r="3" fill="#00FF88"/>
+<text x="205" y="85" text-anchor="middle" fill="#00FF88" font-size="8">REPOSITORY</text>
+
+<!-- Message bubble 2 -->
+<g class="msg-bubble msg-bubble-2">
+<rect x="260" y="35" width="60" height="30" rx="4" fill="#00FF88"/>
+<text x="290" y="55" text-anchor="middle" fill="#0D0D0D" font-size="8">SELECT *</text>
+</g>
+
+<!-- Arrow 2 -->
+<path class="draw-arrow draw-arrow-2" d="M255 70 L305 70" stroke="#00FF88" stroke-width="2" fill="none"/>
+
+<!-- Database -->
+<rect x="310" y="40" width="70" height="60" rx="6" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+<ellipse cx="345" cy="55" rx="25" ry="8" fill="none" stroke="#333" stroke-width="2"/>
+<ellipse cx="345" cy="90" rx="25" ry="8" fill="none" stroke="#333" stroke-width="2"/>
+<text x="345" y="75" text-anchor="middle" fill="#888" font-size="9">users</text>
+
+<!-- Query animation -->
+<rect class="query-fade" x="320" y="65" width="50" height="8" rx="2" fill="#00FF88" opacity="0.3"/>
+
+<!-- Arrow 3 (response) -->
+<path class="draw-arrow draw-arrow-3" d="M380 70 L420 70" stroke="#00FF88" stroke-width="2" fill="none"/>
+
+<!-- Success check -->
+<circle cx="435" cy="70" r="15" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+<polyline class="check-animate" points="428 70 433 75 442 65" stroke="#00FF88" stroke-width="2" fill="none"/>
+</svg>
+</div>
+</section>
+
+<!-- Example 4: Interactive Hover -->
+<section class="mb-16">
+<h2 class="text-xl font-semibold mb-4">4. Hover Effects with Info</h2>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-8">
+<svg viewBox="0 0 500 100" class="w-full h-auto">
+<!-- Hoverable boxes -->
+<a href="#" class="hover-glow cursor-pointer">
+<rect x="20" y="30" width="100" height="40" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="2" class="transition-all duration-300"/>
+<text x="70" y="55" text-anchor="middle" fill="#fff" font-size="11">Interface</text>
+<title>Define the contract</title>
+</a>
+
+<svg class="w-8 h-8 inline-block mx-2" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+
+<a href="#" class="hover-glow cursor-pointer">
+<rect x="160" y="30" width="100" height="40" rx="4" fill="#1a1a1a" stroke="#00FF88" stroke-width="2" class="transition-all duration-300"/>
+<text x="210" y="55" text-anchor="middle" fill="#00FF88" font-size="11">Implementation</text>
+</a>
+
+<svg class="w-8 h-8 inline-block mx-2" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+
+<a href="#" class="hover-glow cursor-pointer">
+<rect x="300" y="30" width="80" height="40" rx="4" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2" class="transition-all duration-300"/>
+<text x="340" y="55" text-anchor="middle" fill="#3b82f6" font-size="11">Usage</text>
+</a>
+
+<svg class="w-8 h-8 inline-block mx-2" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+
+<a href="#" class="hover-glow cursor-pointer">
+<rect x="420" y="30" width="60" height="40" rx="4" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2" class="transition-all duration-300"/>
+<text x="450" y="55" text-anchor="middle" fill="#fbbf24" font-size="11">Test</text>
+</svg>
+</svg>
+<p class="text-text-muted text-sm mt-4">Hover over elements to see glow effect</p>
+</div>
+</section>
+
+<!-- Example 5: Typewriter Code -->
+<section>
+<h2 class="text-xl font-semibold mb-4">5. Typewriter Effect</h2>
+<div class="bg-bg-card border border-border-subtle rounded-xl p-8">
+<pre class="bg-bg-code rounded-lg p-6 text-sm overflow-x-auto"><code><span class="text-purple-400 keyword">interface</span> <span class="text-blue-400 type">UserRepository</span> {
+    <span class="text-purple-400 keyword">async</span> <span class="text-cyan-400 function">findById</span>(id: <span class="text-blue-400 type">string</span>): <span class="text-blue-400 type">Promise</span>&lt;<span class="text-blue-400 type">User</span>&gt;;
+    <span class="text-purple-400 keyword">async</span> <span class="text-cyan-400 function">save</span>(user: <span class="text-blue-400 type">User</span>): <span class="text-blue-400 type">Promise</span>&lt;<span class="text-blue-400 type">void</span>&gt;;
+}</code></pre>
+</div>
+</section>
+</div>
+</body>
+</html>

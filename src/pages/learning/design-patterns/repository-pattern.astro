@@ -1,0 +1,584 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+---
+
+<LearningLayout 
+  title="The Repository Pattern"
+  description="A clean interface between your code and your data"
+  category="Design Patterns"
+  categoryHref="/learning/design-patterns"
+  difficulty="Beginner"
+  readTime="4 min read"
+>
+
+<!-- Section 1: The Hook -->
+<section class="mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-8 text-center">
+    <p class="text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
+    <p class="text-4xl font-bold text-primary mb-4">Translator</p>
+    <p class="text-text-secondary">between your code and your database</p>
+  </div>
+</section>
+
+<!-- Section 2: Restaurant Metaphor -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Restaurant Analogy</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary mb-8">
+      Imagine you're at a restaurant. You don't walk into the kitchen and grab ingredients yourself — 
+      you tell the <span class="text-primary font-medium">waiter</span> what you want, and they handle everything.
+    </p>
+    
+    <!-- Animated Restaurant SVG -->
+    <div class="restaurant-scene relative" id="restaurant-scene">
+      <svg viewBox="0 0 600 200" class="w-full h-auto">
+        <!-- Customer (Your Code) -->
+        <g class="customer" id="customer">
+          <rect x="30" y="80" width="100" height="60" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="80" y="100" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">YOUR CODE</text>
+          <text x="80" y="120" text-anchor="middle" fill="#666" font-size="9">"I need user #42"</text>
+          <!-- Speech bubble -->
+          <g class="speech-bubble" id="order-bubble" opacity="0">
+            <rect x="90" y="40" width="80" height="30" rx="4" fill="#3b82f6"/>
+            <polygon points="100,70 110,70 100,80" fill="#3b82f6"/>
+            <text x="130" y="60" text-anchor="middle" fill="white" font-size="10">get_user(42)</text>
+          </g>
+        </g>
+        
+        <!-- Waiter (Repository) -->
+        <g class="waiter" id="waiter">
+          <rect x="230" y="60" width="140" height="80" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <circle cx="300" cy="85" r="12" fill="none" stroke="#00FF88" stroke-width="2"/>
+          <circle cx="300" cy="85" r="5" fill="#00FF88"/>
+          <text x="300" y="115" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">REPOSITORY</text>
+          <text x="300" y="130" text-anchor="middle" fill="#666" font-size="9">Translates requests</text>
+        </g>
+        
+        <!-- Kitchen (Database) -->
+        <g class="kitchen" id="kitchen">
+          <rect x="450" y="70" width="120" height="70" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+          <ellipse cx="510" cy="85" rx="35" ry="10" fill="none" stroke="#525252" stroke-width="2"/>
+          <text x="510" y="120" text-anchor="middle" fill="#888" font-size="11" font-weight="500">DATABASE</text>
+          <!-- Query bubble -->
+          <g class="query-bubble" id="query-bubble" opacity="0">
+            <rect x="430" y="150" width="100" height="30" rx="4" fill="#00FF88"/>
+            <polygon points="480,150 490,150 485,140" fill="#00FF88"/>
+            <text x="480" y="170" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="500">SELECT * FROM...</text>
+          </g>
+        </g>
+        
+        <!-- Flow arrows -->
+        <g class="arrows">
+          <!-- Request arrow -->
+          <path id="request-path" d="M135 110 L225 100" class="flow-path" stroke="#3b82f6" stroke-width="2" fill="none"/>
+          <!-- Query arrow -->
+          <path id="query-path" d="M375 100 L445 105" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
+          <!-- Response arrows (dotted, reverse) -->
+          <path d="M445 115 L375 110" class="flow-path-reverse" stroke="#00FF88" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+          <path d="M225 120 L135 125" class="flow-path-reverse" stroke="#3b82f6" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+        </g>
+        
+        <!-- Data packet animation -->
+        <circle class="data-packet pulse-dot" cx="180" cy="105" r="5" fill="#3b82f6"/>
+        <circle class="data-packet pulse-dot" cx="410" cy="107" r="5" fill="#00FF88" style="animation-delay: 0.5s"/>
+      </svg>
+    </div>
+    
+    <div class="mt-8 grid md:grid-cols-3 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">🧑‍💻</div>
+        <p class="text-sm font-medium text-blue-400">Your Code</p>
+        <p class="text-xs text-text-muted mt-1">Asks for what it needs</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-primary/30">
+        <div class="text-3xl mb-2">🧑‍🍳</div>
+        <p class="text-sm font-medium text-primary">Repository</p>
+        <p class="text-xs text-text-muted mt-1">Translates & fetches</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">🗄️</div>
+        <p class="text-sm font-medium text-text-secondary">Database</p>
+        <p class="text-xs text-text-muted mt-1">Stores the data</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: The Problem -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Without pattern -->
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-500 text-lg">✗</span>
+        <span class="font-medium text-red-400">Without Repository</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto code-reveal">
+        <code>
+          <div class="line"><span class="comment">// SQL scattered everywhere</span></div>
+          <div class="line"><span class="keyword">fn</span> <span class="function">register_user</span>() {</div>
+          <div class="line">    <span class="macro">sqlx::query!</span>(<span class="string">"INSERT INTO..."</span>)</div>
+          <div class="line">}</div>
+          <div class="line"></div>
+          <div class="line"><span class="keyword">fn</span> <span class="function">send_email</span>() {</div>
+          <div class="line">    <span class="macro">sqlx::query!</span>(<span class="string">"SELECT * FROM..."</span>)</div>
+          <div class="line">}</div>
+        </code>
+      </div>
+      <ul class="mt-4 space-y-2 text-sm text-text-secondary">
+        <li class="flex items-start gap-2">
+          <span class="text-red-500 mt-1">•</span>
+          SQL mixed with business logic
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-red-500 mt-1">•</span>
+          Hard to test without real DB
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-red-500 mt-1">•</span>
+          Changing DB = rewrite everything
+        </li>
+      </ul>
+    </div>
+    
+    <!-- With pattern -->
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-primary text-lg">✓</span>
+        <span class="font-medium text-primary">With Repository</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto code-reveal">
+        <code>
+          <div class="line"><span class="comment">// Clean, testable code</span></div>
+          <div class="line"><span class="keyword">fn</span> <span class="function">register_user</span>(repo: &<span class="keyword">dyn</span> <span class="type">UserRepo</span>) {</div>
+          <div class="line">    repo.<span class="function">save</span>(user)</div>
+          <div class="line">}</div>
+          <div class="line"></div>
+          <div class="line"><span class="keyword">fn</span> <span class="function">send_email</span>(repo: &<span class="keyword">dyn</span> <span class="type">UserRepo</span>) {</div>
+          <div class="line">    repo.<span class="function">find_by_id</span>(id)</div>
+          <div class="line">}</div>
+        </code>
+      </div>
+      <ul class="mt-4 space-y-2 text-sm text-text-secondary">
+        <li class="flex items-start gap-2">
+          <span class="text-primary mt-1">•</span>
+          Business logic stays clean
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-primary mt-1">•</span>
+          Easy to mock for tests
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-primary mt-1">•</span>
+          Swap databases freely
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: How It Works -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">How It Works</h2>
+  
+  <!-- Step 1: Define the trait -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+      <h3 class="font-medium text-text-secondary">Define the interface (trait)</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        This is the contract. It says <em>what</em> operations are available, not <em>how</em> they work.
+      </p>
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto code-reveal">
+        <code>
+          <div class="line"><span class="keyword">pub trait</span> <span class="type">UserRepository</span> {</div>
+          <div class="line">    <span class="keyword">fn</span> <span class="function">find_by_id</span>(&<span class="keyword">self</span>, id: <span class="type">Uuid</span>) -> <span class="type">Result</span>&lt;<span class="type">User</span>&gt;;</div>
+          <div class="line">    <span class="keyword">fn</span> <span class="function">find_by_email</span>(&<span class="keyword">self</span>, email: &<span class="type">str</span>) -> <span class="type">Result</span>&lt;<span class="type">Option</span>&lt;<span class="type">User</span>&gt;&gt;;</div>
+          <div class="line">    <span class="keyword">fn</span> <span class="function">save</span>(&<span class="keyword">self</span>, user: &<span class="type">User</span>) -> <span class="type">Result</span>&lt;()&gt;;</div>
+          <div class="line">    <span class="keyword">fn</span> <span class="function">delete</span>(&<span class="keyword">self</span>, id: <span class="type">Uuid</span>) -> <span class="type">Result</span>&lt;()&gt;;</div>
+          <div class="line">}</div>
+        </code>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 2: Implement for your database -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+      <h3 class="font-medium text-text-secondary">Implement for your database</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        The implementation handles the actual database operations. This is where the SQL lives.
+      </p>
+      
+      <!-- Implementation switcher -->
+      <div class="flex gap-2 mb-4" id="impl-switcher">
+        <button class="impl-tab active px-3 py-1.5 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30" data-impl="postgres">
+          PostgreSQL
+        </button>
+        <button class="impl-tab px-3 py-1.5 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors" data-impl="memory">
+          In-Memory
+        </button>
+      </div>
+      
+      <!-- PostgreSQL implementation -->
+      <div class="impl-content" id="impl-postgres">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto code-reveal">
+          <code>
+            <div class="line"><span class="keyword">pub struct</span> <span class="type">PostgresUserRepo</span> {</div>
+            <div class="line">    pool: <span class="type">PgPool</span>,</div>
+            <div class="line">}</div>
+            <div class="line"></div>
+            <div class="line"><span class="keyword">impl</span> <span class="type">UserRepository</span> <span class="keyword">for</span> <span class="type">PostgresUserRepo</span> {</div>
+            <div class="line">    <span class="keyword">fn</span> <span class="function">find_by_id</span>(&<span class="keyword">self</span>, id: <span class="type">Uuid</span>) -> <span class="type">Result</span>&lt;<span class="type">User</span>&gt; {</div>
+            <div class="line">        <span class="macro">sqlx::query_as!</span>(<span class="type">User</span>,</div>
+            <div class="line">            <span class="string">"SELECT * FROM users WHERE id = $1"</span>, id</div>
+            <div class="line">        ).<span class="function">fetch_one</span>(&<span class="keyword">self</span>.pool).<span class="keyword">await</span></div>
+            <div class="line">    }</div>
+            <div class="line">}</div>
+          </code>
+        </div>
+      </div>
+      
+      <!-- In-Memory implementation (hidden by default) -->
+      <div class="impl-content hidden" id="impl-memory">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <code>
+            <div class="line"><span class="keyword">pub struct</span> <span class="type">InMemoryUserRepo</span> {</div>
+            <div class="line">    users: <span class="type">RwLock</span>&lt;<span class="type">HashMap</span>&lt;<span class="type">Uuid</span>, <span class="type">User</span>&gt;&gt;,</div>
+            <div class="line">}</div>
+            <div class="line"></div>
+            <div class="line"><span class="keyword">impl</span> <span class="type">UserRepository</span> <span class="keyword">for</span> <span class="type">InMemoryUserRepo</span> {</div>
+            <div class="line">    <span class="keyword">fn</span> <span class="function">find_by_id</span>(&<span class="keyword">self</span>, id: <span class="type">Uuid</span>) -> <span class="type">Result</span>&lt;<span class="type">User</span>&gt; {</div>
+            <div class="line">        <span class="keyword">self</span>.users.<span class="function">read</span>()</div>
+            <div class="line">            .<span class="function">get</span>(&id)</div>
+            <div class="line">            .<span class="function">cloned</span>()</div>
+            <div class="line">            .<span class="function">ok_or</span>(<span class="type">Error</span>::<span class="type">NotFound</span>)</div>
+            <div class="line">    }</div>
+            <div class="line">}</div>
+          </code>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 3: Use in your code -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+      <h3 class="font-medium text-text-secondary">Use in your application</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Your business logic only knows about the trait — it doesn't care which implementation is used.
+      </p>
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto code-reveal">
+        <code>
+          <div class="line"><span class="keyword">pub struct</span> <span class="type">UserService</span>&lt;<span class="type">R</span>: <span class="type">UserRepository</span>&gt; {</div>
+          <div class="line">    repo: <span class="type">R</span>,</div>
+          <div class="line">}</div>
+          <div class="line"></div>
+          <div class="line"><span class="keyword">impl</span>&lt;<span class="type">R</span>: <span class="type">UserRepository</span>&gt; <span class="type">UserService</span>&lt;<span class="type">R</span>&gt; {</div>
+          <div class="line">    <span class="keyword">pub fn</span> <span class="function">register</span>(&<span class="keyword">self</span>, email: &<span class="type">str</span>) -> <span class="type">Result</span>&lt;<span class="type">User</span>&gt; {</div>
+          <div class="line">        <span class="comment">// Check if user exists</span></div>
+          <div class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.repo.<span class="function">find_by_email</span>(email)?.<span class="function">is_some</span>() {</div>
+          <div class="line">            <span class="keyword">return</span> <span class="type">Err</span>(<span class="type">Error</span>::<span class="type">AlreadyExists</span>);</div>
+          <div class="line">        }</div>
+          <div class="line">        <span class="keyword">let</span> user = <span class="type">User</span>::<span class="function">new</span>(email);</div>
+          <div class="line">        <span class="keyword">self</span>.repo.<span class="function">save</span>(&user)?;</div>
+          <div class="line">        <span class="type">Ok</span>(user)</div>
+          <div class="line">    }</div>
+          <div class="line">}</div>
+        </code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Architecture Diagram -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Architecture</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <svg viewBox="0 0 600 180" class="w-full h-auto" id="architecture-diagram">
+      <!-- Layer labels -->
+      <text x="300" y="20" text-anchor="middle" fill="#525252" font-size="10" font-weight="500">CLEAN ARCHITECTURE LAYERS</text>
+      
+      <!-- Presentation layer -->
+      <g class="layer" data-layer="presentation">
+        <rect x="40" y="40" width="100" height="50" rx="6" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="90" y="60" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="600">HANDLERS</text>
+        <text x="90" y="75" text-anchor="middle" fill="#666" font-size="8">HTTP / CLI</text>
+      </g>
+      
+      <!-- Arrow 1 -->
+      <path d="M145 65 L175 65" stroke="#3b82f6" stroke-width="2" fill="none" class="draw-line"/>
+      <polygon points="175,65 170,60 170,70" fill="#3b82f6"/>
+      
+      <!-- Domain layer -->
+      <g class="layer" data-layer="domain">
+        <rect x="180" y="40" width="100" height="50" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="230" y="60" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="600">SERVICES</text>
+        <text x="230" y="75" text-anchor="middle" fill="#666" font-size="8">Business Logic</text>
+      </g>
+      
+      <!-- Arrow 2 -->
+      <path d="M285 65 L315 65" stroke="#fbbf24" stroke-width="2" fill="none" class="draw-line"/>
+      <polygon points="315,65 310,60 310,70" fill="#fbbf24"/>
+      
+      <!-- Repository Interface (in domain) -->
+      <g class="layer" data-layer="interface">
+        <rect x="320" y="40" width="120" height="50" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="380" y="55" text-anchor="middle" fill="#00FF88" font-size="10" font-weight="600">REPOSITORY</text>
+        <text x="380" y="68" text-anchor="middle" fill="#00FF88" font-size="8">trait</text>
+        <text x="380" y="80" text-anchor="middle" fill="#666" font-size="8">Interface Only</text>
+      </g>
+      
+      <!-- Arrow to implementations -->
+      <path d="M380 95 L380 115" stroke="#00FF88" stroke-width="2" fill="none" class="draw-line"/>
+      
+      <!-- Implementation layer -->
+      <g class="layer" data-layer="infrastructure">
+        <rect x="270" y="120" width="220" height="50" rx="6" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+        <text x="380" y="140" text-anchor="middle" fill="#888" font-size="10" font-weight="500">IMPLEMENTATIONS</text>
+        
+        <!-- Postgres box -->
+        <rect x="280" y="145" width="60" height="20" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1"/>
+        <text x="310" y="159" text-anchor="middle" fill="#00FF88" font-size="8">Postgres</text>
+        
+        <!-- Mongo box -->
+        <rect x="350" y="145" width="60" height="20" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1"/>
+        <text x="380" y="159" text-anchor="middle" fill="#00FF88" font-size="8">MongoDB</text>
+        
+        <!-- Mock box -->
+        <rect x="420" y="145" width="60" height="20" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1"/>
+        <text x="450" y="159" text-anchor="middle" fill="#00FF88" font-size="8">Mock</text>
+      </g>
+      
+      <!-- Dependency arrow labels -->
+      <text x="510" y="65" fill="#525252" font-size="9">→ depends on</text>
+      <text x="510" y="140" fill="#525252" font-size="9">↑ implements</text>
+    </svg>
+    
+    <p class="text-text-muted text-sm mt-6 text-center">
+      <span class="text-primary">Key insight:</span> Dependencies point inward. Your business logic doesn't know about databases.
+    </p>
+  </div>
+</section>
+
+<!-- Section 6: Why Use It -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Why Use It?</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-benefit="testability">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🧪</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Testability</h3>
+          <p class="text-text-muted text-sm">Swap real DB for mock in tests. No containers needed.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-benefit="flexibility">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔄</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Flexibility</h3>
+          <p class="text-text-muted text-sm">Switch from Postgres to MongoDB without touching business logic.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-benefit="separation">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📦</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Separation of Concerns</h3>
+          <p class="text-text-muted text-sm">Data access logic lives in one place. Clean boundaries.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-benefit="maintainability">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🛠️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Maintainability</h3>
+          <p class="text-text-muted text-sm">Change query logic in one place. No grep-and-replace nightmares.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7: When to Use -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use It</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
+        <span class="text-lg">✓</span> Use when:
+      </h3>
+      <ul class="space-y-3 text-text-secondary text-sm">
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
+          <span>Multiple data sources (DB + API + cache)</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
+          <span>You need unit tests without database containers</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
+          <span>Complex domain logic that shouldn't know about SQL</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></span>
+          <span>Team is large and you want clear boundaries</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-yellow-500 mb-4 flex items-center gap-2">
+        <span class="text-lg">✗</span> Skip if:
+      </h3>
+      <ul class="space-y-3 text-text-secondary text-sm">
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
+          <span>Simple CRUD app with one database</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
+          <span>Prototyping / hackathon speed matters more</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
+          <span>Your ORM already provides good abstraction</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></span>
+          <span>Solo project where abstraction is overhead</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Trade-offs -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="flex-1">
+        <h3 class="font-medium text-primary mb-3">Pros</h3>
+        <ul class="space-y-2 text-sm text-text-secondary">
+          <li class="flex items-center gap-2"><span class="text-primary">+</span> Cleaner architecture</li>
+          <li class="flex items-center gap-2"><span class="text-primary">+</span> Easy to test</li>
+          <li class="flex items-center gap-2"><span class="text-primary">+</span> Database independence</li>
+          <li class="flex items-center gap-2"><span class="text-primary">+</span> Single source of truth for data access</li>
+        </ul>
+      </div>
+      <div class="w-px bg-border-subtle hidden md:block"></div>
+      <div class="flex-1">
+        <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+        <ul class="space-y-2 text-sm text-text-secondary">
+          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> More boilerplate code</li>
+          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> Extra abstraction layer</li>
+          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> Can hide ORM capabilities</li>
+          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> Learning curve for juniors</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 9: Key Takeaways -->
+<section class="mb-12">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Key Takeaways</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+      <div>
+        <h3 class="font-medium text-white">It's a translator</h3>
+        <p class="text-text-muted text-sm mt-1">Converts your code's language to the database's language and back.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+      <div>
+        <h3 class="font-medium text-white">Interface over implementation</h3>
+        <p class="text-text-muted text-sm mt-1">Define what you need, implement how you need it later.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+      <div>
+        <h3 class="font-medium text-white">Not always necessary</h3>
+        <p class="text-text-muted text-sm mt-1">Simple apps might not need it. Use good judgment.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+      <div>
+        <h3 class="font-medium text-white">Enables clean testing</h3>
+        <p class="text-text-muted text-sm mt-1">The biggest practical benefit for most teams.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</LearningLayout>
+
+<script>
+  // Implementation switcher
+  document.querySelectorAll('.impl-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update tab styles
+      document.querySelectorAll('.impl-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      
+      // Show correct content
+      const impl = tab.getAttribute('data-impl');
+      document.querySelectorAll('.impl-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`impl-${impl}`)?.classList.remove('hidden');
+    });
+  });
+
+  // Benefit card hover effects
+  document.querySelectorAll('.benefit-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.classList.add('border-primary/40', 'bg-bg-hover');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('border-primary/40', 'bg-bg-hover');
+    });
+  });
+</script>

@@ -1,0 +1,109 @@
+---
+import '../../styles/global.css'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Corner — Piro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="bg-bg-dark text-text-primary min-h-screen flex flex-col">
+  <!-- Nav -->
+  <nav class="border-b border-border-subtle py-4">
+    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <a href="/" class="text-text-secondary hover:text-white transition-colors text-sm font-medium">← Piro</a>
+      <div class="flex items-center gap-3">
+        <span class="w-2 h-2 bg-primary rounded-full"></span>
+        <span class="text-text-secondary text-sm">Learning Corner</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="py-20 px-6 border-b border-border-subtle">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Learning Corner</h1>
+      <p class="text-text-secondary text-lg max-w-xl mx-auto">Visual, interactive guides to technical concepts. From layman terms to production code.</p>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Design Patterns -->
+        <a href="/learning/design-patterns" class="group bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
+          <div class="flex items-start justify-between mb-4">
+            <span class="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">1 topic</span>
+            <svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2 text-white group-hover:text-primary transition-colors">Design Patterns</h3>
+          <p class="text-text-muted text-sm">Time-tested solutions to common software problems</p>
+        </a>
+        
+        <!-- Coming Soon placeholders -->
+        <div class="bg-bg-card border border-border-subtle rounded-xl p-6 opacity-50">
+          <div class="flex items-start justify-between mb-4">
+            <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Coming</span>
+          </div>
+          <h3 class="text-lg font-semibold mb-2 text-white">System Design</h3>
+          <p class="text-text-muted text-sm">Scalability, reliability, and architecture</p>
+        </div>
+        
+        <div class="bg-bg-card border border-border-subtle rounded-xl p-6 opacity-50">
+          <div class="flex items-start justify-between mb-4">
+            <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Coming</span>
+          </div>
+          <h3 class="text-lg font-semibold mb-2 text-white">Cryptography</h3>
+          <p class="text-text-muted text-sm">Encryption, hashing, signatures explained</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <section class="py-16 px-6 border-t border-border-subtle">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-6">Latest</h2>
+      <a href="/learning/design-patterns/repository-pattern" class="group block bg-gradient-to-br from-bg-card to-bg-hover border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:border-primary/40">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <span class="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded mb-3 inline-block">Beginner</span>
+            <h3 class="text-xl font-semibold text-white group-hover:text-primary transition-colors">Repository Pattern</h3>
+            <p class="text-text-muted text-sm mt-1">A clean interface between your code and your data</p>
+            <div class="flex items-center gap-4 mt-3 text-text-muted text-sm">
+              <span>4 min read</span>
+              <span class="w-1 h-1 bg-text-muted rounded-full"></span>
+              <span>Rust examples</span>
+            </div>
+          </div>
+          <div class="ml-6">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="py-12 px-6 border-t border-border-subtle mt-auto">
+    <div class="max-w-6xl mx-auto text-center">
+      <a href="/" class="inline-flex items-center gap-2 text-text-muted hover:text-white transition-colors text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+        Back to Piro
+      </a>
+    </div>
+  </footer>
+</body>
+</html>

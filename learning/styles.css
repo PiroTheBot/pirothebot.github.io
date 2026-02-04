@@ -1,0 +1,251 @@
+/* Learning Corner Landing Page Styles */
+
+:root {
+    --bg-dark: #0a0a0a;
+    --bg-card: #121218;
+    --accent: #00ff88;
+    --accent-dim: rgba(0, 255, 136, 0.15);
+    --text: #e0e0e0;
+    --text-dim: #888;
+    --text-muted: #555;
+    --border: #2a2a35;
+}
+
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.hero-icon {
+    margin-bottom: 1.5rem;
+}
+
+.icon-large {
+    width: 80px;
+    height: 80px;
+    color: var(--accent);
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+}
+
+.hero .tagline {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+}
+
+/* Categories Grid */
+.categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.category-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover:not(.placeholder) {
+    border-color: var(--accent);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+}
+
+.category-card.placeholder {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.category-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    color: var(--accent);
+}
+
+.category-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.category-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.category-card p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    min-height: 2.5em;
+}
+
+.topic-count {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--accent-dim);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: var(--accent);
+}
+
+.topic-count.coming-soon {
+    background: rgba(255, 217, 61, 0.15);
+    color: #ffd93d;
+}
+
+/* Current Learning Section */
+.current-learning {
+    margin-bottom: 3rem;
+}
+
+.current-learning h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--text);
+}
+
+.learning-card {
+    display: block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+.learning-card:hover {
+    border-color: var(--accent);
+}
+
+.learning-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, var(--accent-dim), rgba(0, 255, 136, 0.05));
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+}
+
+.learning-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.learning-card p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.learning-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* How It Works */
+.how-it-works {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+}
+
+.how-it-works h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.step {
+    text-align: center;
+}
+
+.step-num {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: var(--bg-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin: 0 auto 0.75rem;
+}
+
+.step p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+.step p strong {
+    color: var(--text);
+}
+
+/* Footer */
+.site-nav {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.back-home:hover {
+    color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    main {
+        padding: 2rem 1rem;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .categories {
+        grid-template-columns: 1fr;
+    }
+}

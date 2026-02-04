@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Design Patterns — Learning Corner</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6;min-height:100vh}
+a{color:#00FF88;text-decoration:none}
+a:hover{color:#00CC6A}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+.animate-fade-up{opacity:0;transform:translateY(20px);animation:fadeUp .5s ease forwards}
+.animate-float{animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.card-hover{transition:all .25s}
+.card-hover:hover{border-color:#00FF88;transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,255,136,0.1)}
+</style></head>
+<body>
+<section class="py-16 px-6 text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" style="background:radial-gradient(ellipse at top right, rgba(0,255,136,0.05),transparent 70%)"></div>
+<div class="max-w-4xl mx-auto relative">
+<a href="/learning/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary mb-6" style="color:#666">← Learning Corner</a>
+<div class="text-6xl mb-6 animate-float">📐</div>
+<h1 class="text-3xl md:text-4xl font-bold mb-3">Design Patterns</h1>
+<p class="text-text-secondary" style="color:#B0B0B0">Time-tested solutions to common programming problems</p>
+</div>
+</section>
+<section class="py-8 px-6">
+<div class="max-w-4xl mx-auto">
+<a href="/learning/topic/design-patterns/repository-pattern.html" class="group block bg-bg-card rounded-xl p-6 border card-hover animate-fade-up" style="background:#1A1A1A;border-color:#333">
+<div class="flex items-start justify-between mb-3"><span class="px-3 py-1 bg-primary text-bg-main text-xs rounded-full" style="background:#00FF88;color:#0D0D0D">Beginner</span></div>
+<h3 class="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Repository Pattern</h3>
+<p class="text-text-secondary text-sm mb-3" style="color:#B0B0B0">Abstract database access</p>
+<span class="text-text-muted text-sm" style="color:#666">⏱️ 10 min read</span>
+</a>
+</div>
+</section>
+<footer class="py-12 px-6 text-center border-t border-border-subtle" style="border-color:#333"><a href="/learning/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary" style="color:#666">← Back to Learning Corner</a></footer>
+<script>const o=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:.1});document.querySelectorAll('.animate-fade-up').forEach(e=>o.observe(e));</script>
+</body>
+</html>

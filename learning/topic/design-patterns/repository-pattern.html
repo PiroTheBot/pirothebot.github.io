@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Repository Pattern — Learning Corner</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet"><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6;min-height:100vh}
+a{color:#00FF88;text-decoration:none}
+a:hover{color:#00CC6A}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+.animate-fade-up{opacity:0;transform:translateY(20px);animation:fadeUp .5s ease forwards}
+pre{background:#0F0F0F;border:1px solid #333;border-radius:12px;padding:1.5rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.875rem;line-height:1.7}
+code{color:#E0E7FF}
+.kw{color:#c084fc}.tp{color:#93c5fd}.fn{color:#67e8f9}.vr{color:#fcd34d}.str{color:#86efac}.cm{color:#666;font-style:italic}.as{color:#c084fc}
+</style></head>
+<body>
+<div class="scroll-progress" style="position:fixed;top:0;left:0;width:100%;height:3px;background:#333;z-index:1000"><div id="p" style="height:100%;background:#00FF88;width:0%;transition:width .1s"></div></div>
+<section class="py-16 px-6 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" style="background:radial-gradient(ellipse at top right, rgba(0,255,136,0.05),transparent 70%)"></div>
+<div class="max-w-4xl mx-auto relative">
+<a href="/learning/category/design-patterns.html" class="inline-flex items-center gap-2 text-text-muted hover:text-primary mb-6" style="color:#666">← Design Patterns</a>
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-primary/20 text-primary text-sm font-medium rounded-full mb-4" style="background:rgba(0,255,136,0.2)">Beginner</span>
+<h1 class="text-3xl md:text-4xl font-bold mb-4 animate-fade-up">The Repository Pattern</h1>
+<p class="text-text-secondary text-lg animate-fade-up" style="animation-delay:100ms;color:#B0B0B0">Understanding how to talk to databases the clean way</p>
+<div class="flex items-center gap-4 mt-6 text-sm text-text-muted animate-fade-up" style="animation-delay:150ms;color:#666"><span>⏱️ 10 min read</span><span>📈 Layman → Intermediate</span></div>
+</div>
+</section>
+<div class="max-w-6xl mx-auto px-6 pb-16">
+<div class="lg:flex lg:gap-12">
+<div class="lg:flex-1">
+<section id="what" class="mb-12 animate-fade-up"><h2 class="text-2xl font-semibold mb-6">❓ What is it?</h2>
+<div class="bg-bg-card rounded-xl p-6 mb-6" style="background:#1A1A1A"><h3 class="text-lg font-medium text-primary mb-4" style="color:#00FF88">The Library Analogy</h3>
+<div class="w-full max-w-lg mx-auto"><svg viewBox="0 0 400 200" class="w-full h-auto"><ellipse cx="50" cy="40" rx="35" ry="12" fill="none" stroke="#333" stroke-width="2"/><path d="M15 40 Q15 75, 50 75 Q85 75, 85 40" fill="none" stroke="#333" stroke-width="2"/><ellipse cx="50" cy="40" rx="35" ry="12" fill="rgba(0,255,136,0.1)"/><circle cx="15" cy="40" r="5" fill="#00FF88"/><circle cx="85" cy="40" r="5" fill="#00FF88"/><path d="M95 40 L125 40" stroke="#00FF88" stroke-width="2" stroke-dasharray="4"/><rect x="130" y="25" width="140" height="100" rx="8" fill="#1A1A1A" stroke="#00FF88" stroke-width="2"/><circle cx="200" cy="50" r="15" fill="none" stroke="#00FF88" stroke-width="2"/><circle cx="200" cy="50" r="8" fill="#00FF88"/><text x="200" y="90" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">Repository</text><path d="M275 75 L305 75" stroke="#4DA6FF" stroke-width="2" stroke-dasharray="4"/><rect x="310" y="50" width="70" height="50" rx="8" fill="#1A1A1A" stroke="#4DA6FF" stroke-width="2"/><text x="345" y="120" text-anchor="middle" fill="#666" font-size="10">Your Code</text></svg></div>
+<p class="text-text-secondary text-sm mt-4 text-center italic" style="color:#B0B0B0">The <strong style="color:#00FF88">librarian (Repository)</strong> knows exactly where every book is.</p></div>
+<div class="bg-bg-code border border-border-subtle rounded-xl p-6" style="border-color:#333"><h3 class="text-lg font-medium text-primary mb-3" style="color:#00FF88">Technical Definition</h3><p class="text-text-secondary" style="color:#B0B0B0">A <strong>Repository</strong> is a layer that mediates between your domain logic and the data access layer. It abstracts the database operations behind a collection-like interface.</p></div></section>
+<section id="why" class="mb-12 animate-fade-up"><h2 class="text-2xl font-semibold mb-6">💡 Why use it?</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-bg-card rounded-xl p-5 border border-border-subtle hover:border-primary/50 transition-colors" style="background:#1A1A1A;border-color:#333"><div class="text-2xl mb-3">🛡️</div><h3 class="font-medium mb-2">Single Source</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">All data access logic in one place</p></div>
+<div class="bg-bg-card rounded-xl p-5 border border-border-subtle hover:border-primary/50 transition-colors" style="background:#1A1A1A;border-color:#333"><div class="text-2xl mb-3">🧪</div><h3 class="font-medium mb-2">Easier Testing</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">Swap real DB for fake data</p></div>
+<div class="bg-bg-card rounded-xl p-5 border border-border-subtle hover:border-primary/50 transition-colors" style="background:#1A1A1A;border-color:#333"><div class="text-2xl mb-3">🔄</div><h3 class="font-medium mb-2">Database Independence</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">Switch DBs without rewriting</p></div>
+<div class="bg-bg-card rounded-xl p-5 border border-border-subtle hover:border-primary/50 transition-colors" style="background:#1A1A1A;border-color:#333"><div class="text-2xl mb-3">✨</div><h3 class="font-medium mb-2">Cleaner Code</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">No SQL mixed with app code</p></div>
+</div></section>
+<section id="when" class="mb-12 animate-fade-up"><h2 class="text-2xl font-semibold mb-6">⏰ When to use it?</h2>
+<div class="space-y-4">
+<div class="bg-bg-card rounded-xl p-6 border-l-4 border-success" style="border-left-color:#00FF88;background:#1A1A1A"><h3 class="font-medium text-success mb-3" style="color:#00FF88">✅ Use when:</h3><ul class="space-y-2">{['Multiple data sources','Need unit tests','Complex data access','Framework agnostic'].map(x=>`<li class="flex items-start gap-2 text-text-secondary text-sm" style="color:#B0B0B0"><span class="text-success mt-0.5" style="color:#00FF88">•</span>${x}</li>`).join('')}</ul></div>
+<div class="bg-bg-card rounded-xl p-6 border-l-4 border-warning" style="border-left-color:#FFD93D;background:#1A1A1A"><h3 class="font-medium text-warning mb-3" style="color:#FFD93D">⏳ Skip if:</h3><ul class="space-y-2">{['Very simple CRUD','ORM already abstracts','Rapid prototyping'].map(x=>`<li class="flex items-start gap-2 text-text-secondary text-sm" style="color:#B0B0B0"><span class="text-warning mt-0.5" style="color:#FFD93D">•</span>${x}</li>`).join('')}</ul></div>
+</div></section>
+<section id="how" class="mb-12 animate-fade-up"><h2 class="text-2xl font-semibold mb-6">🔧 How it works</h2>
+<div class="space-y-6">
+<div class="flex gap-4"><div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold flex-shrink-0" style="background:#00FF88;color:#0D0D0D">1</div><div class="flex-1"><h3 class="text-lg font-medium mb-2">Define the Interface</h3><p class="text-text-secondary text-sm mb-4" style="color:#B0B0B0">Tell the world what operations you support</p><pre><code><span class="kw">interface</span> <span class="tp">UserRepository</span> {
+    <span class="fn">findById</span>(id: <span class="tp">string</span>): <span class="tp">Promise</span>&lt;<span class="tp">User</span>&gt;;
+    <span class="fn">save</span>(user: <span class="tp">User</span>): <span class="tp">Promise</span>&lt;<span class="tp">void</span>&gt;;
+}</code></pre></div></div>
+<div class="flex gap-4"><div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold flex-shrink-0" style="background:#00FF88;color:#0D0D0D">2</div><div class="flex-1"><h3 class="text-lg font-medium mb-2">Implement It</h3><p class="text-text-secondary text-sm mb-4" style="color:#B0B0B0">Actually talk to the database</p><pre><code><span class="kw">class</span> <span class="tp">PostgresRepo</span> <span class="kw">implements</span> <span class="tp">UserRepository</span> {
+    <span class="kw">constructor</span>(<span class="vr">private</span> db: <span class="tp">Database</span>) {}
+    <span class="as">async</span> <span class="fn">findById</span>(id) {
+        <span class="kw">return</span> <span class="kw">await</span> <span class="vr">this</span>.db.<span class="fn">query</span>(...);
+    }
+}</code></pre></div></div>
+<div class="flex gap-4"><div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold flex-shrink-0" style="background:#00FF88;color:#0D0D0D">3</div><div class="flex-1"><h3 class="text-lg font-medium mb-2">Use in Your Code</h3><p class="text-text-secondary text-sm mb-4" style="color:#B0B0B0">Clean, testable business logic</p><pre><code><span class="kw">class</span> <span class="tp">UserService</span> {
+    <span class="kw">constructor</span>(<span class="vr">private</span> repo: <span class="tp">UserRepository</span>) {}
+    <span class="as">async</span> <span class="fn">register</span>(email) {
+        <span class="kw">const</span> exists = <span class="kw">await</span> <span class="vr">this</span>.repo.<span class="fn">findByEmail</span>(email);
+    }
+}</code></pre></div></div>
+</div></section>
+<section id="example" class="mb-12 animate-fade-up"><h2 class="text-2xl font-semibold mb-6">🌍 Real-World Example</h2>
+<p class="text-text-secondary mb-6" style="color:#B0B0B0"><strong>Scenario:</strong> E-commerce with users, products, orders</p>
+<div class="bg-bg-card rounded-xl p-6 mb-4" style="background:#1A1A1A"><svg viewBox="0 0 500 180" class="w-full h-auto"><rect x="20" y="50" width="80" height="50" rx="8" fill="#4DA6FF"/><text x="60" y="80" text-anchor="middle" fill="white" font-size="11" font-weight="500">Controllers</text><path d="M105 75 L130 75" stroke="#4DA6FF" stroke-width="2" stroke-dasharray="4"/><rect x="135" y="50" width="80" height="50" rx="8" fill="#FFD93D"/><text x="175" y="80" text-anchor="middle" fill="#0D0D0D" font-size="11" font-weight="500">Services</text><path d="M220 75 L245 75" stroke="#FFD93D" stroke-width="2" stroke-dasharray="4"/><rect x="250" y="50" width="100" height="50" rx="8" fill="#00FF88"/><text x="300" y="80" text-anchor="middle" fill="#0D0D0D" font-size="11" font-weight="500">Repositories</text><path d="M300 105 L300 135" stroke="#00FF88" stroke-width="2" stroke-dasharray="4"/><ellipse cx="300" cy="155" rx="70" ry="20" fill="#1A1A1A" stroke="#333" stroke-width="2"/><text x="300" y="160" text-anchor="middle" fill="white" font-size="12" font-weight="500">Database</text></svg></div>
+<p class="text-text-secondary" style="color:#B0B0B0">Each <strong style="color:#00FF88">Service</strong> talks only to <strong style="color:#00FF88">Repositories</strong>.</p></section>
+<section id="takeaways" class="mb-12 animate-fade-up"><h2 class="text-2xl font-semibold mb-6">🎯 Key Takeaways</h2><ul class="space-y-4">{[{t:'Abstraction',d:'Hides database complexity'},{t:'Single Responsibility',d:'One repo per entity'},{t:'Testability',d:'Mock the repository'},{t:'Flexibility',d:'Change databases easily'}].map(x=>`<li class="flex items-start gap-3 bg-bg-card rounded-xl p-4 border border-border-subtle" style="background:#1A1A1A;border-color:#333"><span class="text-success text-xl" style="color:#00FF88">✓</span><div><strong class="text-text-primary">${x.t}</strong><p class="text-text-secondary text-sm" style="color:#B0B0B0">${x.d}</p></div></li>`).join('')}</ul></section>
+<div class="flex items-center justify-between py-6 border-t border-border-subtle animate-fade-up" style="border-color:#333"><a href="/learning/category/design-patterns.html" class="inline-flex items-center gap-2 text-text-muted hover:text-primary" style="color:#666">← All Categories</a><a href="#" class="inline-flex items-center gap-2 text-text-muted hover:text-primary" style="color:#666">↑ Back to Top</a></div>
+</div></div></div>
+<script>window.addEventListener('scroll',()=>{const s=document.documentElement.scrollTop,h=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('p').style.width=(s/h*100)+'%'});const o=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});document.querySelectorAll('.animate-fade-up').forEach(e=>o.observe(e));</script>
+</body>
+</html>

@@ -12,29 +12,6 @@ import '../styles/global.css'
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦎</text></svg>">
   <style>
-    /* Heartbeat animation */
-    .heartbeat {
-      display: flex;
-      gap: 4px;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-    }
-    .beat {
-      width: 4px;
-      height: 20px;
-      background: var(--color-primary);
-      border-radius: 2px;
-      animation: pulse-beat 1.2s ease-in-out infinite;
-    }
-    .beat:nth-child(1) { animation-delay: 0s; }
-    .beat:nth-child(2) { animation-delay: 0.2s; }
-    .beat:nth-child(3) { animation-delay: 0.4s; }
-    
-    @keyframes pulse-beat {
-      0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
-      50% { transform: scaleY(1); opacity: 1; }
-    }
-    
     /* Status pulse */
     .status-pulse {
       width: 8px;
@@ -105,13 +82,6 @@ import '../styles/global.css'
 </head>
 <body class="bg-bg-dark text-text-primary min-h-screen flex flex-col items-center justify-center p-6">
   <main class="text-center max-w-md">
-    <!-- Heartbeat animation -->
-    <div class="heartbeat">
-      <span class="beat"></span>
-      <span class="beat"></span>
-      <span class="beat"></span>
-    </div>
-    
     <!-- Identity -->
     <div class="text-5xl mb-4">🦎</div>
     <h1 class="text-4xl font-bold mb-2 tracking-tight">Piro</h1>

@@ -1,38 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Design Patterns — Learning Corner</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design Patterns — Learning Corner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6;min-height:100vh}
-a{color:#00FF88;text-decoration:none}
-a:hover{color:#00CC6A}
-@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
-.animate-fade-up{opacity:0;transform:translateY(20px);animation:fadeUp .5s ease forwards}
-.animate-float{animation:float 3s ease-in-out infinite}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e5e5e5;line-height:1.6;min-height:100vh}
+h1,h2,h3{color:#fff;font-weight:600}
+a{color:#00ff88;text-decoration:none;transition:color 0.15s}
+a:hover{color:#00cc6a}
+p{color:#a3a3a3}
+.section{padding:3rem 1.5rem}
+.container{max-width:900px;margin:0 auto}
+.hero{text-align:center;padding:4rem 1.5rem;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right, rgba(0,255,136,0.08),transparent 70%);pointer-events:none}
+.hero-icon{width:80px;height:80px;background:#00ff88;border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:1.5rem;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.card-hover{transition:all .25s}
-.card-hover:hover{border-color:#00FF88;transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,255,136,0.1)}
-</style></head>
+h1{font-size:clamp(1.75rem,4vw,2.5rem);margin-bottom:0.75rem}
+.card{display:block;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:1.5rem;text-decoration:none;color:inherit;transition:all 0.25s ease}
+.card:hover{border-color:#00ff88;transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,255,136,0.15)}
+.badge{position:absolute;top:1rem;right:1rem;padding:0.25rem 0.75rem;font-size:0.75rem;font-weight:500;border-radius:999px}
+.badge-success{background:rgba(0,255,136,0.2);color:#00ff88}
+.badge-warning{background:rgba(255,217,61,0.2);color:#ffd93d}
+.icon{width:64px;height:64px;background:#252525;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;margin-bottom:1rem}
+.topic-title{font-size:1.125rem;font-weight:600;margin-bottom:0.5rem;color:#fff}
+.topic-title:hover{color:#00ff88}
+.topic-desc{font-size:0.875rem;color:#888;margin-bottom:0.75rem}
+.topic-meta{font-size:0.75rem;color:#666}
+.footer{padding:3rem 1.5rem;text-align:center;border-top:1px solid #333;margin-top:4rem}
+.footer-link{display:inline-flex;align-items:center;gap:0.5rem;color:#888;font-size:0.875rem}
+.footer-link:hover{color:#00ff88}
+.animate{opacity:0;transform:translateY(20px);transition:all 0.5s ease}
+.animate.visible{opacity:1;transform:translateY(0)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+::selection{background:#00ff88;color:#0a0a0a}
+</style>
+</head>
 <body>
-<section class="py-16 px-6 text-center relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" style="background:radial-gradient(ellipse at top right, rgba(0,255,136,0.05),transparent 70%)"></div>
-<div class="max-w-4xl mx-auto relative">
-<a href="/learning/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary mb-6" style="color:#666">← Learning Corner</a>
-<div class="text-6xl mb-6 animate-float">📐</div>
-<h1 class="text-3xl md:text-4xl font-bold mb-3">Design Patterns</h1>
-<p class="text-text-secondary" style="color:#B0B0B0">Time-tested solutions to common programming problems</p>
+<section class="hero">
+<div class="container">
+<a href="/learning/" class="animate" style="display:inline-flex;align-items:center;gap:0.5rem;color:#888;margin-bottom:1.5rem;font-size:0.875rem">← Learning Corner</a>
+<div class="hero-icon">📐</div>
+<h1 class="animate">Design Patterns</h1>
+<p class="animate" style="color:#888">Time-tested solutions to common programming problems</p>
 </div>
 </section>
-<section class="py-8 px-6">
-<div class="max-w-4xl mx-auto">
-<a href="/learning/topic/design-patterns/repository-pattern.html" class="group block bg-bg-card rounded-xl p-6 border card-hover animate-fade-up" style="background:#1A1A1A;border-color:#333">
-<div class="flex items-start justify-between mb-3"><span class="px-3 py-1 bg-primary text-bg-main text-xs rounded-full" style="background:#00FF88;color:#0D0D0D">Beginner</span></div>
-<h3 class="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Repository Pattern</h3>
-<p class="text-text-secondary text-sm mb-3" style="color:#B0B0B0">Abstract database access</p>
-<span class="text-text-muted text-sm" style="color:#666">⏱️ 10 min read</span>
+<section class="section">
+<div class="container">
+<a href="/learning/topic/design-patterns/repository-pattern.html" class="card animate" style="position:relative">
+<span class="badge badge-success">Beginner</span>
+<div class="icon">📚</div>
+<h2 class="topic-title">Repository Pattern</h2>
+<p class="topic-desc">Learn how to abstract database access for cleaner, testable code</p>
+<div class="topic-meta">⏱️ 10 min read</div>
 </a>
 </div>
 </section>
-<footer class="py-12 px-6 text-center border-t border-border-subtle" style="border-color:#333"><a href="/learning/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary" style="color:#666">← Back to Learning Corner</a></footer>
-<script>const o=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:.1});document.querySelectorAll('.animate-fade-up').forEach(e=>o.observe(e));</script>
+<footer class="footer">
+<a href="/learning/" class="footer-link">← Back to Learning Corner</a>
+</footer>
+<script>
+const o=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.animate').forEach(e=>o.observe(e));
+</script>
 </body>
 </html>

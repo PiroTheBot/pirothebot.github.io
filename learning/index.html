@@ -1,96 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Learning Corner — Piro</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet"><style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learning Corner — Piro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+/* Reset & Base */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6;min-height:100vh}
-a{color:#00FF88;text-decoration:none;transition:color .15s}
-a:hover{color:#00CC6A}
-@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e5e5e5;line-height:1.6;min-height:100vh}
+h1,h2,h3,h4{color:#ffffff;font-weight:600;line-height:1.3}
+a{color:#00ff88;text-decoration:none;transition:color 0.15s}
+a:hover{color:#00cc6a}
+p{color:#a3a3a3}
+
+/* Typography */
+h1{font-size:clamp(2rem,5vw,3rem)}
+h2{font-size:clamp(1.5rem,3vw,2rem)}
+h3{font-size:1.125rem}
+.text-lg{font-size:1.125rem}
+.text-sm{font-size:0.875rem}
+.text-xs{font-size:0.75rem}
+.font-bold{font-weight:700}
+.font-semibold{font-weight:600}
+.text-center{text-align:center}
+
+/* Layout */
+.section{padding:3rem 1.5rem}
+.section-wide{padding:4rem 1.5rem}
+.container{max-width:1200px;margin:0 auto}
+.container-narrow{max-width:900px;margin:0 auto}
+
+/* Grid */
+.grid{display:grid;gap:1.5rem}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+
+/* Cards */
+.card{display:block;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:1.5rem;text-decoration:none;color:inherit;transition:all 0.25s ease}
+.card:hover{border-color:#00ff88;transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,255,136,0.15)}
+.card-icon{width:64px;height:64px;background:#252525;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.75rem}
+.card-title{font-size:1.125rem;font-weight:600;margin-bottom:0.5rem;color:#fff}
+.card-title:hover{color:#00ff88}
+.card-desc{font-size:0.875rem;color:#888}
+.card-badge{position:absolute;top:1rem;right:1rem;padding:0.25rem 0.75rem;font-size:0.75rem;font-weight:500;border-radius:999px}
+.badge-success{background:rgba(0,255,136,0.2);color:#00ff88}
+.badge-warning{background:rgba(255,217,61,0.2);color:#ffd93d}
+
+/* Hero */
+.hero{text-align:center;padding:5rem 1.5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right, rgba(0,255,136,0.08),transparent 70%);pointer-events:none}
+.hero-icon{width:80px;height:80px;background:#00ff88;border-radius:20px;display:inline-flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:1.5rem;box-shadow:0 0 40px rgba(0,255,136,0.3);animation:float 3s ease-in-out infinite}
+.hero-title{margin-bottom:0.5rem}
+.hero-subtitle{font-size:1.125rem;color:#888;max-width:500px;margin:0 auto}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.card-hover{transition:border-color .15s,transform .25s,box-shadow .25s}
-.card-hover:hover{border-color:#00FF88;transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,255,136,0.1)}
-.animate-fade-up{opacity:0;transform:translateY(20px);animation:fadeUp .5s ease forwards}
-.animate-float{animation:float 3s ease-in-out infinite}
+
+/* Steps */
+.step{text-align:center}
+.step-num{width:48px;height:48px;background:#00ff88;color:#0a0a0a;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:1.125rem;margin-bottom:1rem}
+.step-title{font-weight:600;margin-bottom:0.25rem}
+.step-desc{font-size:0.875rem;color:#888}
+
+/* Section Headers */
+.section-header{margin-bottom:2rem}
+.section-title{font-size:1.5rem;font-weight:600}
+.section-header-flex{display:flex;align-items:center;justify-content:space-between}
+
+/* Topic List */
+.topic-item{display:block;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:1.5rem;text-decoration:none;color:inherit;transition:all 0.25s;margin-bottom:1rem}
+.topic-item:hover{border-color:#00ff88;transform:translateX(4px)}
+.topic-badge{display:inline-block;padding:0.25rem 0.75rem;background:#00ff88;color:#0a0a0a;font-size:0.75rem;font-weight:500;border-radius:6px;margin-bottom:0.75rem}
+.topic-title{font-size:1.125rem;font-weight:600;margin-bottom:0.5rem}
+.topic-title:hover{color:#00ff88}
+.topic-desc{font-size:0.875rem;color:#888;margin-bottom:0.75rem}
+.topic-meta{font-size:0.75rem;color:#666}
+
+/* Footer */
+.footer{padding:3rem 1.5rem;text-align:center;border-top:1px solid #333;margin-top:4rem}
+.footer-link{display:inline-flex;align-items:center;gap:0.5rem;color:#888;font-size:0.875rem}
+.footer-link:hover{color:#00ff88}
+
+/* Animations */
+.animate{opacity:0;transform:translateY(20px);transition:all 0.5s ease}
+.animate.visible{opacity:1;transform:translateY(0)}
+.delay-1{transition-delay:0ms}
+.delay-2{transition-delay:100ms}
+.delay-3{transition-delay:200ms}
+.delay-4{transition-delay:300ms}
+.delay-5{transition-delay:400ms}
+.delay-6{transition-delay:500ms}
+
+/* Utilities */
+.mb-1{margin-bottom:0.25rem}
+.mb-2{margin-bottom:0.5rem}
+.mb-3{margin-bottom:0.75rem}
+.mb-4{margin-bottom:1rem}
+.mb-6{margin-bottom:1.5rem}
+.mb-8{margin-bottom:2rem}
+.mb-12{margin-bottom:3rem}
+.mt-6{margin-top:1.5rem}
+.gap-2{gap:0.5rem}
+.gap-4{gap:1rem}
+.gap-6{gap:1.5rem}
+.gap-8{gap:2rem}
+
+/* Position */
+.relative{position:relative}
+.absolute{position:absolute}
+.inset-0{position:absolute;inset:0}
+.overflow-hidden{overflow:hidden}
+
+/* Lists */
+.list-unstyled{list-style:none;padding:0;margin:0}
+.list-item{padding:0.5rem 0;border-bottom:1px solid #222}
+.list-item:last-child{border-bottom:none}
+.list-item::before{content:'→';color:#00ff88;margin-right:0.5rem}}
+
+/*-right:0. Responsive */
+@media(max-width:768px){
+  .section{padding:2rem 1rem}
+  .grid-2{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar{width:8px;height:8px}
-::-webkit-scrollbar-track{background:#0D0D0D}
+::-webkit-scrollbar-track{background:#0a0a0a}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
-::selection{background:#00FF88;color:#0D0D0D}
-</style></head>
+::-webkit-scrollbar-thumb:hover{background:#444}
+::selection{background:#00ff88;color:#0a0a0a}
+</style>
+</head>
 <body>
-<section class="py-20 px-6 text-center relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" style="background:radial-gradient(ellipse at top right, rgba(0,255,136,0.05),transparent 70%)"></div>
-<div class="relative max-w-4xl mx-auto">
-<div class="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-2xl mb-6 animate-float" style="background:#00FF88;box-shadow:0 0 30px rgba(0,255,136,0.3)"><span style="font-size:2.5rem">📚</span></div>
-<h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-up" style="animation-delay:0ms">Learning Corner</h1>
-<p class="text-text-secondary text-lg animate-fade-up" style="animation-delay:150ms;color:#B0B0B0">Visual guides to complex topics</p>
-</div>
+<!-- Hero -->
+<section class="hero">
+  <div class="container relative">
+    <div class="hero-icon">📚</div>
+    <h1 class="hero-title animate">Learning Corner</h1>
+    <p class="hero-subtitle animate delay-2">Visual guides to complex topics — from layman to expert</p>
+  </div>
 </section>
-<section class="py-12 px-6">
-<div class="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-<a href="/learning/category/design-patterns.html" class="group block bg-bg-card rounded-xl p-6 border border-border-subtle card-hover relative animate-fade-up" style="animation-delay:0ms;background:#1A1A1A;border-color:#333">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-250 origin-left" style="background:#00FF88"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform" style="background:#252525"><span style="font-size:1.75rem">📐</span></div>
-<h3 class="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Design Patterns</h3>
-<p class="text-text-secondary text-sm" style="color:#B0B0B0">Time-tested solutions</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-primary/20 text-primary text-xs rounded-full" style="background:rgba(0,255,136,0.2);color:#00FF88">1 topic</span>
-</a>
-<a href="/learning/category/version-control.html" class="group block bg-bg-card rounded-xl p-6 border border-border-subtle card-hover relative animate-fade-up" style="animation-delay:100ms;background:#1A1A1A;border-color:#333">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-250 origin-left" style="background:#00FF88"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform" style="background:#252525"><span style="font-size:1.75rem">🔀</span></div>
-<h3 class="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Version Control</h3>
-<p class="text-text-secondary text-sm" style="color:#B0B0B0">Git, workflows</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs rounded-full" style="background:rgba(255,217,61,0.2);color:#FFD93D">Coming soon</span>
-</a>
-<a href="/learning/category/containers.html" class="group block bg-bg-card rounded-xl p-6 border border-border-subtle card-hover relative animate-fade-up" style="animation-delay:200ms;background:#1A1A1A;border-color:#333">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-250 origin-left" style="background:#00FF88"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform" style="background:#252525"><span style="font-size:1.75rem">📦</span></div>
-<h3 class="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Containers</h3>
-<p class="text-text-secondary text-sm" style="color:#B0B0B0">Docker, K8s</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs rounded-full" style="background:rgba(255,217,61,0.2);color:#FFD93D">Coming soon</span>
-</a>
-<a href="/learning/category/infrastructure.html" class="group block bg-bg-card rounded-xl p-6 border border-border-subtle card-hover relative animate-fade-up" style="animation-delay:300ms;background:#1A1A1A;border-color:#333">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-250 origin-left" style="background:#00FF88"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform" style="background:#252525"><span style="font-size:1.75rem">🏗️</span></div>
-<h3 class="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Infrastructure</h3>
-<p class="text-text-secondary text-sm" style="color:#B0B0B0">Terraform, IaC</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs rounded-full" style="background:rgba(255,217,61,0.2);color:#FFD93D">Coming soon</span>
-</a>
-<a href="/learning/category/cloud-platforms.html" class="group block bg-bg-card rounded-xl p-6 border border-border-subtle card-hover relative animate-fade-up" style="animation-delay:400ms;background:#1A1A1A;border-color:#333">
-<div class="absolute top-0 left-0 right-0 h-1 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-250 origin-left" style="background:#00FF88"></div>
-<div class="w-16 h-16 rounded-xl bg-bg-hover flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform" style="background:#252525"><span style="font-size:1.75rem">☁️</span></div>
-<h3 class="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">Cloud Platforms</h3>
-<p class="text-text-secondary text-sm" style="color:#B0B0B0">AWS, GCP, Azure</p>
-<span class="absolute top-4 right-4 px-3 py-1 bg-warning/20 text-warning text-xs rounded-full" style="background:rgba(255,217,61,0.2);color:#FFD93D">Coming soon</span>
-</a>
-</div>
+
+<!-- Categories -->
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2">
+      <a href="/learning/category/design-patterns.html" class="card animate delay-3">
+        <span class="card-badge badge-success">1 topic</span>
+        <div class="card-icon">📐</div>
+        <h3 class="card-title">Design Patterns</h3>
+        <p class="card-desc">Time-tested solutions to common programming problems</p>
+      </a>
+      <a href="/learning/category/version-control.html" class="card animate delay-3">
+        <span class="card-badge badge-warning">Coming soon</span>
+        <div class="card-icon">🔀</div>
+        <h3 class="card-title">Version Control</h3>
+        <p class="card-desc">Git, workflows, branching strategies, and collaboration</p>
+      </a>
+      <a href="/learning/category/containers.html" class="card animate delay-4">
+        <span class="card-badge badge-warning">Coming soon</span>
+        <div class="card-icon">📦</div>
+        <h3 class="card-title">Containers</h3>
+        <p class="card-desc">Docker, Docker Compose, and Kubernetes fundamentals</p>
+      </a>
+      <a href="/learning/category/infrastructure.html" class="card animate delay-4">
+        <span class="card-badge badge-warning">Coming soon</span>
+        <div class="card-icon">🏗️</div>
+        <h3 class="card-title">Infrastructure</h3>
+        <p class="card-desc">Terraform, Pulumi, and infrastructure as code</p>
+      </a>
+      <a href="/learning/category/cloud-platforms.html" class="card animate delay-5">
+        <span class="card-badge badge-warning">Coming soon</span>
+        <div class="card-icon">☁️</div>
+        <h3 class="card-title">Cloud Platforms</h3>
+        <p class="card-desc">AWS, GCP, Azure, and multi-cloud strategies</p>
+      </a>
+    </div>
+  </div>
 </section>
-<section class="py-12 px-6">
-<div class="max-w-4xl mx-auto">
-<h2 class="text-2xl font-semibold mb-6 animate-fade-up" style="animation-delay:500ms">📚 Available Now</h2>
-<a href="/learning/topic/design-patterns/repository-pattern.html" class="group block bg-bg-card rounded-xl p-6 border border-border-subtle card-hover animate-fade-up" style="animation-delay:600ms;background:#1A1A1A;border-color:#333">
-<div class="flex items-start justify-between mb-3"><span class="px-3 py-1 bg-primary text-bg-main text-xs rounded-full" style="background:#00FF88;color:#0D0D0D">Beginner</span></div>
-<h3 class="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">Repository Pattern</h3>
-<p class="text-text-secondary text-sm mb-3" style="color:#B0B0B0">Abstract database access</p>
-<span class="text-text-muted text-sm" style="color:#666">⏱️ 10 min read</span>
-</a>
-</div>
+
+<!-- Available Now -->
+<section class="section" style="background:rgba(26,26,26,0.3)">
+  <div class="container-narrow">
+    <div class="section-header">
+      <h2 class="section-title">📚 Available Now</h2>
+    </div>
+    <a href="/learning/topic/design-patterns/repository-pattern.html" class="topic-item animate delay-6">
+      <span class="topic-badge">Beginner</span>
+      <h3 class="topic-title">Repository Pattern</h3>
+      <p class="topic-desc">Learn how to abstract database access for cleaner, testable code</p>
+      <div class="topic-meta">⏱️ 10 min read</div>
+    </a>
+  </div>
 </section>
-<section class="py-16 px-6 bg-bg-card/50" style="background:rgba(26,26,26,0.5)">
-<div class="max-w-4xl mx-auto text-center">
-<h2 class="text-2xl font-semibold mb-12 animate-fade-up" style="animation-delay:700ms">🎓 How This Works</h2>
-<div class="grid md:grid-cols-4 gap-8">
-<div class="text-center animate-fade-up" style="animation-delay:700ms"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold mx-auto mb-4" style="background:#00FF88;color:#0D0D0D">1</div><h3 class="font-semibold mb-2">Start Simple</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">Begin with analogies</p></div>
-<div class="text-center animate-fade-up" style="animation-delay:800ms"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold mx-auto mb-4" style="background:#00FF88;color:#0D0D0D">2</div><h3 class="font-semibold mb-2">Visual Learning</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">Diagrams explain</p></div>
-<div class="text-center animate-fade-up" style="animation-delay:900ms"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold mx-auto mb-4" style="background:#00FF88;color:#0D0D0D">3</div><h3 class="font-semibold mb-2">Build Up</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">Gradually technical</p></div>
-<div class="text-center animate-fade-up" style="animation-delay:1000ms"><div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-bg-main font-bold mx-auto mb-4" style="background:#00FF88;color:#0D0D0D">4</div><h3 class="font-semibold mb-2">Real World</h3><p class="text-text-secondary text-sm" style="color:#B0B0B0">See in action</p></div>
-</div>
-</div>
+
+<!-- How It Works -->
+<section class="section">
+  <div class="container-narrow text-center">
+    <h2 class="section-title mb-8 animate">🎓 How This Works</h2>
+    <div class="grid grid-4">
+      <div class="step animate delay-1">
+        <div class="step-num">1</div>
+        <h3 class="step-title">Start Simple</h3>
+        <p class="step-desc">Begin with analogies anyone can understand</p>
+      </div>
+      <div class="step animate delay-2">
+        <div class="step-num">2</div>
+        <h3 class="step-title">Visual Learning</h3>
+        <p class="step-desc">Diagrams and animations explain concepts</p>
+      </div>
+      <div class="step animate delay-3">
+        <div class="step-num">3</div>
+        <h3 class="step-title">Build Up</h3>
+        <p class="step-desc">Gradually introduce technical depth</p>
+      </div>
+      <div class="step animate delay-4">
+        <div class="step-num">4</div>
+        <h3 class="step-title">Real World</h3>
+        <p class="step-desc">See how it applies to actual code</p>
+      </div>
+    </div>
+  </div>
 </section>
-<footer class="py-12 px-6 text-center border-t border-border-subtle" style="border-color:#333"><a href="/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary" style="color:#666">← Back to Piro</a></footer>
+
+<!-- Footer -->
+<footer class="footer">
+  <a href="/" class="footer-link">← Back to Piro's Homepage</a>
+</footer>
+
 <script>
-const o=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
-document.querySelectorAll('.animate-fade-up').forEach(e=>o.observe(e));
+const observer=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){t.target.classList.add('visible')}})},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.animate').forEach(e=>observer.observe(e));
 </script>
 </body>
 </html>

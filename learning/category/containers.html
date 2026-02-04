@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>containers — Learning Corner</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#0D0D0D;color:#fff;line-height:1.6;min-height:100vh}
-a{color:#00FF88;text-decoration:none}
-a:hover{color:#00CC6A}
-.animate-float{animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-</style></head>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Containers — Learning Corner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e5e5e5;line-height:1.6}h1{color:#fff;font-weight:600}a{color:#00ff88;text-decoration:none}a:hover{color:#00cc6a}.section{padding:4rem 1.5rem}.container{max-width:800px;margin:0 auto}.hero{text-align:center;position:relative}.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right, rgba(0,255,136,0.08),transparent 70%)}.icon{font-size:4rem;margin-bottom:1.5rem;display:inline-block;animation:float 3s ease-in-out infinite}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}.badge{display:inline-block;padding:0.5rem 1rem;background:rgba(255,217,61,0.2);color:#ffd93d;border-radius:6px;font-size:0.875rem;font-weight:500;margin-bottom:1rem}.card{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:2rem;margin:2rem 0;max-width:500px}.card h2{color:#00ff88;margin-bottom:1rem;font-size:1.25rem}.card ul{list-style:none;padding:0}.card li{padding:0.5rem 0;color:#a3a3a3;border-bottom:1px solid #222}.card li:last-child{border-bottom:none}.card li::before{content:'→';color:#00ff88;margin-right:0.75rem}.footer{padding:3rem 1.5rem;text-align:center;border-top:1px solid #333}</style>
+</head>
 <body>
-<section class="py-16 px-6 text-center relative overflow-hidden">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" style="background:radial-gradient(ellipse at top right, rgba(0,255,136,0.05),transparent 70%)"></div>
-<div class="max-w-4xl mx-auto relative">
-<a href="/learning/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary mb-6" style="color:#666">← Learning Corner</a>
-<div class="text-6xl mb-6 animate-float">🔧</div>
-<h1 class="text-3xl md:text-4xl font-bold mb-4">containers</h1>
-<p class="text-text-secondary mb-8" style="color:#B0B0B0">Coming soon</p>
-<div class="bg-bg-card rounded-xl p-8 border border-border-subtle max-w-md mx-auto" style="background:#1A1A1A;border-color:#333"><h2 class="text-xl font-semibold text-primary mb-4" style="color:#00FF88">Coming Soon</h2><p class="text-text-secondary mb-4" style="color:#B0B0B0">Topics we're working on:</p><ul class="text-left text-sm text-text-secondary space-y-2" style="color:#B0B0B0"><li class="flex items-center gap-2"><span style="color:#00FF88">→</span>Coming soon</li></ul></div>
+<section class="hero section">
+<div class="container">
+<a href="/learning/" style="color:#888;font-size:0.875rem;display:inline-flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem">← Learning Corner</a>
+<div class="icon">📦</div>
+<h1>Containers</h1>
+<p style="color:#888;margin-bottom:2rem">Docker, Docker Compose, and Kubernetes fundamentals</p>
+<span class="badge">Coming Soon</span>
+<div class="card">
+<h2>Topics we're working on:</h2>
+<ul>
+<li>Docker fundamentals and Dockerfile best practices</li>
+<li>Docker Compose for local development</li>
+<li>Multi-stage builds and image optimization</li>
+<li>Kubernetes core concepts (Pods, Services, Deployments)</li>
+<li>Container orchestration patterns</li>
+</ul>
+</div>
 </div>
 </section>
-<footer class="py-12 px-6 text-center border-t border-border-subtle" style="border-color:#333"><a href="/learning/" class="inline-flex items-center gap-2 text-text-muted hover:text-primary" style="color:#666">← Back to Learning Corner</a></footer>
+<footer class="footer">
+<a href="/learning/">← Back to Learning Corner</a>
+</footer>
 </body>
 </html>

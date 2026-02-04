@@ -115,12 +115,12 @@ const rb = '}';
   
   <div class="grid md:grid-cols-2 gap-6">
     <!-- Without pattern -->
-    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in">
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-red-500 text-lg">✗</span>
         <span class="font-medium text-red-400">Without Repository</span>
       </div>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1">
         <pre><code><span class="comment">// SQL scattered everywhere</span>
 <span class="keyword">fn</span> <span class="function">register_user</span>() {lb}
     <span class="macro">sqlx::query!</span>(<span class="string">"INSERT INTO..."</span>)
@@ -147,12 +147,12 @@ const rb = '}';
     </div>
     
     <!-- With pattern -->
-    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in">
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-primary text-lg">✓</span>
         <span class="font-medium text-primary">With Repository</span>
       </div>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1">
         <pre><code><span class="comment">// Clean, testable code</span>
 <span class="keyword">fn</span> <span class="function">register_user</span>(repo: &amp;<span class="keyword">dyn</span> <span class="type">UserRepo</span>) {lb}
     repo.<span class="function">save</span>(user)

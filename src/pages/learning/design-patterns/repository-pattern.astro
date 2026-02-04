@@ -446,22 +446,22 @@ const rb = '}';
     <div class="flex flex-col md:flex-row gap-6">
       <div class="flex-1">
         <h3 class="font-medium text-primary mb-3">Pros</h3>
-        <ul class="space-y-2 text-sm text-text-secondary">
-          <li class="flex items-center gap-2"><span class="text-primary">+</span> Cleaner architecture</li>
-          <li class="flex items-center gap-2"><span class="text-primary">+</span> Easy to test</li>
-          <li class="flex items-center gap-2"><span class="text-primary">+</span> Database independence</li>
-          <li class="flex items-center gap-2"><span class="text-primary">+</span> Single source of truth for data access</li>
-        </ul>
+        <BulletList bullet="+" color="primary" items={[
+          "Cleaner architecture",
+          "Easy to test",
+          "Database independence",
+          "Single source of truth for data access"
+        ]} />
       </div>
       <div class="w-px bg-border-subtle hidden md:block"></div>
       <div class="flex-1">
         <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
-        <ul class="space-y-2 text-sm text-text-secondary">
-          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> More boilerplate code</li>
-          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> Extra abstraction layer</li>
-          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> Can hide ORM capabilities</li>
-          <li class="flex items-center gap-2"><span class="text-yellow-500">−</span> Learning curve for juniors</li>
-        </ul>
+        <BulletList bullet="−" color="yellow" items={[
+          "More boilerplate code",
+          "Extra abstraction layer",
+          "Can hide ORM capabilities",
+          "Learning curve for juniors"
+        ]} />
       </div>
     </div>
   </div>

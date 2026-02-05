@@ -1,0 +1,1607 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout 
+  title="Kubernetes"
+  description="Container orchestration at scale — deploy, scale, and manage containerized applications automatically"
+  category="DevOps"
+  categoryHref="/learning/devops"
+  difficulty="Advanced"
+  readTime="18 min read"
+>
+
+<!-- Section 1: The Hook -->
+<section class="mb-12 md:mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+    <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as an</p>
+    <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Operating System</p>
+    <p class="text-text-secondary text-sm md:text-base">for your containers — it runs, heals, and scales them so you don't have to</p>
+  </div>
+</section>
+
+<!-- Section 2: The City Planner Analogy -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The City Planner Analogy</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary text-sm md:text-base mb-6 md:mb-8">
+      Imagine you're the <span class="text-primary font-medium">mayor of a city</span>. You don't personally construct buildings, 
+      lay pipes, or direct traffic. Instead, you set <span class="text-primary font-medium">policies</span> — "we need 5 hospitals, 
+      10 schools, and roads connecting them." City departments handle the rest. If a hospital burns down, 
+      they rebuild it automatically. If population grows, they build more schools. That's Kubernetes.
+    </p>
+    
+    <!-- Animated City SVG -->
+    <div class="relative overflow-x-auto">
+      <svg viewBox="0 0 600 260" class="w-full h-auto min-w-[480px]">
+        <!-- City Hall (Control Plane) -->
+        <g>
+          <rect x="210" y="10" width="180" height="70" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="300" y="35" text-anchor="middle" fill="#00FF88" font-size="13" font-weight="600">CITY HALL</text>
+          <text x="300" y="52" text-anchor="middle" fill="#666" font-size="10">Control Plane</text>
+          <text x="300" y="68" text-anchor="middle" fill="#666" font-size="9">Sets policies, makes decisions</text>
+        </g>
+        
+        <!-- Neighborhood 1 (Node 1) -->
+        <g>
+          <rect x="10" y="120" width="175" height="130" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="97" y="145" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">NEIGHBORHOOD A</text>
+          <text x="97" y="160" text-anchor="middle" fill="#525252" font-size="9">Node 1 (Worker)</text>
+          
+          <!-- Buildings (Pods) -->
+          <rect x="22" y="172" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+          <text x="57" y="193" text-anchor="middle" fill="#fbbf24" font-size="9">🏥 Hospital</text>
+          
+          <rect x="102" y="172" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#60a5fa" stroke-width="1"/>
+          <text x="137" y="193" text-anchor="middle" fill="#60a5fa" font-size="9">🏫 School</text>
+          
+          <rect x="22" y="215" width="70" height="25" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="57" y="232" text-anchor="middle" fill="#34d399" font-size="8">Pod</text>
+          
+          <rect x="102" y="215" width="70" height="25" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="137" y="232" text-anchor="middle" fill="#34d399" font-size="8">Pod</text>
+        </g>
+        
+        <!-- Neighborhood 2 (Node 2) -->
+        <g>
+          <rect x="213" y="120" width="175" height="130" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="300" y="145" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">NEIGHBORHOOD B</text>
+          <text x="300" y="160" text-anchor="middle" fill="#525252" font-size="9">Node 2 (Worker)</text>
+          
+          <rect x="225" y="172" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#f472b6" stroke-width="1"/>
+          <text x="260" y="193" text-anchor="middle" fill="#f472b6" font-size="9">🏪 Store</text>
+          
+          <rect x="305" y="172" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+          <text x="340" y="193" text-anchor="middle" fill="#fbbf24" font-size="9">🏥 Hospital</text>
+          
+          <rect x="225" y="215" width="70" height="25" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="260" y="232" text-anchor="middle" fill="#34d399" font-size="8">Pod</text>
+          
+          <rect x="305" y="215" width="70" height="25" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="340" y="232" text-anchor="middle" fill="#34d399" font-size="8">Pod</text>
+        </g>
+        
+        <!-- Neighborhood 3 (Node 3) -->
+        <g>
+          <rect x="416" y="120" width="175" height="130" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="503" y="145" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">NEIGHBORHOOD C</text>
+          <text x="503" y="160" text-anchor="middle" fill="#525252" font-size="9">Node 3 (Worker)</text>
+          
+          <rect x="428" y="172" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#60a5fa" stroke-width="1"/>
+          <text x="463" y="193" text-anchor="middle" fill="#60a5fa" font-size="9">🏫 School</text>
+          
+          <rect x="508" y="172" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#a78bfa" stroke-width="1"/>
+          <text x="543" y="193" text-anchor="middle" fill="#a78bfa" font-size="9">🗄️ Database</text>
+          
+          <rect x="428" y="215" width="70" height="25" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="463" y="232" text-anchor="middle" fill="#34d399" font-size="8">Pod</text>
+          
+          <rect x="508" y="215" width="70" height="25" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="543" y="232" text-anchor="middle" fill="#34d399" font-size="8">Pod</text>
+        </g>
+        
+        <!-- Arrows from City Hall to Neighborhoods -->
+        <path d="M260 80 L140 115" class="flow-path" stroke="#00FF88" stroke-width="1.5" fill="none"/>
+        <polygon points="140,115 148,110 145,118" fill="#00FF88"/>
+        
+        <path d="M300 80 L300 115" class="flow-path" stroke="#00FF88" stroke-width="1.5" fill="none"/>
+        <polygon points="300,115 295,108 305,108" fill="#00FF88"/>
+        
+        <path d="M340 80 L460 115" class="flow-path" stroke="#00FF88" stroke-width="1.5" fill="none"/>
+        <polygon points="460,115 455,108 462,110" fill="#00FF88"/>
+        
+        <!-- Animated data packets -->
+        <circle class="pulse-dot" cx="200" cy="97" r="4" fill="#00FF88"/>
+        <circle class="pulse-dot" cx="300" cy="97" r="4" fill="#00FF88" style="animation-delay: 0.3s"/>
+        <circle class="pulse-dot" cx="400" cy="97" r="4" fill="#00FF88" style="animation-delay: 0.6s"/>
+      </svg>
+    </div>
+    
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-primary/30">
+        <div class="text-2xl mb-2">🏛️</div>
+        <p class="text-sm font-medium text-primary">City Hall</p>
+        <p class="text-xs text-text-muted mt-1">Control Plane</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-2xl mb-2">🏘️</div>
+        <p class="text-sm font-medium text-blue-400">Neighborhoods</p>
+        <p class="text-xs text-text-muted mt-1">Worker Nodes</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-2xl mb-2">🏢</div>
+        <p class="text-sm font-medium text-yellow-400">Buildings</p>
+        <p class="text-xs text-text-muted mt-1">Containers</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-2xl mb-2">🧱</div>
+        <p class="text-sm font-medium text-text-secondary">City Blocks</p>
+        <p class="text-xs text-text-muted mt-1">Pods</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: The Problem It Solves -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Without Kubernetes -->
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-500 text-lg">✗</span>
+        <span class="font-medium text-red-400">Manual Container Management</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre class="text-text-muted"><code><span class="comment"># 3am. PagerDuty wakes you up.</span>
+$ ssh prod-server-12
+$ docker ps | grep api
+<span class="comment"># Container crashed. Again.</span>
+$ docker run -d --restart=always \
+    -p 8080:8080 myapp:v2.3.1
+<span class="comment"># Wait, was it v2.3.1 or v2.3.2?</span>
+<span class="comment"># Which servers have the new version?</span>
+$ for server in prod-{lb}1..20{rb}; do
+    ssh $server "docker ps"
+  done
+<span class="comment"># 4am. Still debugging. 😩</span></code></pre>
+      </div>
+      <BulletList color="red" items={[
+        "Manual restarts when containers crash",
+        "No easy way to scale up or down",
+        "Version mismatches across servers",
+        "Load balancing is your problem",
+        "Deployments = fear and downtime"
+      ]} />
+    </div>
+    
+    <!-- With Kubernetes -->
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-primary text-lg">✓</span>
+        <span class="font-medium text-primary">Kubernetes Orchestration</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre><code><span class="comment"># deployment.yaml - the whole story</span>
+<span class="type">apiVersion</span>: <span class="string">apps/v1</span>
+<span class="type">kind</span>: <span class="string">Deployment</span>
+<span class="type">spec</span>:
+  <span class="type">replicas</span>: <span class="string">5</span>
+  <span class="type">template</span>:
+    <span class="type">spec</span>:
+      <span class="type">containers</span>:
+      - <span class="type">name</span>: <span class="string">api</span>
+        <span class="type">image</span>: <span class="string">myapp:v2.3.2</span>
+
+<span class="comment"># kubectl apply -f deployment.yaml</span>
+<span class="comment"># Container crashes? K8s restarts it.</span>
+<span class="comment"># Need more? Change replicas: 20</span>
+<span class="comment"># Go back to sleep. 😴</span></code></pre>
+      </div>
+      <BulletList color="primary" items={[
+        "Self-healing: crashed containers restart automatically",
+        "Declarative scaling: change a number, done",
+        "Rolling updates with zero downtime",
+        "Built-in service discovery and load balancing",
+        "Same config = same infrastructure, anywhere"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Core Concepts -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Core Concepts</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🫛</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Pods</h3>
+          <p class="text-text-muted text-sm">The smallest deployable unit. A pod wraps one or more containers that share networking and storage. Think of it as a "wrapper" around your container(s).</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🖥️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Nodes</h3>
+          <p class="text-text-muted text-sm">Physical or virtual machines that run your pods. Each node has a kubelet agent that communicates with the control plane.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🌐</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Clusters</h3>
+          <p class="text-text-muted text-sm">A set of nodes managed together. One cluster = one control plane + multiple worker nodes. Your entire Kubernetes environment.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔗</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Services</h3>
+          <p class="text-text-muted text-sm">A stable networking endpoint for accessing pods. Pods come and go, but Services provide a fixed address and load balance traffic across them.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🚀</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Deployments</h3>
+          <p class="text-text-muted text-sm">Manages your pods — how many replicas to run, how to roll out updates, and how to roll back if things go wrong.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📁</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Namespaces</h3>
+          <p class="text-text-muted text-sm">Virtual clusters within a cluster. Isolate teams, environments (dev/staging/prod), or applications from each other.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔐</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">ConfigMaps & Secrets</h3>
+          <p class="text-text-muted text-sm">Decouple configuration from code. ConfigMaps hold non-sensitive data; Secrets hold passwords, tokens, and keys (base64-encoded).</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">💾</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Volumes</h3>
+          <p class="text-text-muted text-sm">Persistent storage that outlives containers. When a pod restarts, the data survives. Supports cloud disks, NFS, and more.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Architecture Deep Dive -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Architecture</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-8 fade-in overflow-x-auto">
+    <svg viewBox="0 0 600 380" class="w-full h-auto min-w-[480px]">
+      <!-- Control Plane Box -->
+      <rect x="10" y="10" width="580" height="155" rx="10" fill="none" stroke="#00FF88" stroke-width="2" stroke-dasharray="6 3"/>
+      <text x="30" y="35" fill="#00FF88" font-size="13" font-weight="600">CONTROL PLANE</text>
+      
+      <!-- API Server -->
+      <rect x="30" y="50" width="120" height="50" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+      <text x="90" y="72" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">API Server</text>
+      <text x="90" y="88" text-anchor="middle" fill="#525252" font-size="8">Gateway to cluster</text>
+      
+      <!-- etcd -->
+      <rect x="170" y="50" width="120" height="50" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+      <text x="230" y="72" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">etcd</text>
+      <text x="230" y="88" text-anchor="middle" fill="#525252" font-size="8">Key-value store</text>
+      
+      <!-- Scheduler -->
+      <rect x="310" y="50" width="120" height="50" rx="6" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2"/>
+      <text x="370" y="72" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="600">Scheduler</text>
+      <text x="370" y="88" text-anchor="middle" fill="#525252" font-size="8">Assigns pods to nodes</text>
+      
+      <!-- Controller Manager -->
+      <rect x="450" y="50" width="120" height="50" rx="6" fill="#1a1a1a" stroke="#60a5fa" stroke-width="2"/>
+      <text x="510" y="72" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="600">Controllers</text>
+      <text x="510" y="88" text-anchor="middle" fill="#525252" font-size="8">Reconciliation loops</text>
+      
+      <!-- Arrows between control plane components -->
+      <path d="M150 75 L170 75" stroke="#525252" stroke-width="1" fill="none"/>
+      <path d="M290 75 L310 75" stroke="#525252" stroke-width="1" fill="none"/>
+      <path d="M430 75 L450 75" stroke="#525252" stroke-width="1" fill="none"/>
+      
+      <!-- Control plane description -->
+      <text x="30" y="140" fill="#666" font-size="9">The brain of K8s. API Server is the single entry point. etcd stores all state. Scheduler decides WHERE. Controllers ensure WHAT.</text>
+      
+      <!-- Worker Node 1 -->
+      <rect x="10" y="195" width="285" height="175" rx="10" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6 3"/>
+      <text x="30" y="218" fill="#3b82f6" font-size="12" font-weight="600">WORKER NODE 1</text>
+      
+      <!-- kubelet -->
+      <rect x="30" y="232" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="80" y="250" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="500">kubelet</text>
+      <text x="80" y="263" text-anchor="middle" fill="#525252" font-size="7">Node agent</text>
+      
+      <!-- kube-proxy -->
+      <rect x="145" y="232" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#22d3ee" stroke-width="1.5"/>
+      <text x="195" y="250" text-anchor="middle" fill="#22d3ee" font-size="10" font-weight="500">kube-proxy</text>
+      <text x="195" y="263" text-anchor="middle" fill="#525252" font-size="7">Network rules</text>
+      
+      <!-- Pods in node 1 -->
+      <rect x="30" y="285" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="65" y="302" text-anchor="middle" fill="#34d399" font-size="9">Pod A</text>
+      <text x="65" y="314" text-anchor="middle" fill="#525252" font-size="7">nginx</text>
+      
+      <rect x="110" y="285" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="145" y="302" text-anchor="middle" fill="#34d399" font-size="9">Pod B</text>
+      <text x="145" y="314" text-anchor="middle" fill="#525252" font-size="7">api</text>
+      
+      <rect x="190" y="285" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="225" y="302" text-anchor="middle" fill="#34d399" font-size="9">Pod C</text>
+      <text x="225" y="314" text-anchor="middle" fill="#525252" font-size="7">worker</text>
+
+      <!-- Container Runtime label -->
+      <text x="30" y="352" fill="#525252" font-size="8">Container Runtime: containerd / CRI-O</text>
+      
+      <!-- Worker Node 2 -->
+      <rect x="305" y="195" width="285" height="175" rx="10" fill="none" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6 3"/>
+      <text x="325" y="218" fill="#3b82f6" font-size="12" font-weight="600">WORKER NODE 2</text>
+      
+      <rect x="325" y="232" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="375" y="250" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="500">kubelet</text>
+      <text x="375" y="263" text-anchor="middle" fill="#525252" font-size="7">Node agent</text>
+      
+      <rect x="440" y="232" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#22d3ee" stroke-width="1.5"/>
+      <text x="490" y="250" text-anchor="middle" fill="#22d3ee" font-size="10" font-weight="500">kube-proxy</text>
+      <text x="490" y="263" text-anchor="middle" fill="#525252" font-size="7">Network rules</text>
+      
+      <rect x="325" y="285" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="360" y="302" text-anchor="middle" fill="#34d399" font-size="9">Pod D</text>
+      <text x="360" y="314" text-anchor="middle" fill="#525252" font-size="7">api</text>
+      
+      <rect x="405" y="285" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="440" y="302" text-anchor="middle" fill="#34d399" font-size="9">Pod E</text>
+      <text x="440" y="314" text-anchor="middle" fill="#525252" font-size="7">db</text>
+      
+      <rect x="485" y="285" width="70" height="35" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="520" y="302" text-anchor="middle" fill="#34d399" font-size="9">Pod F</text>
+      <text x="520" y="314" text-anchor="middle" fill="#525252" font-size="7">cache</text>
+      
+      <text x="325" y="352" fill="#525252" font-size="8">Container Runtime: containerd / CRI-O</text>
+      
+      <!-- Arrows from Control Plane to Worker Nodes -->
+      <path d="M90 165 L90 195" class="flow-path" stroke="#00FF88" stroke-width="1.5" fill="none"/>
+      <polygon points="90,195 85,188 95,188" fill="#00FF88"/>
+      
+      <path d="M510 165 L510 195" class="flow-path" stroke="#00FF88" stroke-width="1.5" fill="none"/>
+      <polygon points="510,195 505,188 515,188" fill="#00FF88"/>
+      
+      <circle class="pulse-dot" cx="90" cy="180" r="3" fill="#00FF88"/>
+      <circle class="pulse-dot" cx="510" cy="180" r="3" fill="#00FF88" style="animation-delay: 0.4s"/>
+    </svg>
+    
+    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+      <div>
+        <p class="text-primary text-sm font-medium">API Server</p>
+        <p class="text-text-muted text-xs mt-1">Front door for all operations</p>
+      </div>
+      <div>
+        <p class="text-yellow-400 text-sm font-medium">etcd</p>
+        <p class="text-text-muted text-xs mt-1">Cluster's source of truth</p>
+      </div>
+      <div>
+        <p class="text-purple-400 text-sm font-medium">Scheduler</p>
+        <p class="text-text-muted text-xs mt-1">Picks the best node for pods</p>
+      </div>
+      <div>
+        <p class="text-blue-400 text-sm font-medium">Controllers</p>
+        <p class="text-text-muted text-xs mt-1">Keep desired = actual state</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: How It Works -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">How It Works</h2>
+  <p class="text-text-secondary text-sm md:text-base mb-8 fade-in">
+    When you deploy an application, here's the chain of events inside the cluster:
+  </p>
+  
+  <!-- Step 1 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+      <h3 class="font-medium text-text-secondary">You write a manifest</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">A YAML file describing your desired state — "I want 3 replicas of my API running."</p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># deployment.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">apps/v1</span>
+<span class="type">kind</span>: <span class="string">Deployment</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">my-api</span>
+<span class="type">spec</span>:
+  <span class="type">replicas</span>: <span class="string">3</span>
+  <span class="type">selector</span>:
+    <span class="type">matchLabels</span>:
+      <span class="type">app</span>: <span class="string">my-api</span>
+  <span class="type">template</span>:
+    <span class="type">metadata</span>:
+      <span class="type">labels</span>:
+        <span class="type">app</span>: <span class="string">my-api</span>
+    <span class="type">spec</span>:
+      <span class="type">containers</span>:
+      - <span class="type">name</span>: <span class="string">api</span>
+        <span class="type">image</span>: <span class="string">myapp:v1.0.0</span>
+        <span class="type">ports</span>:
+        - <span class="type">containerPort</span>: <span class="string">8080</span></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 2 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+      <h3 class="font-medium text-text-secondary">kubectl sends it to the API Server</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">The API Server validates the manifest, authenticates you, and stores the desired state in etcd.</p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="function">$</span> kubectl apply -f deployment.yaml
+<span class="string">deployment.apps/my-api created</span>
+
+<span class="comment"># Behind the scenes:</span>
+<span class="comment"># 1. kubectl → API Server (HTTPS)</span>
+<span class="comment"># 2. API Server validates YAML</span>
+<span class="comment"># 3. API Server → etcd (stores desired state)</span>
+<span class="comment"># 4. API Server confirms back to you</span></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 3 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+      <h3 class="font-medium text-text-secondary">Scheduler assigns pods to nodes</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm">The Scheduler watches for unassigned pods and picks the best node based on available resources, constraints, and affinity rules. It considers CPU, memory, disk, and even custom rules you define.</p>
+    </div>
+  </div>
+  
+  <!-- Step 4 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">4</span>
+      <h3 class="font-medium text-text-secondary">kubelet pulls the image and starts containers</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm">On each assigned node, the kubelet pulls the container image and tells the container runtime (containerd) to start the containers. The pod is now <span class="text-primary">Running</span>.</p>
+    </div>
+  </div>
+  
+  <!-- Step 5 -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">5</span>
+      <h3 class="font-medium text-text-secondary">Controllers ensure desired = actual state</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">The Deployment controller continuously watches. If a pod crashes, it creates a new one. If you change replicas from 3 to 5, it spins up 2 more. This is the <span class="text-primary font-medium">reconciliation loop</span> — the heart of Kubernetes.</p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="function">$</span> kubectl get pods
+<span class="string">NAME                      READY   STATUS    RESTARTS   AGE</span>
+my-api-7d9b4c5f6-abc12   1/1     Running   0          2m
+my-api-7d9b4c5f6-def34   1/1     Running   0          2m
+my-api-7d9b4c5f6-ghi56   1/1     Running   0          2m
+
+<span class="comment"># Kill a pod — watch K8s bring it back</span>
+<span class="function">$</span> kubectl delete pod my-api-7d9b4c5f6-abc12
+<span class="string">pod "my-api-7d9b4c5f6-abc12" deleted</span>
+
+<span class="function">$</span> kubectl get pods
+<span class="string">NAME                      READY   STATUS    RESTARTS   AGE</span>
+my-api-7d9b4c5f6-def34   1/1     Running   0          3m
+my-api-7d9b4c5f6-ghi56   1/1     Running   0          3m
+my-api-7d9b4c5f6-<span class="keyword">xyz99</span>   1/1     Running   0          <span class="keyword">5s</span>  <span class="comment">← New pod!</span></code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7: Code Examples with Tool Tabs -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Code Examples</h2>
+  
+  <!-- Tool Switcher -->
+  <div class="mb-6 fade-in">
+    <div class="flex flex-wrap gap-2" id="tool-switcher">
+      <button class="tool-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-tool="kubectl">
+        <span class="text-lg">⚡</span> kubectl
+      </button>
+      <button class="tool-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-tool="helm">
+        <span class="text-lg">⎈</span> Helm
+      </button>
+      <button class="tool-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-tool="kustomize">
+        <span class="text-lg">🔧</span> Kustomize
+      </button>
+    </div>
+  </div>
+  
+  <!-- Step 1: Deploy an Application -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+      <h3 class="font-medium text-text-secondary">Deploy an Application</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- kubectl deploy -->
+      <div class="tool-content" id="tool-kubectl-deploy">
+        <p class="text-text-secondary text-sm mb-4">Write YAML manifests and apply them directly. The most explicit approach — you see exactly what's being created.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># deployment.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">apps/v1</span>
+<span class="type">kind</span>: <span class="string">Deployment</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">web-app</span>
+  <span class="type">labels</span>:
+    <span class="type">app</span>: <span class="string">web-app</span>
+<span class="type">spec</span>:
+  <span class="type">replicas</span>: <span class="string">3</span>
+  <span class="type">selector</span>:
+    <span class="type">matchLabels</span>:
+      <span class="type">app</span>: <span class="string">web-app</span>
+  <span class="type">template</span>:
+    <span class="type">metadata</span>:
+      <span class="type">labels</span>:
+        <span class="type">app</span>: <span class="string">web-app</span>
+    <span class="type">spec</span>:
+      <span class="type">containers</span>:
+      - <span class="type">name</span>: <span class="string">web</span>
+        <span class="type">image</span>: <span class="string">nginx:1.25</span>
+        <span class="type">ports</span>:
+        - <span class="type">containerPort</span>: <span class="string">80</span>
+        <span class="type">resources</span>:
+          <span class="type">requests</span>:
+            <span class="type">cpu</span>: <span class="string">100m</span>
+            <span class="type">memory</span>: <span class="string">128Mi</span>
+          <span class="type">limits</span>:
+            <span class="type">cpu</span>: <span class="string">250m</span>
+            <span class="type">memory</span>: <span class="string">256Mi</span>
+---
+<span class="comment"># service.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">v1</span>
+<span class="type">kind</span>: <span class="string">Service</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">web-app</span>
+<span class="type">spec</span>:
+  <span class="type">selector</span>:
+    <span class="type">app</span>: <span class="string">web-app</span>
+  <span class="type">ports</span>:
+  - <span class="type">port</span>: <span class="string">80</span>
+    <span class="type">targetPort</span>: <span class="string">80</span>
+  <span class="type">type</span>: <span class="string">ClusterIP</span></code></pre>
+        </div>
+        <div class="mt-4 bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="function">$</span> kubectl apply -f deployment.yaml -f service.yaml
+<span class="string">deployment.apps/web-app created</span>
+<span class="string">service/web-app created</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Helm deploy -->
+      <div class="tool-content hidden" id="tool-helm-deploy">
+        <p class="text-text-secondary text-sm mb-4">Package your app as a Helm chart with templated values. Great for reusable, configurable deployments.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># Chart.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">v2</span>
+<span class="type">name</span>: <span class="string">web-app</span>
+<span class="type">description</span>: <span class="string">A web application chart</span>
+<span class="type">version</span>: <span class="string">1.0.0</span>
+<span class="type">appVersion</span>: <span class="string">"1.25"</span></code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># values.yaml</span>
+<span class="type">replicaCount</span>: <span class="string">3</span>
+<span class="type">image</span>:
+  <span class="type">repository</span>: <span class="string">nginx</span>
+  <span class="type">tag</span>: <span class="string">"1.25"</span>
+<span class="type">service</span>:
+  <span class="type">type</span>: <span class="string">ClusterIP</span>
+  <span class="type">port</span>: <span class="string">80</span>
+<span class="type">resources</span>:
+  <span class="type">requests</span>:
+    <span class="type">cpu</span>: <span class="string">100m</span>
+    <span class="type">memory</span>: <span class="string">128Mi</span>
+  <span class="type">limits</span>:
+    <span class="type">cpu</span>: <span class="string">250m</span>
+    <span class="type">memory</span>: <span class="string">256Mi</span></code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># templates/deployment.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">apps/v1</span>
+<span class="type">kind</span>: <span class="string">Deployment</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">{lb}{lb}</span> .Release.Name <span class="string">{rb}{rb}</span>
+<span class="type">spec</span>:
+  <span class="type">replicas</span>: <span class="string">{lb}{lb}</span> .Values.replicaCount <span class="string">{rb}{rb}</span>
+  <span class="type">template</span>:
+    <span class="type">spec</span>:
+      <span class="type">containers</span>:
+      - <span class="type">name</span>: <span class="string">web</span>
+        <span class="type">image</span>: <span class="string">"{lb}{lb}</span> .Values.image.repository <span class="string">{rb}{rb}</span>:<span class="string">{lb}{lb}</span> .Values.image.tag <span class="string">{rb}{rb}</span>"
+        <span class="type">resources</span>:
+          <span class="string">{lb}{lb}</span>- toYaml .Values.resources | nindent 10 <span class="string">{rb}{rb}</span></code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="function">$</span> helm install web-app ./web-app
+<span class="string">NAME: web-app</span>
+<span class="string">STATUS: deployed</span>
+
+<span class="comment"># Or with custom values:</span>
+<span class="function">$</span> helm install web-app ./web-app --set replicaCount=5</code></pre>
+        </div>
+      </div>
+      
+      <!-- Kustomize deploy -->
+      <div class="tool-content hidden" id="tool-kustomize-deploy">
+        <p class="text-text-secondary text-sm mb-4">Define a base configuration and overlay environment-specific changes. No templating needed — pure YAML patching.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># base/deployment.yaml (same plain YAML)</span>
+<span class="type">apiVersion</span>: <span class="string">apps/v1</span>
+<span class="type">kind</span>: <span class="string">Deployment</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">web-app</span>
+<span class="type">spec</span>:
+  <span class="type">replicas</span>: <span class="string">1</span>
+  <span class="type">template</span>:
+    <span class="type">spec</span>:
+      <span class="type">containers</span>:
+      - <span class="type">name</span>: <span class="string">web</span>
+        <span class="type">image</span>: <span class="string">nginx:1.25</span></code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># base/kustomization.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">kustomize.config.k8s.io/v1beta1</span>
+<span class="type">kind</span>: <span class="string">Kustomization</span>
+<span class="type">resources</span>:
+- <span class="string">deployment.yaml</span>
+- <span class="string">service.yaml</span></code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># overlays/prod/kustomization.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">kustomize.config.k8s.io/v1beta1</span>
+<span class="type">kind</span>: <span class="string">Kustomization</span>
+<span class="type">resources</span>:
+- <span class="string">../../base</span>
+<span class="type">replicas</span>:
+- <span class="type">name</span>: <span class="string">web-app</span>
+  <span class="type">count</span>: <span class="string">3</span>
+<span class="type">namePrefix</span>: <span class="string">prod-</span>
+<span class="type">namespace</span>: <span class="string">production</span></code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="function">$</span> kubectl apply -k overlays/prod/
+<span class="string">deployment.apps/prod-web-app created</span>
+<span class="string">service/prod-web-app created</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 2: Scale Your App -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+      <h3 class="font-medium text-text-secondary">Scale Your App</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- kubectl scale -->
+      <div class="tool-content" id="tool-kubectl-scale">
+        <p class="text-text-secondary text-sm mb-4">Scale imperatively with a command, or declaratively by editing the YAML.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># Imperative — quick and direct</span>
+<span class="function">$</span> kubectl scale deployment web-app --replicas=10
+<span class="string">deployment.apps/web-app scaled</span>
+
+<span class="comment"># Or auto-scale based on CPU</span>
+<span class="function">$</span> kubectl autoscale deployment web-app \
+    --min=3 --max=20 --cpu-percent=70
+<span class="string">horizontalpodautoscaler.autoscaling/web-app autoscaled</span></code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># hpa.yaml — Horizontal Pod Autoscaler</span>
+<span class="type">apiVersion</span>: <span class="string">autoscaling/v2</span>
+<span class="type">kind</span>: <span class="string">HorizontalPodAutoscaler</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">web-app</span>
+<span class="type">spec</span>:
+  <span class="type">scaleTargetRef</span>:
+    <span class="type">apiVersion</span>: <span class="string">apps/v1</span>
+    <span class="type">kind</span>: <span class="string">Deployment</span>
+    <span class="type">name</span>: <span class="string">web-app</span>
+  <span class="type">minReplicas</span>: <span class="string">3</span>
+  <span class="type">maxReplicas</span>: <span class="string">20</span>
+  <span class="type">metrics</span>:
+  - <span class="type">type</span>: <span class="string">Resource</span>
+    <span class="type">resource</span>:
+      <span class="type">name</span>: <span class="string">cpu</span>
+      <span class="type">target</span>:
+        <span class="type">type</span>: <span class="string">Utilization</span>
+        <span class="type">averageUtilization</span>: <span class="string">70</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Helm scale -->
+      <div class="tool-content hidden" id="tool-helm-scale">
+        <p class="text-text-secondary text-sm mb-4">Update a single value and upgrade the release.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># Override replicaCount</span>
+<span class="function">$</span> helm upgrade web-app ./web-app --set replicaCount=10
+<span class="string">Release "web-app" has been upgraded.</span>
+
+<span class="comment"># Or use a values file per environment</span>
+<span class="function">$</span> helm upgrade web-app ./web-app -f values-prod.yaml
+
+<span class="comment"># values-prod.yaml</span>
+<span class="type">replicaCount</span>: <span class="string">10</span>
+<span class="type">resources</span>:
+  <span class="type">requests</span>:
+    <span class="type">cpu</span>: <span class="string">500m</span>
+    <span class="type">memory</span>: <span class="string">512Mi</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Kustomize scale -->
+      <div class="tool-content hidden" id="tool-kustomize-scale">
+        <p class="text-text-secondary text-sm mb-4">Add a replicas field to your overlay — no patching the base.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># overlays/prod/kustomization.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">kustomize.config.k8s.io/v1beta1</span>
+<span class="type">kind</span>: <span class="string">Kustomization</span>
+<span class="type">resources</span>:
+- <span class="string">../../base</span>
+<span class="type">replicas</span>:
+- <span class="type">name</span>: <span class="string">web-app</span>
+  <span class="type">count</span>: <span class="string">10</span>
+
+<span class="comment"># Apply the overlay</span>
+<span class="function">$</span> kubectl apply -k overlays/prod/</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 3: Rolling Updates -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+      <h3 class="font-medium text-text-secondary">Rolling Updates</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- kubectl rolling update -->
+      <div class="tool-content" id="tool-kubectl-update">
+        <p class="text-text-secondary text-sm mb-4">Update the image and watch Kubernetes gradually replace old pods with new ones — zero downtime.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment"># Update the image</span>
+<span class="function">$</span> kubectl set image deployment/web-app web=nginx:1.26
+<span class="string">deployment.apps/web-app image updated</span>
+
+<span class="comment"># Watch the rollout</span>
+<span class="function">$</span> kubectl rollout status deployment/web-app
+<span class="string">Waiting for deployment "web-app" rollout to finish:</span>
+<span class="string">  2 out of 3 new replicas have been updated...</span>
+<span class="string">  3 of 3 updated replicas are available.</span>
+<span class="string">deployment "web-app" successfully rolled out</span>
+
+<span class="comment"># Something broke? Roll back instantly</span>
+<span class="function">$</span> kubectl rollout undo deployment/web-app
+<span class="string">deployment.apps/web-app rolled back</span>
+
+<span class="comment"># Check rollout history</span>
+<span class="function">$</span> kubectl rollout history deployment/web-app</code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># Control rollout strategy in YAML</span>
+<span class="type">spec</span>:
+  <span class="type">strategy</span>:
+    <span class="type">type</span>: <span class="string">RollingUpdate</span>
+    <span class="type">rollingUpdate</span>:
+      <span class="type">maxSurge</span>: <span class="string">1</span>        <span class="comment"># Max extra pods during update</span>
+      <span class="type">maxUnavailable</span>: <span class="string">0</span>  <span class="comment"># Always maintain full capacity</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Helm rolling update -->
+      <div class="tool-content hidden" id="tool-helm-update">
+        <p class="text-text-secondary text-sm mb-4">Bump the image tag in values and upgrade the release. Helm tracks revision history for rollbacks.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># Update the image tag</span>
+<span class="function">$</span> helm upgrade web-app ./web-app --set image.tag=1.26
+<span class="string">Release "web-app" has been upgraded. Revision: 2</span>
+
+<span class="comment"># Check history</span>
+<span class="function">$</span> helm history web-app
+<span class="string">REVISION  STATUS      DESCRIPTION</span>
+<span class="string">1         superseded  Install complete</span>
+<span class="string">2         deployed    Upgrade complete</span>
+
+<span class="comment"># Rollback to previous revision</span>
+<span class="function">$</span> helm rollback web-app 1
+<span class="string">Rollback was a success! Revision: 3</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Kustomize rolling update -->
+      <div class="tool-content hidden" id="tool-kustomize-update">
+        <p class="text-text-secondary text-sm mb-4">Use the image transformer to override the tag in your overlay — the base stays untouched.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># overlays/prod/kustomization.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">kustomize.config.k8s.io/v1beta1</span>
+<span class="type">kind</span>: <span class="string">Kustomization</span>
+<span class="type">resources</span>:
+- <span class="string">../../base</span>
+<span class="type">images</span>:
+- <span class="type">name</span>: <span class="string">nginx</span>
+  <span class="type">newTag</span>: <span class="string">"1.26"</span>
+
+<span class="function">$</span> kubectl apply -k overlays/prod/
+<span class="comment"># K8s performs the rolling update automatically</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 4: Expose to the Internet -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">4</span>
+      <h3 class="font-medium text-text-secondary">Expose to the Internet</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- kubectl expose -->
+      <div class="tool-content" id="tool-kubectl-expose">
+        <p class="text-text-secondary text-sm mb-4">Use an Ingress resource to route external traffic to your service with TLS termination.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># ingress.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">networking.k8s.io/v1</span>
+<span class="type">kind</span>: <span class="string">Ingress</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">web-app</span>
+  <span class="type">annotations</span>:
+    <span class="type">cert-manager.io/cluster-issuer</span>: <span class="string">letsencrypt-prod</span>
+<span class="type">spec</span>:
+  <span class="type">tls</span>:
+  - <span class="type">hosts</span>:
+    - <span class="string">app.example.com</span>
+    <span class="type">secretName</span>: <span class="string">web-app-tls</span>
+  <span class="type">rules</span>:
+  - <span class="type">host</span>: <span class="string">app.example.com</span>
+    <span class="type">http</span>:
+      <span class="type">paths</span>:
+      - <span class="type">path</span>: <span class="string">/</span>
+        <span class="type">pathType</span>: <span class="string">Prefix</span>
+        <span class="type">backend</span>:
+          <span class="type">service</span>:
+            <span class="type">name</span>: <span class="string">web-app</span>
+            <span class="type">port</span>:
+              <span class="type">number</span>: <span class="string">80</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Helm expose -->
+      <div class="tool-content hidden" id="tool-helm-expose">
+        <p class="text-text-secondary text-sm mb-4">Enable ingress in your values file — the chart template handles the rest.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># values-prod.yaml</span>
+<span class="type">ingress</span>:
+  <span class="type">enabled</span>: <span class="string">true</span>
+  <span class="type">hosts</span>:
+  - <span class="type">host</span>: <span class="string">app.example.com</span>
+    <span class="type">paths</span>:
+    - <span class="type">path</span>: <span class="string">/</span>
+  <span class="type">tls</span>:
+  - <span class="type">secretName</span>: <span class="string">web-app-tls</span>
+    <span class="type">hosts</span>:
+    - <span class="string">app.example.com</span>
+
+<span class="function">$</span> helm upgrade web-app ./web-app -f values-prod.yaml</code></pre>
+        </div>
+      </div>
+      
+      <!-- Kustomize expose -->
+      <div class="tool-content hidden" id="tool-kustomize-expose">
+        <p class="text-text-secondary text-sm mb-4">Add ingress to your base resources and customize per environment.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># overlays/prod/ingress-patch.yaml</span>
+<span class="type">apiVersion</span>: <span class="string">networking.k8s.io/v1</span>
+<span class="type">kind</span>: <span class="string">Ingress</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">web-app</span>
+<span class="type">spec</span>:
+  <span class="type">tls</span>:
+  - <span class="type">hosts</span>:
+    - <span class="string">app.example.com</span>
+    <span class="type">secretName</span>: <span class="string">web-app-tls</span>
+
+<span class="comment"># overlays/prod/kustomization.yaml</span>
+<span class="type">resources</span>:
+- <span class="string">../../base</span>
+<span class="type">patchesStrategicMerge</span>:
+- <span class="string">ingress-patch.yaml</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Tool Comparison -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">kubectl vs Helm vs Kustomize</h2>
+  
+  <div class="grid gap-4 stagger-children">
+    <!-- kubectl -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">⚡</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-medium text-white mb-1">kubectl</h3>
+          <p class="text-text-muted text-sm mb-3">Direct communication with the Kubernetes API. Write plain YAML, apply it. No abstraction layer.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded">Learning & debugging</span>
+            <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded">Simple deployments</span>
+            <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded">Full control</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Helm -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">⎈</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-medium text-white mb-1">Helm</h3>
+          <p class="text-text-muted text-sm mb-3">The "package manager" for Kubernetes. Charts bundle templates + values for reusable, versionable deployments. Huge ecosystem of pre-made charts.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-blue-500/10 text-blue-400 px-2 py-1 rounded">Complex apps</span>
+            <span class="text-xs bg-blue-500/10 text-blue-400 px-2 py-1 rounded">Third-party software</span>
+            <span class="text-xs bg-blue-500/10 text-blue-400 px-2 py-1 rounded">Release management</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Kustomize -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔧</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-medium text-white mb-1">Kustomize</h3>
+          <p class="text-text-muted text-sm mb-3">Overlay-based configuration. Keep plain YAML (no templates), layer environment-specific patches on top. Built into kubectl since v1.14.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs bg-purple-500/10 text-purple-400 px-2 py-1 rounded">Multi-environment</span>
+            <span class="text-xs bg-purple-500/10 text-purple-400 px-2 py-1 rounded">No templating</span>
+            <span class="text-xs bg-purple-500/10 text-purple-400 px-2 py-1 rounded">GitOps friendly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-6 bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <h3 class="font-medium text-text-secondary mb-4">When to use what?</h3>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="bg-bg-main rounded-lg p-4 border border-border-subtle">
+        <p class="text-primary text-sm font-medium mb-2">Just learning?</p>
+        <p class="text-text-muted text-xs">Start with <span class="text-white">kubectl</span>. Understand the raw YAML before adding abstractions.</p>
+      </div>
+      <div class="bg-bg-main rounded-lg p-4 border border-border-subtle">
+        <p class="text-blue-400 text-sm font-medium mb-2">Installing software?</p>
+        <p class="text-text-muted text-xs">Use <span class="text-white">Helm</span>. Install Prometheus, Grafana, nginx-ingress in one command.</p>
+      </div>
+      <div class="bg-bg-main rounded-lg p-4 border border-border-subtle">
+        <p class="text-purple-400 text-sm font-medium mb-2">Multi-env configs?</p>
+        <p class="text-text-muted text-xs">Use <span class="text-white">Kustomize</span>. Same base, different overlays for dev/staging/prod.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 9: Networking Deep Dive -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Networking</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-8 fade-in overflow-x-auto mb-8">
+    <svg viewBox="0 0 600 280" class="w-full h-auto min-w-[480px]">
+      <!-- Internet -->
+      <rect x="230" y="5" width="140" height="35" rx="6" fill="#1a1a1a" stroke="#ef4444" stroke-width="2"/>
+      <text x="300" y="28" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="600">🌍 INTERNET</text>
+      
+      <!-- Ingress -->
+      <rect x="210" y="60" width="180" height="40" rx="6" fill="#1a1a1a" stroke="#f472b6" stroke-width="2"/>
+      <text x="300" y="85" text-anchor="middle" fill="#f472b6" font-size="11" font-weight="600">Ingress Controller</text>
+      
+      <!-- LoadBalancer -->
+      <rect x="50" y="125" width="150" height="40" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+      <text x="125" y="150" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="500">LoadBalancer</text>
+      
+      <!-- NodePort -->
+      <rect x="225" y="125" width="150" height="40" rx="6" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2"/>
+      <text x="300" y="150" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="500">NodePort</text>
+      
+      <!-- ClusterIP -->
+      <rect x="400" y="125" width="150" height="40" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+      <text x="475" y="150" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="500">ClusterIP</text>
+      
+      <!-- Pods -->
+      <rect x="100" y="200" width="80" height="30" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="140" y="220" text-anchor="middle" fill="#34d399" font-size="9">Pod 1</text>
+      
+      <rect x="260" y="200" width="80" height="30" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="300" y="220" text-anchor="middle" fill="#34d399" font-size="9">Pod 2</text>
+      
+      <rect x="420" y="200" width="80" height="30" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+      <text x="460" y="220" text-anchor="middle" fill="#34d399" font-size="9">Pod 3</text>
+      
+      <!-- Arrows -->
+      <path d="M300 40 L300 60" stroke="#ef4444" stroke-width="1.5" fill="none"/>
+      <polygon points="300,60 295,53 305,53" fill="#ef4444"/>
+      
+      <path d="M260 100 L125 125" stroke="#f472b6" stroke-width="1" fill="none"/>
+      <path d="M300 100 L300 125" stroke="#f472b6" stroke-width="1" fill="none"/>
+      <path d="M340 100 L475 125" stroke="#f472b6" stroke-width="1" fill="none"/>
+      
+      <path d="M125 165 L140 200" stroke="#fbbf24" stroke-width="1" fill="none"/>
+      <path d="M300 165 L300 200" stroke="#a78bfa" stroke-width="1" fill="none"/>
+      <path d="M475 165 L460 200" stroke="#00FF88" stroke-width="1" fill="none"/>
+      
+      <!-- Labels -->
+      <text x="75" y="260" fill="#fbbf24" font-size="9">External IP from cloud</text>
+      <text x="238" y="260" fill="#a78bfa" font-size="9">Opens port on all nodes</text>
+      <text x="405" y="260" fill="#00FF88" font-size="9">Internal only (default)</text>
+    </svg>
+  </div>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-5">
+      <h3 class="font-medium text-primary mb-2">ClusterIP <span class="text-text-muted text-xs">(default)</span></h3>
+      <p class="text-text-muted text-sm">Internal-only. Pods can reach each other via service name. Not accessible from outside the cluster.</p>
+      <p class="text-text-muted text-xs mt-2 italic">Use for: internal APIs, databases, caches</p>
+    </div>
+    <div class="bg-bg-card border border-purple-500/30 rounded-xl p-5">
+      <h3 class="font-medium text-purple-400 mb-2">NodePort</h3>
+      <p class="text-text-muted text-sm">Opens a static port (30000-32767) on every node. External traffic hits <code class="text-purple-400">NodeIP:Port</code>.</p>
+      <p class="text-text-muted text-xs mt-2 italic">Use for: development, bare-metal clusters</p>
+    </div>
+    <div class="bg-bg-card border border-yellow-500/30 rounded-xl p-5">
+      <h3 class="font-medium text-yellow-400 mb-2">LoadBalancer</h3>
+      <p class="text-text-muted text-sm">Provisions a cloud load balancer (AWS ALB/NLB, GCP LB). Gets an external IP automatically.</p>
+      <p class="text-text-muted text-xs mt-2 italic">Use for: exposing a single service on cloud</p>
+    </div>
+    <div class="bg-bg-card border border-pink-500/30 rounded-xl p-5">
+      <h3 class="font-medium text-pink-400 mb-2">Ingress</h3>
+      <p class="text-text-muted text-sm">HTTP/HTTPS routing rules. One load balancer → multiple services via host/path rules. TLS termination.</p>
+      <p class="text-text-muted text-xs mt-2 italic">Use for: production — the standard approach</p>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: Storage -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Storage</h2>
+  
+  <p class="text-text-secondary text-sm md:text-base mb-6 fade-in">
+    Containers are <span class="text-primary font-medium">ephemeral</span> — when they restart, data is gone. Kubernetes Volumes solve this 
+    with a layered abstraction: admins provision storage, developers request it.
+  </p>
+  
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="grid md:grid-cols-3 gap-6 mb-6">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+            <span class="text-xl">💽</span>
+          </div>
+          <h4 class="text-sm font-medium text-blue-400 mb-1">PersistentVolume (PV)</h4>
+          <p class="text-text-muted text-xs">A piece of storage provisioned by an admin or dynamically. Cluster-level resource.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+            <span class="text-xl">📋</span>
+          </div>
+          <h4 class="text-sm font-medium text-purple-400 mb-1">PersistentVolumeClaim (PVC)</h4>
+          <p class="text-text-muted text-xs">A request for storage by a pod. "I need 10Gi of fast SSD storage."</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2">
+            <span class="text-xl">⚙️</span>
+          </div>
+          <h4 class="text-sm font-medium text-primary mb-1">StorageClass</h4>
+          <p class="text-text-muted text-xs">Defines how storage is dynamically provisioned. "fast" = SSD, "standard" = HDD.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># pvc.yaml — Request storage</span>
+<span class="type">apiVersion</span>: <span class="string">v1</span>
+<span class="type">kind</span>: <span class="string">PersistentVolumeClaim</span>
+<span class="type">metadata</span>:
+  <span class="type">name</span>: <span class="string">db-storage</span>
+<span class="type">spec</span>:
+  <span class="type">accessModes</span>:
+  - <span class="string">ReadWriteOnce</span>
+  <span class="type">storageClassName</span>: <span class="string">fast-ssd</span>
+  <span class="type">resources</span>:
+    <span class="type">requests</span>:
+      <span class="type">storage</span>: <span class="string">10Gi</span>
+---
+<span class="comment"># Use it in a pod</span>
+<span class="type">spec</span>:
+  <span class="type">containers</span>:
+  - <span class="type">name</span>: <span class="string">postgres</span>
+    <span class="type">image</span>: <span class="string">postgres:16</span>
+    <span class="type">volumeMounts</span>:
+    - <span class="type">name</span>: <span class="string">data</span>
+      <span class="type">mountPath</span>: <span class="string">/var/lib/postgresql/data</span>
+  <span class="type">volumes</span>:
+  - <span class="type">name</span>: <span class="string">data</span>
+    <span class="type">persistentVolumeClaim</span>:
+      <span class="type">claimName</span>: <span class="string">db-storage</span></code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 11: Production Readiness -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Production Readiness</h2>
+  <p class="text-text-secondary text-sm md:text-base mb-8 fade-in">
+    Getting containers running is step one. Running them <span class="text-primary font-medium">reliably in production</span> requires 
+    health checks, resource limits, auto-scaling, and access control.
+  </p>
+  
+  <!-- Health Probes -->
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">💓</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Health Probes</h3>
+          <p class="text-text-muted text-sm">How Kubernetes knows if your app is alive, ready for traffic, and started successfully.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="type">containers</span>:
+- <span class="type">name</span>: <span class="string">api</span>
+  <span class="type">image</span>: <span class="string">myapp:v1.0.0</span>
+  
+  <span class="comment"># Is the container alive? (restart if not)</span>
+  <span class="type">livenessProbe</span>:
+    <span class="type">httpGet</span>:
+      <span class="type">path</span>: <span class="string">/healthz</span>
+      <span class="type">port</span>: <span class="string">8080</span>
+    <span class="type">initialDelaySeconds</span>: <span class="string">10</span>
+    <span class="type">periodSeconds</span>: <span class="string">15</span>
+  
+  <span class="comment"># Is it ready for traffic? (remove from LB if not)</span>
+  <span class="type">readinessProbe</span>:
+    <span class="type">httpGet</span>:
+      <span class="type">path</span>: <span class="string">/ready</span>
+      <span class="type">port</span>: <span class="string">8080</span>
+    <span class="type">initialDelaySeconds</span>: <span class="string">5</span>
+    <span class="type">periodSeconds</span>: <span class="string">10</span>
+  
+  <span class="comment"># Has it started? (for slow-starting apps)</span>
+  <span class="type">startupProbe</span>:
+    <span class="type">httpGet</span>:
+      <span class="type">path</span>: <span class="string">/healthz</span>
+      <span class="type">port</span>: <span class="string">8080</span>
+    <span class="type">failureThreshold</span>: <span class="string">30</span>
+    <span class="type">periodSeconds</span>: <span class="string">10</span></code></pre>
+      </div>
+      
+      <div class="mt-4 grid md:grid-cols-3 gap-3">
+        <div class="bg-bg-main rounded-lg p-3 border border-border-subtle">
+          <p class="text-primary text-xs font-medium mb-1">livenessProbe</p>
+          <p class="text-text-muted text-xs">Container stuck? Restart it.</p>
+        </div>
+        <div class="bg-bg-main rounded-lg p-3 border border-border-subtle">
+          <p class="text-blue-400 text-xs font-medium mb-1">readinessProbe</p>
+          <p class="text-text-muted text-xs">Not ready? Stop sending traffic.</p>
+        </div>
+        <div class="bg-bg-main rounded-lg p-3 border border-border-subtle">
+          <p class="text-yellow-400 text-xs font-medium mb-1">startupProbe</p>
+          <p class="text-text-muted text-xs">Still booting? Don't kill it yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Resource Management -->
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📊</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Resource Requests & Limits</h3>
+          <p class="text-text-muted text-sm">Guarantee minimum resources and cap maximum usage. Prevents noisy neighbors and OOM kills.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="type">resources</span>:
+  <span class="comment"># Guaranteed minimum — scheduler uses this to place pods</span>
+  <span class="type">requests</span>:
+    <span class="type">cpu</span>: <span class="string">250m</span>      <span class="comment"># 0.25 CPU cores</span>
+    <span class="type">memory</span>: <span class="string">256Mi</span>  <span class="comment"># 256 MB RAM</span>
+  <span class="comment"># Hard ceiling — container is killed if it exceeds memory limit</span>
+  <span class="type">limits</span>:
+    <span class="type">cpu</span>: <span class="string">500m</span>      <span class="comment"># 0.5 CPU cores (throttled, not killed)</span>
+    <span class="type">memory</span>: <span class="string">512Mi</span>  <span class="comment"># 512 MB RAM (OOMKilled if exceeded)</span></code></pre>
+      </div>
+      
+      <div class="mt-4 grid md:grid-cols-2 gap-4">
+        <div class="bg-bg-main rounded-lg p-4 border border-primary/20">
+          <h4 class="text-sm font-medium text-primary mb-2">✅ Best Practice</h4>
+          <BulletList color="primary" items={[
+            "Always set requests (scheduling depends on it)",
+            "Set memory limits (prevents OOM cascades)",
+            "CPU limits are optional (throttling vs. killing)"
+          ]} />
+        </div>
+        <div class="bg-bg-main rounded-lg p-4 border border-red-500/20">
+          <h4 class="text-sm font-medium text-red-400 mb-2">❌ Anti-Pattern</h4>
+          <BulletList color="red" items={[
+            "No limits = one pod can starve a whole node",
+            "Limits too low = constant OOMKills and restarts",
+            "Requests too high = wasted cluster capacity"
+          ]} />
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- RBAC -->
+  <div class="fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🛡️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">RBAC (Role-Based Access Control)</h3>
+          <p class="text-text-muted text-sm">Control who can do what in your cluster. Essential for multi-team environments.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># role.yaml — Define permissions</span>
+<span class="type">apiVersion</span>: <span class="string">rbac.authorization.k8s.io/v1</span>
+<span class="type">kind</span>: <span class="string">Role</span>
+<span class="type">metadata</span>:
+  <span class="type">namespace</span>: <span class="string">dev</span>
+  <span class="type">name</span>: <span class="string">pod-reader</span>
+<span class="type">rules</span>:
+- <span class="type">apiGroups</span>: [<span class="string">""</span>]
+  <span class="type">resources</span>: [<span class="string">"pods"</span>, <span class="string">"pods/log"</span>]
+  <span class="type">verbs</span>: [<span class="string">"get"</span>, <span class="string">"list"</span>, <span class="string">"watch"</span>]
+---
+<span class="comment"># rolebinding.yaml — Assign to user</span>
+<span class="type">apiVersion</span>: <span class="string">rbac.authorization.k8s.io/v1</span>
+<span class="type">kind</span>: <span class="string">RoleBinding</span>
+<span class="type">metadata</span>:
+  <span class="type">namespace</span>: <span class="string">dev</span>
+  <span class="type">name</span>: <span class="string">read-pods</span>
+<span class="type">subjects</span>:
+- <span class="type">kind</span>: <span class="string">User</span>
+  <span class="type">name</span>: <span class="string">jane@example.com</span>
+<span class="type">roleRef</span>:
+  <span class="type">kind</span>: <span class="string">Role</span>
+  <span class="type">name</span>: <span class="string">pod-reader</span>
+  <span class="type">apiGroup</span>: <span class="string">rbac.authorization.k8s.io</span></code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 12: Why Use It -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Why Use Kubernetes?</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔄</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Self-Healing</h3>
+          <p class="text-text-muted text-sm">Crashed containers restart automatically. Failed nodes get their pods rescheduled. No 3am pages.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📈</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Auto-Scaling</h3>
+          <p class="text-text-muted text-sm">Scale pods based on CPU, memory, or custom metrics. Scale nodes based on demand. Handle traffic spikes automatically.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🚀</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Zero-Downtime Deployments</h3>
+          <p class="text-text-muted text-sm">Rolling updates replace pods gradually. If a new version fails health checks, rollback happens automatically.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🌐</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Service Discovery</h3>
+          <p class="text-text-muted text-sm">Pods find each other by name. No hardcoded IPs. Built-in DNS resolves service names to pod endpoints.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔐</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Secrets Management</h3>
+          <p class="text-text-muted text-sm">Store and inject credentials without baking them into images. Rotate secrets without redeploying code.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📦</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Run Anywhere</h3>
+          <p class="text-text-muted text-sm">AWS EKS, GCP GKE, Azure AKS, bare metal, or your laptop. Same YAML works everywhere.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 13: When to Use / Skip -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use It</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
+        <span class="text-lg">✓</span> Use when:
+      </h3>
+      <BulletList color="primary" items={[
+        "Running microservices that need to scale independently",
+        "You need auto-scaling for variable traffic patterns",
+        "Multi-cloud or hybrid deployments are required",
+        "Team needs standardized deployment workflows",
+        "Zero-downtime deployments are a hard requirement",
+        "You're running 10+ services in production",
+        "You need strong isolation between teams/environments"
+      ]} />
+    </div>
+    <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-yellow-500 mb-4 flex items-center gap-2">
+        <span class="text-lg">⚠️</span> Skip if:
+      </h3>
+      <BulletList color="yellow" items={[
+        "You have a simple app that runs on one server",
+        "Your team is small and doesn't have K8s experience",
+        "The app is a monolith that doesn't need scaling",
+        "You're prototyping or building an MVP",
+        "A PaaS (Heroku, Railway, Fly.io) would suffice",
+        "You can't dedicate time to learn and maintain it",
+        "Your workload is serverless (Lambda/Cloud Functions)"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 14: Trade-offs -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="flex-1">
+        <h3 class="font-medium text-primary mb-3">Pros</h3>
+        <BulletList bullet="+" color="primary" items={[
+          "Industry standard — massive community and ecosystem",
+          "Cloud-agnostic — same YAML runs on AWS, GCP, Azure",
+          "Self-healing and auto-scaling out of the box",
+          "Declarative — describe what you want, not how to get there",
+          "Extensible — Custom Resource Definitions (CRDs) for anything",
+          "Battle-tested — runs at Google, Spotify, Airbnb scale"
+        ]} />
+      </div>
+      <div class="w-px bg-border-subtle hidden md:block"></div>
+      <div class="flex-1">
+        <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+        <BulletList bullet="−" color="yellow" items={[
+          "Steep learning curve — lots of concepts to internalize",
+          "Operational overhead — clusters need maintenance, upgrades",
+          "Resource hungry — control plane alone needs 2+ CPU, 4GB+ RAM",
+          "YAML fatigue — verbose configs even for simple things",
+          "Debugging is hard — distributed systems are inherently complex",
+          "Overkill for simple apps — sometimes docker compose is enough"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 15: Key Takeaways -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Key Takeaways</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+      <div>
+        <h3 class="font-medium text-white">Kubernetes is a container orchestrator</h3>
+        <p class="text-text-muted text-sm mt-1">It doesn't run containers — it manages them. It decides where they run, restarts them when they fail, and scales them when needed.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+      <div>
+        <h3 class="font-medium text-white">Declarative, not imperative</h3>
+        <p class="text-text-muted text-sm mt-1">You describe the desired state ("I want 5 replicas"). Kubernetes figures out how to get there and keeps it that way.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+      <div>
+        <h3 class="font-medium text-white">Pods are the smallest unit</h3>
+        <p class="text-text-muted text-sm mt-1">You don't deploy containers directly — you deploy Pods (which wrap containers). But you usually don't create Pods directly either — you use Deployments.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+      <div>
+        <h3 class="font-medium text-white">Services provide stable networking</h3>
+        <p class="text-text-muted text-sm mt-1">Pods are ephemeral — they get new IPs every time. Services give you a stable endpoint that load-balances across healthy pods.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+      <div>
+        <h3 class="font-medium text-white">Pick the right tool for the job</h3>
+        <p class="text-text-muted text-sm mt-1">kubectl for learning & debugging, Helm for packaging complex apps, Kustomize for environment-specific overlays. They're not mutually exclusive.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">6</span>
+      <div>
+        <h3 class="font-medium text-white">Production needs more than just deploying</h3>
+        <p class="text-text-muted text-sm mt-1">Health probes, resource limits, RBAC, and monitoring are not optional. A cluster without these is a ticking time bomb.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">7</span>
+      <div>
+        <h3 class="font-medium text-white">Start with managed Kubernetes</h3>
+        <p class="text-text-muted text-sm mt-1">Don't run your own control plane. Use EKS, GKE, or AKS — they handle upgrades, etcd backups, and high availability. Focus on your apps.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">8</span>
+      <div>
+        <h3 class="font-medium text-white">It's complex, but worth it at scale</h3>
+        <p class="text-text-muted text-sm mt-1">Kubernetes has a real learning curve. But once you're running 10+ services that need to scale, heal, and update independently — nothing else comes close.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</LearningLayout>
+
+<script>
+  // Tool tab switcher (kubectl / Helm / Kustomize)
+  document.querySelectorAll('.tool-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tool-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+
+      const val = tab.getAttribute('data-tool');
+      document.querySelectorAll('.tool-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll(`[id^="tool-${val}"]`).forEach(c => c.classList.remove('hidden'));
+    });
+  });
+</script>

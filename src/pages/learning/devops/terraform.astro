@@ -1,0 +1,1256 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout 
+  title="Terraform"
+  description="Infrastructure as Code — define, provision, and manage cloud resources with declarative configuration"
+  category="DevOps"
+  categoryHref="/learning/devops"
+  difficulty="Intermediate"
+  readTime="12 min read"
+>
+
+<!-- Section 1: The Hook -->
+<section class="mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-8 text-center">
+    <p class="text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
+    <p class="text-4xl font-bold text-primary mb-4">Blueprint</p>
+    <p class="text-text-secondary">for your entire cloud infrastructure</p>
+  </div>
+</section>
+
+<!-- Section 2: Architect Metaphor -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Architect Analogy</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary mb-8">
+      Imagine you're an architect. You don't build houses by hand every time — you create 
+      <span class="text-primary font-medium">blueprints</span>. The blueprint describes exactly what you want, 
+      and construction workers follow it to build the real thing. If you need another identical house? 
+      Same blueprint, same result.
+    </p>
+    
+    <!-- Animated Architecture SVG -->
+    <div class="relative" id="architect-scene">
+      <svg viewBox="0 0 700 220" class="w-full h-auto">
+        <!-- Architect (You) -->
+        <g class="architect" id="architect">
+          <rect x="30" y="70" width="100" height="70" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="80" y="95" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">YOU</text>
+          <text x="80" y="112" text-anchor="middle" fill="#666" font-size="9">Developer</text>
+          <text x="80" y="125" text-anchor="middle" fill="#666" font-size="8">.tf files</text>
+        </g>
+        
+        <!-- Blueprint (Terraform Config) -->
+        <g class="blueprint" id="blueprint">
+          <rect x="200" y="50" width="140" height="110" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="270" y="75" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">TERRAFORM</text>
+          
+          <!-- Blueprint grid lines -->
+          <line x1="210" y1="90" x2="330" y2="90" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="210" y1="105" x2="330" y2="105" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="210" y1="120" x2="330" y2="120" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="210" y1="135" x2="330" y2="135" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="250" y1="85" x2="250" y2="150" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="290" y1="85" x2="290" y2="150" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          
+          <text x="270" y="145" text-anchor="middle" fill="#666" font-size="9">Configuration</text>
+        </g>
+        
+        <!-- Cloud Provider (Construction) -->
+        <g class="cloud" id="cloud">
+          <rect x="420" y="40" width="160" height="130" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+          <text x="500" y="65" text-anchor="middle" fill="#888" font-size="11" font-weight="500">CLOUD PROVIDER</text>
+          
+          <!-- Mini infrastructure icons -->
+          <rect x="435" y="80" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+          <text x="452" y="97" text-anchor="middle" fill="#fbbf24" font-size="7">EC2</text>
+          
+          <rect x="480" y="80" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#60a5fa" stroke-width="1"/>
+          <text x="497" y="97" text-anchor="middle" fill="#60a5fa" font-size="7">RDS</text>
+          
+          <rect x="525" y="80" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="542" y="97" text-anchor="middle" fill="#34d399" font-size="7">S3</text>
+          
+          <rect x="435" y="115" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#f472b6" stroke-width="1"/>
+          <text x="452" y="132" text-anchor="middle" fill="#f472b6" font-size="7">VPC</text>
+          
+          <rect x="480" y="115" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#a78bfa" stroke-width="1"/>
+          <text x="497" y="132" text-anchor="middle" fill="#a78bfa" font-size="7">IAM</text>
+          
+          <rect x="525" y="115" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#22d3ee" stroke-width="1"/>
+          <text x="542" y="132" text-anchor="middle" fill="#22d3ee" font-size="7">LB</text>
+        </g>
+        
+        <!-- Flow arrows -->
+        <g class="arrows">
+          <path d="M135 105 L195 105" class="flow-path" stroke="#3b82f6" stroke-width="2" fill="none"/>
+          <polygon points="195,105 188,100 188,110" fill="#3b82f6"/>
+          
+          <path d="M345 105 L415 105" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
+          <polygon points="415,105 408,100 408,110" fill="#00FF88"/>
+        </g>
+        
+        <!-- Labels under arrows -->
+        <text x="165" y="125" text-anchor="middle" fill="#525252" font-size="8">write</text>
+        <text x="380" y="125" text-anchor="middle" fill="#525252" font-size="8">apply</text>
+        
+        <!-- Animated data packets -->
+        <circle class="data-packet pulse-dot" cx="165" cy="105" r="4" fill="#3b82f6"/>
+        <circle class="data-packet pulse-dot" cx="380" cy="105" r="4" fill="#00FF88" style="animation-delay: 0.5s"/>
+      </svg>
+    </div>
+    
+    <div class="mt-8 grid md:grid-cols-3 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">👷</div>
+        <p class="text-sm font-medium text-blue-400">You (Developer)</p>
+        <p class="text-xs text-text-muted mt-1">Write .tf configuration</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-primary/30">
+        <div class="text-3xl mb-2">📐</div>
+        <p class="text-sm font-medium text-primary">Terraform</p>
+        <p class="text-xs text-text-muted mt-1">Translates to API calls</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">☁️</div>
+        <p class="text-sm font-medium text-text-secondary">Cloud Provider</p>
+        <p class="text-xs text-text-muted mt-1">Creates real resources</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: The Problem -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Without Terraform -->
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-500 text-lg">✗</span>
+        <span class="font-medium text-red-400">Manual (ClickOps)</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1 mb-4">
+        <pre class="text-text-muted"><code><span class="comment"># Monday morning routine...</span>
+1. Log into AWS Console
+2. Click EC2 → Launch Instance
+3. Select AMI... wait, which one?
+4. Configure security groups
+5. Hope you remember all the settings
+6. Repeat 47 more times 😩
+7. Document nothing
+8. Pray it works in production</code></pre>
+      </div>
+      <BulletList color="red" items={[
+        "No version control for infrastructure",
+        "Can't reproduce environments reliably",
+        "No audit trail of changes",
+        "Human error on every click",
+        "Impossible to review before deploying"
+      ]} />
+    </div>
+    
+    <!-- With Terraform -->
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-primary text-lg">✓</span>
+        <span class="font-medium text-primary">Infrastructure as Code</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1 mb-4">
+        <pre><code><span class="comment"># main.tf - the whole story</span>
+<span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">count</span>         = <span class="string">48</span>
+  <span class="type">ami</span>           = <span class="string">"ami-0c55b159cbfafe1f0"</span>
+  <span class="type">instance_type</span> = <span class="string">"t3.micro"</span>
+{rb}
+
+<span class="comment"># git commit -m "Add 48 web servers"</span>
+<span class="comment"># terraform apply</span>
+<span class="comment"># ☕ Done.</span></code></pre>
+      </div>
+      <BulletList color="primary" items={[
+        "Git history = infrastructure history",
+        "Same config = same infrastructure",
+        "Review changes before applying",
+        "Automate everything",
+        "Self-documenting infrastructure"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Core Concepts -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Core Concepts</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <!-- Providers -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="providers">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔌</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Providers</h3>
+          <p class="text-text-muted text-sm">Plugins that connect Terraform to cloud platforms (AWS, GCP, Azure, etc.). Each provider knows how to talk to its API.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Resources -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="resources">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📦</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Resources</h3>
+          <p class="text-text-muted text-sm">The actual infrastructure components you want to create — servers, databases, networks, DNS records, etc.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- State -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="state">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🧠</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">State</h3>
+          <p class="text-text-muted text-sm">Terraform's memory — a JSON file tracking what exists in the real world vs. what's in your config.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Variables -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="variables">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🎛️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Variables</h3>
+          <p class="text-text-muted text-sm">Parameters that make your config reusable — change the environment, region, or size without rewriting code.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Outputs -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="outputs">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📤</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Outputs</h3>
+          <p class="text-text-muted text-sm">Values extracted after apply — IP addresses, URLs, IDs — useful for other tools or modules.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Data Sources -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="data">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔍</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Data Sources</h3>
+          <p class="text-text-muted text-sm">Read-only queries to fetch existing infrastructure info — AMI IDs, VPC details, DNS zones.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: The Workflow -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Workflow</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <svg viewBox="0 0 700 160" class="w-full h-auto" id="workflow-diagram">
+      <!-- Write -->
+      <g class="workflow-step" data-step="write">
+        <rect x="20" y="40" width="120" height="80" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="80" y="70" text-anchor="middle" fill="#3b82f6" font-size="13" font-weight="600">WRITE</text>
+        <text x="80" y="90" text-anchor="middle" fill="#666" font-size="9">main.tf</text>
+        <text x="80" y="105" text-anchor="middle" fill="#666" font-size="9">variables.tf</text>
+      </g>
+      
+      <!-- Arrow 1 -->
+      <path d="M145 80 L175 80" stroke="#3b82f6" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="175,80 168,75 168,85" fill="#3b82f6"/>
+      
+      <!-- Init -->
+      <g class="workflow-step" data-step="init">
+        <rect x="180" y="40" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="230" y="70" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">INIT</text>
+        <text x="230" y="90" text-anchor="middle" fill="#666" font-size="9">Download</text>
+        <text x="230" y="105" text-anchor="middle" fill="#666" font-size="9">providers</text>
+      </g>
+      
+      <!-- Arrow 2 -->
+      <path d="M285 80 L315 80" stroke="#a78bfa" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="315,80 308,75 308,85" fill="#a78bfa"/>
+      
+      <!-- Plan -->
+      <g class="workflow-step" data-step="plan">
+        <rect x="320" y="40" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="370" y="70" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="600">PLAN</text>
+        <text x="370" y="90" text-anchor="middle" fill="#666" font-size="9">Preview</text>
+        <text x="370" y="105" text-anchor="middle" fill="#666" font-size="9">changes</text>
+      </g>
+      
+      <!-- Arrow 3 -->
+      <path d="M425 80 L455 80" stroke="#fbbf24" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="455,80 448,75 448,85" fill="#fbbf24"/>
+      
+      <!-- Apply -->
+      <g class="workflow-step" data-step="apply">
+        <rect x="460" y="40" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="510" y="70" text-anchor="middle" fill="#00FF88" font-size="13" font-weight="600">APPLY</text>
+        <text x="510" y="90" text-anchor="middle" fill="#666" font-size="9">Execute</text>
+        <text x="510" y="105" text-anchor="middle" fill="#666" font-size="9">changes</text>
+      </g>
+      
+      <!-- Arrow 4 -->
+      <path d="M565 80 L595 80" stroke="#00FF88" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="595,80 588,75 588,85" fill="#00FF88"/>
+      
+      <!-- Infrastructure -->
+      <g class="workflow-step" data-step="infra">
+        <rect x="600" y="40" width="80" height="80" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+        <text x="640" y="75" text-anchor="middle" fill="#888" font-size="10" font-weight="500">INFRA</text>
+        <text x="640" y="95" text-anchor="middle" fill="#666" font-size="8">Running!</text>
+      </g>
+      
+      <!-- Destroy arrow (below, going back) -->
+      <path d="M600 135 L100 135" stroke="#ef4444" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+      <polygon points="100,135 107,130 107,140" fill="#ef4444"/>
+      <text x="350" y="150" text-anchor="middle" fill="#ef4444" font-size="9">terraform destroy</text>
+    </svg>
+    
+    <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+      <div>
+        <code class="text-blue-400 text-sm">terraform init</code>
+        <p class="text-text-muted text-xs mt-1">One-time setup</p>
+      </div>
+      <div>
+        <code class="text-purple-400 text-sm">terraform plan</code>
+        <p class="text-text-muted text-xs mt-1">Safe preview</p>
+      </div>
+      <div>
+        <code class="text-primary text-sm">terraform apply</code>
+        <p class="text-text-muted text-xs mt-1">Make it real</p>
+      </div>
+      <div>
+        <code class="text-red-400 text-sm">terraform destroy</code>
+        <p class="text-text-muted text-xs mt-1">Tear it down</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: Code Examples with Provider Tabs -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Code Examples</h2>
+  
+  <!-- Provider Switcher -->
+  <div class="mb-6 fade-in">
+    <div class="flex flex-wrap gap-2" id="provider-switcher">
+      <button class="provider-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-provider="aws">
+        <span class="text-lg">🟠</span> AWS
+      </button>
+      <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="gcp">
+        <span class="text-lg">🔵</span> GCP
+      </button>
+      <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="azure">
+        <span class="text-lg">🟦</span> Azure
+      </button>
+    </div>
+  </div>
+  
+  <!-- Basic Example -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+      <h3 class="font-medium text-text-secondary">Configure the Provider</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        First, tell Terraform which cloud you're using and how to authenticate.
+      </p>
+      
+      <!-- AWS Provider -->
+      <div class="provider-content" id="provider-aws-1">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># providers.tf</span>
+<span class="keyword">terraform</span> {lb}
+  <span class="type">required_providers</span> {lb}
+    <span class="type">aws</span> = {lb}
+      <span class="type">source</span>  = <span class="string">"hashicorp/aws"</span>
+      <span class="type">version</span> = <span class="string">"~> 5.0"</span>
+    {rb}
+  {rb}
+{rb}
+
+<span class="keyword">provider</span> <span class="string">"aws"</span> {lb}
+  <span class="type">region</span> = <span class="string">"us-east-1"</span>
+  
+  <span class="comment"># Auth via env vars: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY</span>
+  <span class="comment"># Or use: aws configure</span>
+{rb}</code></pre>
+        </div>
+      </div>
+      
+      <!-- GCP Provider -->
+      <div class="provider-content hidden" id="provider-gcp-1">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># providers.tf</span>
+<span class="keyword">terraform</span> {lb}
+  <span class="type">required_providers</span> {lb}
+    <span class="type">google</span> = {lb}
+      <span class="type">source</span>  = <span class="string">"hashicorp/google"</span>
+      <span class="type">version</span> = <span class="string">"~> 5.0"</span>
+    {rb}
+  {rb}
+{rb}
+
+<span class="keyword">provider</span> <span class="string">"google"</span> {lb}
+  <span class="type">project</span> = <span class="string">"my-project-id"</span>
+  <span class="type">region</span>  = <span class="string">"us-central1"</span>
+  
+  <span class="comment"># Auth via: gcloud auth application-default login</span>
+  <span class="comment"># Or: GOOGLE_APPLICATION_CREDENTIALS env var</span>
+{rb}</code></pre>
+        </div>
+      </div>
+      
+      <!-- Azure Provider -->
+      <div class="provider-content hidden" id="provider-azure-1">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># providers.tf</span>
+<span class="keyword">terraform</span> {lb}
+  <span class="type">required_providers</span> {lb}
+    <span class="type">azurerm</span> = {lb}
+      <span class="type">source</span>  = <span class="string">"hashicorp/azurerm"</span>
+      <span class="type">version</span> = <span class="string">"~> 3.0"</span>
+    {rb}
+  {rb}
+{rb}
+
+<span class="keyword">provider</span> <span class="string">"azurerm"</span> {lb}
+  <span class="type">features</span> {lb}{rb}
+  
+  <span class="comment"># Auth via: az login</span>
+  <span class="comment"># Or: ARM_CLIENT_ID, ARM_CLIENT_SECRET, etc.</span>
+{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Resource Example -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+      <h3 class="font-medium text-text-secondary">Define Resources</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Resources are the building blocks — each one maps to real infrastructure.
+      </p>
+      
+      <!-- AWS Resources -->
+      <div class="provider-content" id="provider-aws-2">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># main.tf - Create a web server</span>
+<span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">ami</span>           = <span class="string">"ami-0c55b159cbfafe1f0"</span>
+  <span class="type">instance_type</span> = <span class="string">"t3.micro"</span>
+  
+  <span class="type">tags</span> = {lb}
+    <span class="type">Name</span> = <span class="string">"web-server"</span>
+    <span class="type">Env</span>  = <span class="string">"production"</span>
+  {rb}
+{rb}
+
+<span class="comment"># Create a security group</span>
+<span class="keyword">resource</span> <span class="string">"aws_security_group"</span> <span class="string">"web_sg"</span> {lb}
+  <span class="type">name</span>        = <span class="string">"web-sg"</span>
+  <span class="type">description</span> = <span class="string">"Allow HTTP traffic"</span>
+  
+  <span class="type">ingress</span> {lb}
+    <span class="type">from_port</span>   = <span class="string">80</span>
+    <span class="type">to_port</span>     = <span class="string">80</span>
+    <span class="type">protocol</span>    = <span class="string">"tcp"</span>
+    <span class="type">cidr_blocks</span> = [<span class="string">"0.0.0.0/0"</span>]
+  {rb}
+{rb}</code></pre>
+        </div>
+      </div>
+      
+      <!-- GCP Resources -->
+      <div class="provider-content hidden" id="provider-gcp-2">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># main.tf - Create a web server</span>
+<span class="keyword">resource</span> <span class="string">"google_compute_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">name</span>         = <span class="string">"web-server"</span>
+  <span class="type">machine_type</span> = <span class="string">"e2-micro"</span>
+  <span class="type">zone</span>         = <span class="string">"us-central1-a"</span>
+  
+  <span class="type">boot_disk</span> {lb}
+    <span class="type">initialize_params</span> {lb}
+      <span class="type">image</span> = <span class="string">"debian-cloud/debian-11"</span>
+    {rb}
+  {rb}
+  
+  <span class="type">network_interface</span> {lb}
+    <span class="type">network</span> = <span class="string">"default"</span>
+    <span class="type">access_config</span> {lb}{rb} <span class="comment"># Ephemeral public IP</span>
+  {rb}
+  
+  <span class="type">labels</span> = {lb}
+    <span class="type">env</span> = <span class="string">"production"</span>
+  {rb}
+{rb}
+
+<span class="comment"># Firewall rule</span>
+<span class="keyword">resource</span> <span class="string">"google_compute_firewall"</span> <span class="string">"web_fw"</span> {lb}
+  <span class="type">name</span>    = <span class="string">"allow-http"</span>
+  <span class="type">network</span> = <span class="string">"default"</span>
+  
+  <span class="type">allow</span> {lb}
+    <span class="type">protocol</span> = <span class="string">"tcp"</span>
+    <span class="type">ports</span>    = [<span class="string">"80"</span>]
+  {rb}
+  
+  <span class="type">source_ranges</span> = [<span class="string">"0.0.0.0/0"</span>]
+{rb}</code></pre>
+        </div>
+      </div>
+      
+      <!-- Azure Resources -->
+      <div class="provider-content hidden" id="provider-azure-2">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># main.tf - Create a web server</span>
+<span class="keyword">resource</span> <span class="string">"azurerm_resource_group"</span> <span class="string">"rg"</span> {lb}
+  <span class="type">name</span>     = <span class="string">"web-resources"</span>
+  <span class="type">location</span> = <span class="string">"eastus"</span>
+{rb}
+
+<span class="keyword">resource</span> <span class="string">"azurerm_linux_virtual_machine"</span> <span class="string">"web"</span> {lb}
+  <span class="type">name</span>                = <span class="string">"web-server"</span>
+  <span class="type">resource_group_name</span> = azurerm_resource_group.rg.<span class="type">name</span>
+  <span class="type">location</span>            = azurerm_resource_group.rg.<span class="type">location</span>
+  <span class="type">size</span>                = <span class="string">"Standard_B1s"</span>
+  <span class="type">admin_username</span>      = <span class="string">"adminuser"</span>
+  
+  <span class="type">source_image_reference</span> {lb}
+    <span class="type">publisher</span> = <span class="string">"Canonical"</span>
+    <span class="type">offer</span>     = <span class="string">"0001-com-ubuntu-server-jammy"</span>
+    <span class="type">sku</span>       = <span class="string">"22_04-lts"</span>
+    <span class="type">version</span>   = <span class="string">"latest"</span>
+  {rb}
+  
+  <span class="type">tags</span> = {lb}
+    <span class="type">Env</span> = <span class="string">"production"</span>
+  {rb}
+{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Variables Example -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+      <h3 class="font-medium text-text-secondary">Use Variables for Reusability</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Variables make your config flexible. Define once, use everywhere.
+      </p>
+      
+      <!-- AWS Variables -->
+      <div class="provider-content" id="provider-aws-3">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># variables.tf</span>
+<span class="keyword">variable</span> <span class="string">"environment"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Environment name"</span>
+  <span class="type">type</span>        = <span class="type">string</span>
+  <span class="type">default</span>     = <span class="string">"dev"</span>
+{rb}
+
+<span class="keyword">variable</span> <span class="string">"instance_type"</span> {lb}
+  <span class="type">description</span> = <span class="string">"EC2 instance type"</span>
+  <span class="type">type</span>        = <span class="type">string</span>
+  <span class="type">default</span>     = <span class="string">"t3.micro"</span>
+{rb}
+
+<span class="keyword">variable</span> <span class="string">"instance_count"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Number of instances"</span>
+  <span class="type">type</span>        = <span class="type">number</span>
+  <span class="type">default</span>     = <span class="string">1</span>
+{rb}
+
+<span class="comment"># main.tf - Use variables</span>
+<span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">count</span>         = <span class="function">var</span>.instance_count
+  <span class="type">instance_type</span> = <span class="function">var</span>.instance_type
+  
+  <span class="type">tags</span> = {lb}
+    <span class="type">Name</span> = <span class="string">"</span>${"$"}{lb}<span class="function">var</span>.environment{rb}<span class="string">-web-</span>${"$"}{lb}<span class="type">count</span>.index{rb}<span class="string">"</span>
+  {rb}
+{rb}
+
+<span class="comment"># Apply with: terraform apply -var="environment=prod" -var="instance_count=3"</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- GCP Variables -->
+      <div class="provider-content hidden" id="provider-gcp-3">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># variables.tf</span>
+<span class="keyword">variable</span> <span class="string">"environment"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Environment name"</span>
+  <span class="type">type</span>        = <span class="type">string</span>
+  <span class="type">default</span>     = <span class="string">"dev"</span>
+{rb}
+
+<span class="keyword">variable</span> <span class="string">"machine_type"</span> {lb}
+  <span class="type">description</span> = <span class="string">"GCE machine type"</span>
+  <span class="type">type</span>        = <span class="type">string</span>
+  <span class="type">default</span>     = <span class="string">"e2-micro"</span>
+{rb}
+
+<span class="keyword">variable</span> <span class="string">"instance_count"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Number of instances"</span>
+  <span class="type">type</span>        = <span class="type">number</span>
+  <span class="type">default</span>     = <span class="string">1</span>
+{rb}
+
+<span class="comment"># main.tf - Use variables</span>
+<span class="keyword">resource</span> <span class="string">"google_compute_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">count</span>        = <span class="function">var</span>.instance_count
+  <span class="type">name</span>         = <span class="string">"</span>${"$"}{lb}<span class="function">var</span>.environment{rb}<span class="string">-web-</span>${"$"}{lb}<span class="type">count</span>.index{rb}<span class="string">"</span>
+  <span class="type">machine_type</span> = <span class="function">var</span>.machine_type
+{rb}
+
+<span class="comment"># Apply with: terraform apply -var="environment=prod" -var="instance_count=3"</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Azure Variables -->
+      <div class="provider-content hidden" id="provider-azure-3">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># variables.tf</span>
+<span class="keyword">variable</span> <span class="string">"environment"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Environment name"</span>
+  <span class="type">type</span>        = <span class="type">string</span>
+  <span class="type">default</span>     = <span class="string">"dev"</span>
+{rb}
+
+<span class="keyword">variable</span> <span class="string">"vm_size"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Azure VM size"</span>
+  <span class="type">type</span>        = <span class="type">string</span>
+  <span class="type">default</span>     = <span class="string">"Standard_B1s"</span>
+{rb}
+
+<span class="keyword">variable</span> <span class="string">"instance_count"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Number of instances"</span>
+  <span class="type">type</span>        = <span class="type">number</span>
+  <span class="type">default</span>     = <span class="string">1</span>
+{rb}
+
+<span class="comment"># main.tf - Use variables</span>
+<span class="keyword">resource</span> <span class="string">"azurerm_linux_virtual_machine"</span> <span class="string">"web"</span> {lb}
+  <span class="type">count</span> = <span class="function">var</span>.instance_count
+  <span class="type">name</span>  = <span class="string">"</span>${"$"}{lb}<span class="function">var</span>.environment{rb}<span class="string">-web-</span>${"$"}{lb}<span class="type">count</span>.index{rb}<span class="string">"</span>
+  <span class="type">size</span>  = <span class="function">var</span>.vm_size
+{rb}
+
+<span class="comment"># Apply with: terraform apply -var="environment=prod" -var="instance_count=3"</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Outputs Example -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">4</span>
+      <h3 class="font-medium text-text-secondary">Extract Outputs</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Outputs expose values after infrastructure is created — useful for other tools or humans.
+      </p>
+      
+      <!-- AWS Outputs -->
+      <div class="provider-content" id="provider-aws-4">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># outputs.tf</span>
+<span class="keyword">output</span> <span class="string">"instance_ip"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Public IP of the web server"</span>
+  <span class="type">value</span>       = aws_instance.web.<span class="type">public_ip</span>
+{rb}
+
+<span class="keyword">output</span> <span class="string">"instance_id"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Instance ID"</span>
+  <span class="type">value</span>       = aws_instance.web.<span class="type">id</span>
+{rb}
+
+<span class="keyword">output</span> <span class="string">"ssh_command"</span> {lb}
+  <span class="type">description</span> = <span class="string">"SSH into the instance"</span>
+  <span class="type">value</span>       = <span class="string">"ssh ec2-user@</span>${"$"}{lb}aws_instance.web.<span class="type">public_ip</span>{rb}<span class="string">"</span>
+{rb}
+
+<span class="comment"># After apply:</span>
+<span class="comment"># instance_ip = "54.123.45.67"</span>
+<span class="comment"># ssh_command = "ssh ec2-user@54.123.45.67"</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- GCP Outputs -->
+      <div class="provider-content hidden" id="provider-gcp-4">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># outputs.tf</span>
+<span class="keyword">output</span> <span class="string">"instance_ip"</span> {lb}
+  <span class="type">description</span> = <span class="string">"External IP of the web server"</span>
+  <span class="type">value</span>       = google_compute_instance.web.<span class="type">network_interface</span>[0].<span class="type">access_config</span>[0].<span class="type">nat_ip</span>
+{rb}
+
+<span class="keyword">output</span> <span class="string">"instance_name"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Instance name"</span>
+  <span class="type">value</span>       = google_compute_instance.web.<span class="type">name</span>
+{rb}
+
+<span class="keyword">output</span> <span class="string">"ssh_command"</span> {lb}
+  <span class="type">description</span> = <span class="string">"SSH into the instance"</span>
+  <span class="type">value</span>       = <span class="string">"gcloud compute ssh </span>${"$"}{lb}google_compute_instance.web.<span class="type">name</span>{rb}<span class="string">"</span>
+{rb}
+
+<span class="comment"># After apply:</span>
+<span class="comment"># instance_ip = "35.192.0.123"</span>
+<span class="comment"># ssh_command = "gcloud compute ssh web-server"</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Azure Outputs -->
+      <div class="provider-content hidden" id="provider-azure-4">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># outputs.tf</span>
+<span class="keyword">output</span> <span class="string">"instance_ip"</span> {lb}
+  <span class="type">description</span> = <span class="string">"Public IP of the web server"</span>
+  <span class="type">value</span>       = azurerm_linux_virtual_machine.web.<span class="type">public_ip_address</span>
+{rb}
+
+<span class="keyword">output</span> <span class="string">"instance_id"</span> {lb}
+  <span class="type">description</span> = <span class="string">"VM ID"</span>
+  <span class="type">value</span>       = azurerm_linux_virtual_machine.web.<span class="type">id</span>
+{rb}
+
+<span class="keyword">output</span> <span class="string">"ssh_command"</span> {lb}
+  <span class="type">description</span> = <span class="string">"SSH into the instance"</span>
+  <span class="type">value</span>       = <span class="string">"ssh adminuser@</span>${"$"}{lb}azurerm_linux_virtual_machine.web.<span class="type">public_ip_address</span>{rb}<span class="string">"</span>
+{rb}
+
+<span class="comment"># After apply:</span>
+<span class="comment"># instance_ip = "20.123.45.67"</span>
+<span class="comment"># ssh_command = "ssh adminuser@20.123.45.67"</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7: State Deep Dive -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Understanding State</h2>
+  
+  <div class="bg-bg-card border border-yellow-500/30 rounded-xl p-6 md:p-8 fade-in">
+    <div class="flex items-start gap-4 mb-6">
+      <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="text-2xl">⚠️</span>
+      </div>
+      <div>
+        <h3 class="font-medium text-yellow-400 mb-1">State is Critical</h3>
+        <p class="text-text-secondary text-sm">
+          Terraform state (<code class="text-yellow-400">terraform.tfstate</code>) is how Terraform knows what exists in the real world. 
+          Lose it, and Terraform loses its memory. Corrupt it, and things break.
+        </p>
+      </div>
+    </div>
+    
+    <svg viewBox="0 0 700 180" class="w-full h-auto mb-6">
+      <!-- Your Config -->
+      <g>
+        <rect x="30" y="50" width="140" height="80" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="100" y="80" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">YOUR CONFIG</text>
+        <text x="100" y="100" text-anchor="middle" fill="#666" font-size="9">main.tf</text>
+        <text x="100" y="115" text-anchor="middle" fill="#666" font-size="9">"I want 3 servers"</text>
+      </g>
+      
+      <!-- State File -->
+      <g>
+        <rect x="270" y="40" width="160" height="100" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="350" y="65" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">STATE FILE</text>
+        <text x="350" y="85" text-anchor="middle" fill="#666" font-size="9">terraform.tfstate</text>
+        <text x="350" y="105" text-anchor="middle" fill="#666" font-size="9">"There are 2 servers"</text>
+        <text x="350" y="125" text-anchor="middle" fill="#666" font-size="9">"IDs: i-abc, i-def"</text>
+      </g>
+      
+      <!-- Real World -->
+      <g>
+        <rect x="530" y="50" width="140" height="80" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="600" y="80" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">REAL WORLD</text>
+        <text x="600" y="100" text-anchor="middle" fill="#666" font-size="9">AWS/GCP/Azure</text>
+        <text x="600" y="115" text-anchor="middle" fill="#666" font-size="9">Actual resources</text>
+      </g>
+      
+      <!-- Arrows and comparison -->
+      <path d="M175 90 L265 90" stroke="#525252" stroke-width="1.5" fill="none"/>
+      <path d="M435 90 L525 90" stroke="#525252" stroke-width="1.5" fill="none"/>
+      
+      <!-- Diff indicator -->
+      <text x="220" y="85" text-anchor="middle" fill="#fbbf24" font-size="10">compare</text>
+      <text x="480" y="85" text-anchor="middle" fill="#fbbf24" font-size="10">sync</text>
+      
+      <!-- Plan result -->
+      <text x="350" y="165" text-anchor="middle" fill="#00FF88" font-size="10">Plan: +1 to add (3 - 2 = 1 new server)</text>
+    </svg>
+    
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-bg-main rounded-lg p-4 border border-red-500/20">
+        <h4 class="text-sm font-medium text-red-400 mb-2">❌ Don't</h4>
+        <BulletList color="red" items={[
+          "Commit terraform.tfstate to git",
+          "Edit state files manually",
+          "Share state via Dropbox/Drive",
+          "Delete state without importing"
+        ]} />
+      </div>
+      <div class="bg-bg-main rounded-lg p-4 border border-primary/20">
+        <h4 class="text-sm font-medium text-primary mb-2">✅ Do</h4>
+        <BulletList color="primary" items={[
+          "Use remote state (S3, GCS, Azure Blob)",
+          "Enable state locking",
+          "Back up state regularly",
+          "Use terraform import for existing resources"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Advanced Concepts -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Advanced Concepts</h2>
+  
+  <!-- Modules -->
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📦</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Modules</h3>
+          <p class="text-text-muted text-sm">Reusable, shareable packages of Terraform configuration. Like functions for infrastructure.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Use a module from the Terraform Registry</span>
+<span class="keyword">module</span> <span class="string">"vpc"</span> {lb}
+  <span class="type">source</span>  = <span class="string">"terraform-aws-modules/vpc/aws"</span>
+  <span class="type">version</span> = <span class="string">"5.0.0"</span>
+  
+  <span class="type">name</span> = <span class="string">"my-vpc"</span>
+  <span class="type">cidr</span> = <span class="string">"10.0.0.0/16"</span>
+  
+  <span class="type">azs</span>             = [<span class="string">"us-east-1a"</span>, <span class="string">"us-east-1b"</span>]
+  <span class="type">private_subnets</span> = [<span class="string">"10.0.1.0/24"</span>, <span class="string">"10.0.2.0/24"</span>]
+  <span class="type">public_subnets</span>  = [<span class="string">"10.0.101.0/24"</span>, <span class="string">"10.0.102.0/24"</span>]
+{rb}
+
+<span class="comment"># Reference module outputs</span>
+<span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">subnet_id</span> = <span class="keyword">module</span>.vpc.<span class="type">private_subnets</span>[0]
+{rb}</code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Remote State -->
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">☁️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Remote State</h3>
+          <p class="text-text-muted text-sm">Store state in the cloud for team collaboration and safety. Supports locking to prevent conflicts.</p>
+        </div>
+      </div>
+      
+      <!-- Remote state switcher -->
+      <div class="flex flex-wrap gap-2 mb-4" id="backend-switcher">
+        <button class="backend-tab active px-3 py-1.5 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30" data-backend="s3">S3 (AWS)</button>
+        <button class="backend-tab px-3 py-1.5 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors" data-backend="gcs">GCS (GCP)</button>
+        <button class="backend-tab px-3 py-1.5 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors" data-backend="azurerm">Azure Blob</button>
+      </div>
+      
+      <!-- S3 Backend -->
+      <div class="backend-content" id="backend-s3">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># backend.tf</span>
+<span class="keyword">terraform</span> {lb}
+  <span class="type">backend</span> <span class="string">"s3"</span> {lb}
+    <span class="type">bucket</span>         = <span class="string">"my-terraform-state"</span>
+    <span class="type">key</span>            = <span class="string">"prod/terraform.tfstate"</span>
+    <span class="type">region</span>         = <span class="string">"us-east-1"</span>
+    <span class="type">encrypt</span>        = <span class="string">true</span>
+    <span class="type">dynamodb_table</span> = <span class="string">"terraform-locks"</span>  <span class="comment"># For state locking</span>
+  {rb}
+{rb}</code></pre>
+        </div>
+      </div>
+      
+      <!-- GCS Backend -->
+      <div class="backend-content hidden" id="backend-gcs">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># backend.tf</span>
+<span class="keyword">terraform</span> {lb}
+  <span class="type">backend</span> <span class="string">"gcs"</span> {lb}
+    <span class="type">bucket</span> = <span class="string">"my-terraform-state"</span>
+    <span class="type">prefix</span> = <span class="string">"prod"</span>
+  {rb}
+{rb}
+
+<span class="comment"># GCS has built-in locking — no extra setup needed!</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Azure Backend -->
+      <div class="backend-content hidden" id="backend-azurerm">
+        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+          <pre><code><span class="comment"># backend.tf</span>
+<span class="keyword">terraform</span> {lb}
+  <span class="type">backend</span> <span class="string">"azurerm"</span> {lb}
+    <span class="type">resource_group_name</span>  = <span class="string">"tfstate-rg"</span>
+    <span class="type">storage_account_name</span> = <span class="string">"mytfstate"</span>
+    <span class="type">container_name</span>       = <span class="string">"tfstate"</span>
+    <span class="type">key</span>                  = <span class="string">"prod.terraform.tfstate"</span>
+  {rb}
+{rb}
+
+<span class="comment"># Azure Blob has built-in locking via leases</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Workspaces -->
+  <div class="fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🗂️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Workspaces</h3>
+          <p class="text-text-muted text-sm">Manage multiple environments (dev, staging, prod) with the same configuration but separate state.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <pre><code><span class="comment"># CLI workspace commands</span>
+$ terraform workspace list
+  default
+* dev
+  staging
+  prod
+
+$ terraform workspace select prod
+Switched to workspace "prod".
+
+$ terraform workspace new feature-x
+Created and switched to workspace "feature-x"!
+
+<span class="comment"># Use workspace name in your config</span>
+<span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">tags</span> = {lb}
+    <span class="type">Environment</span> = <span class="function">terraform</span>.<span class="type">workspace</span>  <span class="comment"># "dev", "staging", or "prod"</span>
+  {rb}
+{rb}
+
+<span class="comment"># Different instance sizes per environment</span>
+<span class="keyword">locals</span> {lb}
+  <span class="type">instance_type</span> = {lb}
+    <span class="type">dev</span>     = <span class="string">"t3.micro"</span>
+    <span class="type">staging</span> = <span class="string">"t3.small"</span>
+    <span class="type">prod</span>    = <span class="string">"t3.large"</span>
+  {rb}
+{rb}
+
+<span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
+  <span class="type">instance_type</span> = <span class="keyword">local</span>.instance_type[<span class="function">terraform</span>.<span class="type">workspace</span>]
+{rb}</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 9: Why Use It -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Why Use Terraform?</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔄</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Reproducibility</h3>
+          <p class="text-text-muted text-sm">Same config = same infrastructure. Every time. No more "works on my cloud".</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📝</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Version Control</h3>
+          <p class="text-text-muted text-sm">Git history for infrastructure. Who changed what, when, and why.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">👥</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Collaboration</h3>
+          <p class="text-text-muted text-sm">Review infrastructure changes in PRs. No more "I clicked something in the console".</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">☁️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Multi-Cloud</h3>
+          <p class="text-text-muted text-sm">One language for AWS, GCP, Azure, and 3000+ providers. Learn once, deploy anywhere.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🤖</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Automation</h3>
+          <p class="text-text-muted text-sm">CI/CD for infrastructure. Push code, get infrastructure. No humans in the loop.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📊</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Drift Detection</h3>
+          <p class="text-text-muted text-sm">Terraform shows when reality doesn't match your config. No more surprise changes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: When to Use -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use Terraform</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
+        <span class="text-lg">✓</span> Use when:
+      </h3>
+      <BulletList color="primary" items={[
+        "Managing cloud infrastructure (any scale)",
+        "You need multiple environments (dev/staging/prod)",
+        "Team collaboration on infrastructure",
+        "Compliance requires audit trails",
+        "Disaster recovery / reproducibility matters",
+        "Multi-cloud or hybrid deployments"
+      ]} />
+    </div>
+    
+    <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-yellow-500 mb-4 flex items-center gap-2">
+        <span class="text-lg">⚠️</span> Consider alternatives if:
+      </h3>
+      <BulletList color="yellow" items={[
+        "Quick one-off experiments (just use console)",
+        "Serverless-only apps (SAM, Serverless Framework)",
+        "Kubernetes-native (Helm, Pulumi, Crossplane)",
+        "Single cloud, want native tooling (CloudFormation, Deployment Manager)",
+        "Team has no IaC experience (steep learning curve)"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 11: Trade-offs -->
+<section class="mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="flex-1">
+        <h3 class="font-medium text-primary mb-3">Pros</h3>
+        <BulletList bullet="+" color="primary" items={[
+          "Declarative — describe what, not how",
+          "Massive provider ecosystem (3000+)",
+          "Strong community and documentation",
+          "HCL is readable and learnable",
+          "Excellent plan/preview before changes",
+          "State enables drift detection"
+        ]} />
+      </div>
+      <div class="w-px bg-border-subtle hidden md:block"></div>
+      <div class="flex-1">
+        <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+        <BulletList bullet="−" color="yellow" items={[
+          "State management complexity",
+          "HCL has limitations (no real loops, limited logic)",
+          "Provider bugs can block upgrades",
+          "Large refactors require state surgery",
+          "Learning curve for teams new to IaC",
+          "Secrets in state (needs encryption)"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 12: Key Takeaways -->
+<section class="mb-12">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Key Takeaways</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+      <div>
+        <h3 class="font-medium text-white">Infrastructure as Code</h3>
+        <p class="text-text-muted text-sm mt-1">Treat infrastructure like application code — version it, review it, test it, automate it.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+      <div>
+        <h3 class="font-medium text-white">Declarative, not imperative</h3>
+        <p class="text-text-muted text-sm mt-1">You describe the end state you want. Terraform figures out how to get there.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+      <div>
+        <h3 class="font-medium text-white">State is sacred</h3>
+        <p class="text-text-muted text-sm mt-1">Protect your state file. Use remote backends with locking. Never edit manually.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+      <div>
+        <h3 class="font-medium text-white">Plan before apply</h3>
+        <p class="text-text-muted text-sm mt-1">Always run <code class="text-primary">terraform plan</code> first. Review changes. Then apply with confidence.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+      <div>
+        <h3 class="font-medium text-white">Start simple, grow modular</h3>
+        <p class="text-text-muted text-sm mt-1">Begin with flat configs. Extract modules when patterns emerge. Don't over-engineer early.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</LearningLayout>
+
+<script>
+  // Provider tab switcher
+  document.querySelectorAll('.provider-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update tab styles
+      document.querySelectorAll('.provider-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      
+      // Show correct content for all provider sections
+      const provider = tab.getAttribute('data-provider');
+      document.querySelectorAll('.provider-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll(`[id^="provider-${provider}"]`).forEach(c => c.classList.remove('hidden'));
+    });
+  });
+
+  // Backend tab switcher
+  document.querySelectorAll('.backend-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.backend-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      
+      const backend = tab.getAttribute('data-backend');
+      document.querySelectorAll('.backend-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`backend-${backend}`)?.classList.remove('hidden');
+    });
+  });
+
+  // Benefit card hover effects
+  document.querySelectorAll('.benefit-card, .concept-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.classList.add('border-primary/40', 'bg-bg-hover');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('border-primary/40', 'bg-bg-hover');
+    });
+  });
+</script>

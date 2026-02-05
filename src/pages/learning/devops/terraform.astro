@@ -38,72 +38,72 @@ const rb = '}';
     
     <!-- Animated Architecture SVG -->
     <div class="relative" id="architect-scene">
-      <svg viewBox="0 0 700 220" class="w-full h-auto">
+      <svg viewBox="0 0 600 200" class="w-full h-auto">
         <!-- Architect (You) -->
         <g class="architect" id="architect">
-          <rect x="30" y="70" width="100" height="70" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
-          <text x="80" y="95" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">YOU</text>
-          <text x="80" y="112" text-anchor="middle" fill="#666" font-size="9">Developer</text>
-          <text x="80" y="125" text-anchor="middle" fill="#666" font-size="8">.tf files</text>
+          <rect x="10" y="55" width="110" height="75" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="65" y="82" text-anchor="middle" fill="#3b82f6" font-size="13" font-weight="600">YOU</text>
+          <text x="65" y="100" text-anchor="middle" fill="#666" font-size="10">Developer</text>
+          <text x="65" y="116" text-anchor="middle" fill="#666" font-size="9">.tf files</text>
         </g>
         
         <!-- Blueprint (Terraform Config) -->
         <g class="blueprint" id="blueprint">
-          <rect x="200" y="50" width="140" height="110" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
-          <text x="270" y="75" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">TERRAFORM</text>
+          <rect x="185" y="35" width="150" height="120" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="260" y="62" text-anchor="middle" fill="#00FF88" font-size="14" font-weight="600">TERRAFORM</text>
           
           <!-- Blueprint grid lines -->
-          <line x1="210" y1="90" x2="330" y2="90" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
-          <line x1="210" y1="105" x2="330" y2="105" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
-          <line x1="210" y1="120" x2="330" y2="120" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
-          <line x1="210" y1="135" x2="330" y2="135" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
-          <line x1="250" y1="85" x2="250" y2="150" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
-          <line x1="290" y1="85" x2="290" y2="150" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="196" y1="78" x2="324" y2="78" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="196" y1="95" x2="324" y2="95" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="196" y1="112" x2="324" y2="112" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="196" y1="129" x2="324" y2="129" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="240" y1="72" x2="240" y2="148" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
+          <line x1="280" y1="72" x2="280" y2="148" stroke="#00FF88" stroke-width="0.5" opacity="0.3"/>
           
-          <text x="270" y="145" text-anchor="middle" fill="#666" font-size="9">Configuration</text>
+          <text x="260" y="145" text-anchor="middle" fill="#666" font-size="10">Configuration</text>
         </g>
         
         <!-- Cloud Provider (Construction) -->
         <g class="cloud" id="cloud">
-          <rect x="420" y="40" width="160" height="130" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
-          <text x="500" y="65" text-anchor="middle" fill="#888" font-size="11" font-weight="500">CLOUD PROVIDER</text>
+          <rect x="405" y="30" width="185" height="140" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+          <text x="497" y="55" text-anchor="middle" fill="#888" font-size="12" font-weight="500">CLOUD PROVIDER</text>
           
           <!-- Mini infrastructure icons -->
-          <rect x="435" y="80" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
-          <text x="452" y="97" text-anchor="middle" fill="#fbbf24" font-size="7">EC2</text>
+          <rect x="418" y="68" width="45" height="28" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+          <text x="440" y="87" text-anchor="middle" fill="#fbbf24" font-size="9">EC2</text>
           
-          <rect x="480" y="80" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#60a5fa" stroke-width="1"/>
-          <text x="497" y="97" text-anchor="middle" fill="#60a5fa" font-size="7">RDS</text>
+          <rect x="472" y="68" width="45" height="28" rx="4" fill="#0a0a0a" stroke="#60a5fa" stroke-width="1"/>
+          <text x="494" y="87" text-anchor="middle" fill="#60a5fa" font-size="9">RDS</text>
           
-          <rect x="525" y="80" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
-          <text x="542" y="97" text-anchor="middle" fill="#34d399" font-size="7">S3</text>
+          <rect x="526" y="68" width="45" height="28" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="548" y="87" text-anchor="middle" fill="#34d399" font-size="9">S3</text>
           
-          <rect x="435" y="115" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#f472b6" stroke-width="1"/>
-          <text x="452" y="132" text-anchor="middle" fill="#f472b6" font-size="7">VPC</text>
+          <rect x="418" y="106" width="45" height="28" rx="4" fill="#0a0a0a" stroke="#f472b6" stroke-width="1"/>
+          <text x="440" y="125" text-anchor="middle" fill="#f472b6" font-size="9">VPC</text>
           
-          <rect x="480" y="115" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#a78bfa" stroke-width="1"/>
-          <text x="497" y="132" text-anchor="middle" fill="#a78bfa" font-size="7">IAM</text>
+          <rect x="472" y="106" width="45" height="28" rx="4" fill="#0a0a0a" stroke="#a78bfa" stroke-width="1"/>
+          <text x="494" y="125" text-anchor="middle" fill="#a78bfa" font-size="9">IAM</text>
           
-          <rect x="525" y="115" width="35" height="25" rx="3" fill="#0a0a0a" stroke="#22d3ee" stroke-width="1"/>
-          <text x="542" y="132" text-anchor="middle" fill="#22d3ee" font-size="7">LB</text>
+          <rect x="526" y="106" width="45" height="28" rx="4" fill="#0a0a0a" stroke="#22d3ee" stroke-width="1"/>
+          <text x="548" y="125" text-anchor="middle" fill="#22d3ee" font-size="9">LB</text>
         </g>
         
         <!-- Flow arrows -->
         <g class="arrows">
-          <path d="M135 105 L195 105" class="flow-path" stroke="#3b82f6" stroke-width="2" fill="none"/>
-          <polygon points="195,105 188,100 188,110" fill="#3b82f6"/>
+          <path d="M125 93 L180 93" class="flow-path" stroke="#3b82f6" stroke-width="2" fill="none"/>
+          <polygon points="180,93 173,88 173,98" fill="#3b82f6"/>
           
-          <path d="M345 105 L415 105" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
-          <polygon points="415,105 408,100 408,110" fill="#00FF88"/>
+          <path d="M340 93 L400 93" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
+          <polygon points="400,93 393,88 393,98" fill="#00FF88"/>
         </g>
         
         <!-- Labels under arrows -->
-        <text x="165" y="125" text-anchor="middle" fill="#525252" font-size="8">write</text>
-        <text x="380" y="125" text-anchor="middle" fill="#525252" font-size="8">apply</text>
+        <text x="152" y="113" text-anchor="middle" fill="#525252" font-size="9">write</text>
+        <text x="370" y="113" text-anchor="middle" fill="#525252" font-size="9">apply</text>
         
         <!-- Animated data packets -->
-        <circle class="data-packet pulse-dot" cx="165" cy="105" r="4" fill="#3b82f6"/>
-        <circle class="data-packet pulse-dot" cx="380" cy="105" r="4" fill="#00FF88" style="animation-delay: 0.5s"/>
+        <circle class="data-packet pulse-dot" cx="152" cy="93" r="5" fill="#3b82f6"/>
+        <circle class="data-packet pulse-dot" cx="370" cy="93" r="5" fill="#00FF88" style="animation-delay: 0.5s"/>
       </svg>
     </div>
     
@@ -277,66 +277,66 @@ const rb = '}';
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Workflow</h2>
   
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
-    <svg viewBox="0 0 700 160" class="w-full h-auto" id="workflow-diagram">
+    <svg viewBox="0 0 600 160" class="w-full h-auto" id="workflow-diagram">
       <!-- Write -->
       <g class="workflow-step" data-step="write">
-        <rect x="20" y="40" width="120" height="80" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2" class="hover-glow cursor-pointer"/>
-        <text x="80" y="70" text-anchor="middle" fill="#3b82f6" font-size="13" font-weight="600">WRITE</text>
-        <text x="80" y="90" text-anchor="middle" fill="#666" font-size="9">main.tf</text>
-        <text x="80" y="105" text-anchor="middle" fill="#666" font-size="9">variables.tf</text>
+        <rect x="8" y="30" width="100" height="75" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="58" y="58" text-anchor="middle" fill="#3b82f6" font-size="13" font-weight="600">WRITE</text>
+        <text x="58" y="76" text-anchor="middle" fill="#666" font-size="9">main.tf</text>
+        <text x="58" y="91" text-anchor="middle" fill="#666" font-size="9">variables.tf</text>
       </g>
       
       <!-- Arrow 1 -->
-      <path d="M145 80 L175 80" stroke="#3b82f6" stroke-width="2" fill="none" class="flow-path"/>
-      <polygon points="175,80 168,75 168,85" fill="#3b82f6"/>
+      <path d="M113 68 L135 68" stroke="#3b82f6" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="135,68 128,63 128,73" fill="#3b82f6"/>
       
       <!-- Init -->
       <g class="workflow-step" data-step="init">
-        <rect x="180" y="40" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2" class="hover-glow cursor-pointer"/>
-        <text x="230" y="70" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">INIT</text>
-        <text x="230" y="90" text-anchor="middle" fill="#666" font-size="9">Download</text>
-        <text x="230" y="105" text-anchor="middle" fill="#666" font-size="9">providers</text>
+        <rect x="140" y="30" width="90" height="75" rx="8" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="185" y="58" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">INIT</text>
+        <text x="185" y="76" text-anchor="middle" fill="#666" font-size="9">Download</text>
+        <text x="185" y="91" text-anchor="middle" fill="#666" font-size="9">providers</text>
       </g>
       
       <!-- Arrow 2 -->
-      <path d="M285 80 L315 80" stroke="#a78bfa" stroke-width="2" fill="none" class="flow-path"/>
-      <polygon points="315,80 308,75 308,85" fill="#a78bfa"/>
+      <path d="M235 68 L257 68" stroke="#a78bfa" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="257,68 250,63 250,73" fill="#a78bfa"/>
       
       <!-- Plan -->
       <g class="workflow-step" data-step="plan">
-        <rect x="320" y="40" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2" class="hover-glow cursor-pointer"/>
-        <text x="370" y="70" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="600">PLAN</text>
-        <text x="370" y="90" text-anchor="middle" fill="#666" font-size="9">Preview</text>
-        <text x="370" y="105" text-anchor="middle" fill="#666" font-size="9">changes</text>
+        <rect x="262" y="30" width="90" height="75" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="307" y="58" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="600">PLAN</text>
+        <text x="307" y="76" text-anchor="middle" fill="#666" font-size="9">Preview</text>
+        <text x="307" y="91" text-anchor="middle" fill="#666" font-size="9">changes</text>
       </g>
       
       <!-- Arrow 3 -->
-      <path d="M425 80 L455 80" stroke="#fbbf24" stroke-width="2" fill="none" class="flow-path"/>
-      <polygon points="455,80 448,75 448,85" fill="#fbbf24"/>
+      <path d="M357 68 L379 68" stroke="#fbbf24" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="379,68 372,63 372,73" fill="#fbbf24"/>
       
       <!-- Apply -->
       <g class="workflow-step" data-step="apply">
-        <rect x="460" y="40" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2" class="hover-glow cursor-pointer"/>
-        <text x="510" y="70" text-anchor="middle" fill="#00FF88" font-size="13" font-weight="600">APPLY</text>
-        <text x="510" y="90" text-anchor="middle" fill="#666" font-size="9">Execute</text>
-        <text x="510" y="105" text-anchor="middle" fill="#666" font-size="9">changes</text>
+        <rect x="384" y="30" width="90" height="75" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="429" y="58" text-anchor="middle" fill="#00FF88" font-size="13" font-weight="600">APPLY</text>
+        <text x="429" y="76" text-anchor="middle" fill="#666" font-size="9">Execute</text>
+        <text x="429" y="91" text-anchor="middle" fill="#666" font-size="9">changes</text>
       </g>
       
       <!-- Arrow 4 -->
-      <path d="M565 80 L595 80" stroke="#00FF88" stroke-width="2" fill="none" class="flow-path"/>
-      <polygon points="595,80 588,75 588,85" fill="#00FF88"/>
+      <path d="M479 68 L501 68" stroke="#00FF88" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="501,68 494,63 494,73" fill="#00FF88"/>
       
       <!-- Infrastructure -->
       <g class="workflow-step" data-step="infra">
-        <rect x="600" y="40" width="80" height="80" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
-        <text x="640" y="75" text-anchor="middle" fill="#888" font-size="10" font-weight="500">INFRA</text>
-        <text x="640" y="95" text-anchor="middle" fill="#666" font-size="8">Running!</text>
+        <rect x="506" y="30" width="86" height="75" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+        <text x="549" y="62" text-anchor="middle" fill="#888" font-size="11" font-weight="500">INFRA</text>
+        <text x="549" y="82" text-anchor="middle" fill="#666" font-size="9">Running!</text>
       </g>
       
       <!-- Destroy arrow (below, going back) -->
-      <path d="M600 135 L100 135" stroke="#ef4444" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
-      <polygon points="100,135 107,130 107,140" fill="#ef4444"/>
-      <text x="350" y="150" text-anchor="middle" fill="#ef4444" font-size="9">terraform destroy</text>
+      <path d="M506 120 L70 120" stroke="#ef4444" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+      <polygon points="70,120 77,115 77,125" fill="#ef4444"/>
+      <text x="290" y="140" text-anchor="middle" fill="#ef4444" font-size="10">terraform destroy</text>
     </svg>
     
     <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -793,42 +793,42 @@ const rb = '}';
       </div>
     </div>
     
-    <svg viewBox="0 0 700 180" class="w-full h-auto mb-6">
+    <svg viewBox="0 0 600 170" class="w-full h-auto mb-6">
       <!-- Your Config -->
       <g>
-        <rect x="30" y="50" width="140" height="80" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
-        <text x="100" y="80" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">YOUR CONFIG</text>
-        <text x="100" y="100" text-anchor="middle" fill="#666" font-size="9">main.tf</text>
-        <text x="100" y="115" text-anchor="middle" fill="#666" font-size="9">"I want 3 servers"</text>
+        <rect x="10" y="40" width="150" height="85" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="85" y="65" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">YOUR CONFIG</text>
+        <text x="85" y="85" text-anchor="middle" fill="#666" font-size="10">main.tf</text>
+        <text x="85" y="103" text-anchor="middle" fill="#666" font-size="9">"I want 3 servers"</text>
       </g>
       
       <!-- State File -->
       <g>
-        <rect x="270" y="40" width="160" height="100" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
-        <text x="350" y="65" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">STATE FILE</text>
-        <text x="350" y="85" text-anchor="middle" fill="#666" font-size="9">terraform.tfstate</text>
-        <text x="350" y="105" text-anchor="middle" fill="#666" font-size="9">"There are 2 servers"</text>
-        <text x="350" y="125" text-anchor="middle" fill="#666" font-size="9">"IDs: i-abc, i-def"</text>
+        <rect x="215" y="30" width="170" height="105" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="300" y="55" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="600">STATE FILE</text>
+        <text x="300" y="75" text-anchor="middle" fill="#666" font-size="10">terraform.tfstate</text>
+        <text x="300" y="96" text-anchor="middle" fill="#666" font-size="9">"There are 2 servers"</text>
+        <text x="300" y="116" text-anchor="middle" fill="#666" font-size="9">"IDs: i-abc, i-def"</text>
       </g>
       
       <!-- Real World -->
       <g>
-        <rect x="530" y="50" width="140" height="80" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
-        <text x="600" y="80" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">REAL WORLD</text>
-        <text x="600" y="100" text-anchor="middle" fill="#666" font-size="9">AWS/GCP/Azure</text>
-        <text x="600" y="115" text-anchor="middle" fill="#666" font-size="9">Actual resources</text>
+        <rect x="440" y="40" width="150" height="85" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="515" y="65" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">REAL WORLD</text>
+        <text x="515" y="85" text-anchor="middle" fill="#666" font-size="10">AWS/GCP/Azure</text>
+        <text x="515" y="103" text-anchor="middle" fill="#666" font-size="9">Actual resources</text>
       </g>
       
       <!-- Arrows and comparison -->
-      <path d="M175 90 L265 90" stroke="#525252" stroke-width="1.5" fill="none"/>
-      <path d="M435 90 L525 90" stroke="#525252" stroke-width="1.5" fill="none"/>
+      <path d="M165 82 L210 82" stroke="#525252" stroke-width="1.5" fill="none"/>
+      <path d="M390 82 L435 82" stroke="#525252" stroke-width="1.5" fill="none"/>
       
       <!-- Diff indicator -->
-      <text x="220" y="85" text-anchor="middle" fill="#fbbf24" font-size="10">compare</text>
-      <text x="480" y="85" text-anchor="middle" fill="#fbbf24" font-size="10">sync</text>
+      <text x="187" y="76" text-anchor="middle" fill="#fbbf24" font-size="10">compare</text>
+      <text x="412" y="76" text-anchor="middle" fill="#fbbf24" font-size="10">sync</text>
       
       <!-- Plan result -->
-      <text x="350" y="165" text-anchor="middle" fill="#00FF88" font-size="10">Plan: +1 to add (3 - 2 = 1 new server)</text>
+      <text x="300" y="158" text-anchor="middle" fill="#00FF88" font-size="11">Plan: +1 to add (3 − 2 = 1 new server)</text>
     </svg>
     
     <div class="grid md:grid-cols-2 gap-4">

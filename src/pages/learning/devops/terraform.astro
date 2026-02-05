@@ -16,20 +16,20 @@ const rb = '}';
 >
 
 <!-- Section 1: The Hook -->
-<section class="mb-20 fade-in">
-  <div class="bg-bg-card border border-border-subtle rounded-xl p-8 text-center">
-    <p class="text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
-    <p class="text-4xl font-bold text-primary mb-4">Blueprint</p>
-    <p class="text-text-secondary">for your entire cloud infrastructure</p>
+<section class="mb-12 md:mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+    <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
+    <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Blueprint</p>
+    <p class="text-text-secondary text-sm md:text-base">for your entire cloud infrastructure</p>
   </div>
 </section>
 
 <!-- Section 2: Architect Metaphor -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Architect Analogy</h2>
   
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
-    <p class="text-text-secondary mb-8">
+    <p class="text-text-secondary text-sm md:text-base mb-6 md:mb-8">
       Imagine you're an architect. You don't build houses by hand every time — you create 
       <span class="text-primary font-medium">blueprints</span>. The blueprint describes exactly what you want, 
       and construction workers follow it to build the real thing. If you need another identical house? 
@@ -37,8 +37,8 @@ const rb = '}';
     </p>
     
     <!-- Animated Architecture SVG -->
-    <div class="relative" id="architect-scene">
-      <svg viewBox="0 0 600 200" class="w-full h-auto">
+    <div class="relative overflow-x-auto" id="architect-scene">
+      <svg viewBox="0 0 600 200" class="w-full h-auto min-w-[480px]">
         <!-- Architect (You) -->
         <g class="architect" id="architect">
           <rect x="10" y="55" width="110" height="75" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
@@ -128,7 +128,7 @@ const rb = '}';
 </section>
 
 <!-- Section 3: The Problem -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
   
   <div class="grid md:grid-cols-2 gap-6">
@@ -138,7 +138,7 @@ const rb = '}';
         <span class="text-red-500 text-lg">✗</span>
         <span class="font-medium text-red-400">Manual (ClickOps)</span>
       </div>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1 mb-4">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
         <pre class="text-text-muted"><code><span class="comment"># Monday morning routine...</span>
 1. Log into AWS Console
 2. Click EC2 → Launch Instance
@@ -164,7 +164,7 @@ const rb = '}';
         <span class="text-primary text-lg">✓</span>
         <span class="font-medium text-primary">Infrastructure as Code</span>
       </div>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1 mb-4">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
         <pre><code><span class="comment"># main.tf - the whole story</span>
 <span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
   <span class="type">count</span>         = <span class="string">48</span>
@@ -188,7 +188,7 @@ const rb = '}';
 </section>
 
 <!-- Section 4: Core Concepts -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Core Concepts</h2>
   
   <div class="grid md:grid-cols-2 gap-4 stagger-children">
@@ -273,11 +273,11 @@ const rb = '}';
 </section>
 
 <!-- Section 5: The Workflow -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Workflow</h2>
   
-  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
-    <svg viewBox="0 0 600 160" class="w-full h-auto" id="workflow-diagram">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-8 fade-in overflow-x-auto">
+    <svg viewBox="0 0 600 160" class="w-full h-auto min-w-[480px]" id="workflow-diagram">
       <!-- Write -->
       <g class="workflow-step" data-step="write">
         <rect x="8" y="30" width="100" height="75" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2" class="hover-glow cursor-pointer"/>
@@ -361,7 +361,7 @@ const rb = '}';
 </section>
 
 <!-- Section 6: Code Examples with Provider Tabs -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Code Examples</h2>
   
   <!-- Provider Switcher -->
@@ -392,7 +392,7 @@ const rb = '}';
       
       <!-- AWS Provider -->
       <div class="provider-content" id="provider-aws-1">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># providers.tf</span>
 <span class="keyword">terraform</span> {lb}
   <span class="type">required_providers</span> {lb}
@@ -414,7 +414,7 @@ const rb = '}';
       
       <!-- GCP Provider -->
       <div class="provider-content hidden" id="provider-gcp-1">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># providers.tf</span>
 <span class="keyword">terraform</span> {lb}
   <span class="type">required_providers</span> {lb}
@@ -437,7 +437,7 @@ const rb = '}';
       
       <!-- Azure Provider -->
       <div class="provider-content hidden" id="provider-azure-1">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># providers.tf</span>
 <span class="keyword">terraform</span> {lb}
   <span class="type">required_providers</span> {lb}
@@ -472,7 +472,7 @@ const rb = '}';
       
       <!-- AWS Resources -->
       <div class="provider-content" id="provider-aws-2">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># main.tf - Create a web server</span>
 <span class="keyword">resource</span> <span class="string">"aws_instance"</span> <span class="string">"web"</span> {lb}
   <span class="type">ami</span>           = <span class="string">"ami-0c55b159cbfafe1f0"</span>
@@ -501,7 +501,7 @@ const rb = '}';
       
       <!-- GCP Resources -->
       <div class="provider-content hidden" id="provider-gcp-2">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># main.tf - Create a web server</span>
 <span class="keyword">resource</span> <span class="string">"google_compute_instance"</span> <span class="string">"web"</span> {lb}
   <span class="type">name</span>         = <span class="string">"web-server"</span>
@@ -541,7 +541,7 @@ const rb = '}';
       
       <!-- Azure Resources -->
       <div class="provider-content hidden" id="provider-azure-2">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># main.tf - Create a web server</span>
 <span class="keyword">resource</span> <span class="string">"azurerm_resource_group"</span> <span class="string">"rg"</span> {lb}
   <span class="type">name</span>     = <span class="string">"web-resources"</span>
@@ -584,7 +584,7 @@ const rb = '}';
       
       <!-- AWS Variables -->
       <div class="provider-content" id="provider-aws-3">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># variables.tf</span>
 <span class="keyword">variable</span> <span class="string">"environment"</span> {lb}
   <span class="type">description</span> = <span class="string">"Environment name"</span>
@@ -620,7 +620,7 @@ const rb = '}';
       
       <!-- GCP Variables -->
       <div class="provider-content hidden" id="provider-gcp-3">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># variables.tf</span>
 <span class="keyword">variable</span> <span class="string">"environment"</span> {lb}
   <span class="type">description</span> = <span class="string">"Environment name"</span>
@@ -653,7 +653,7 @@ const rb = '}';
       
       <!-- Azure Variables -->
       <div class="provider-content hidden" id="provider-azure-3">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># variables.tf</span>
 <span class="keyword">variable</span> <span class="string">"environment"</span> {lb}
   <span class="type">description</span> = <span class="string">"Environment name"</span>
@@ -699,7 +699,7 @@ const rb = '}';
       
       <!-- AWS Outputs -->
       <div class="provider-content" id="provider-aws-4">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># outputs.tf</span>
 <span class="keyword">output</span> <span class="string">"instance_ip"</span> {lb}
   <span class="type">description</span> = <span class="string">"Public IP of the web server"</span>
@@ -724,7 +724,7 @@ const rb = '}';
       
       <!-- GCP Outputs -->
       <div class="provider-content hidden" id="provider-gcp-4">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># outputs.tf</span>
 <span class="keyword">output</span> <span class="string">"instance_ip"</span> {lb}
   <span class="type">description</span> = <span class="string">"External IP of the web server"</span>
@@ -749,7 +749,7 @@ const rb = '}';
       
       <!-- Azure Outputs -->
       <div class="provider-content hidden" id="provider-azure-4">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># outputs.tf</span>
 <span class="keyword">output</span> <span class="string">"instance_ip"</span> {lb}
   <span class="type">description</span> = <span class="string">"Public IP of the web server"</span>
@@ -776,10 +776,10 @@ const rb = '}';
 </section>
 
 <!-- Section 7: State Deep Dive -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Understanding State</h2>
   
-  <div class="bg-bg-card border border-yellow-500/30 rounded-xl p-6 md:p-8 fade-in">
+  <div class="bg-bg-card border border-yellow-500/30 rounded-xl p-4 md:p-8 fade-in overflow-x-auto">
     <div class="flex items-start gap-4 mb-6">
       <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
         <span class="text-2xl">⚠️</span>
@@ -793,7 +793,7 @@ const rb = '}';
       </div>
     </div>
     
-    <svg viewBox="0 0 600 170" class="w-full h-auto mb-6">
+    <svg viewBox="0 0 600 170" class="w-full h-auto mb-6 min-w-[480px]">
       <!-- Your Config -->
       <g>
         <rect x="10" y="40" width="150" height="85" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
@@ -855,7 +855,7 @@ const rb = '}';
 </section>
 
 <!-- Section 8: Advanced Concepts -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Advanced Concepts</h2>
   
   <!-- Modules -->
@@ -871,7 +871,7 @@ const rb = '}';
         </div>
       </div>
       
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
         <pre><code><span class="comment"># Use a module from the Terraform Registry</span>
 <span class="keyword">module</span> <span class="string">"vpc"</span> {lb}
   <span class="type">source</span>  = <span class="string">"terraform-aws-modules/vpc/aws"</span>
@@ -915,7 +915,7 @@ const rb = '}';
       
       <!-- S3 Backend -->
       <div class="backend-content" id="backend-s3">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># backend.tf</span>
 <span class="keyword">terraform</span> {lb}
   <span class="type">backend</span> <span class="string">"s3"</span> {lb}
@@ -931,7 +931,7 @@ const rb = '}';
       
       <!-- GCS Backend -->
       <div class="backend-content hidden" id="backend-gcs">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># backend.tf</span>
 <span class="keyword">terraform</span> {lb}
   <span class="type">backend</span> <span class="string">"gcs"</span> {lb}
@@ -946,7 +946,7 @@ const rb = '}';
       
       <!-- Azure Backend -->
       <div class="backend-content hidden" id="backend-azurerm">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="comment"># backend.tf</span>
 <span class="keyword">terraform</span> {lb}
   <span class="type">backend</span> <span class="string">"azurerm"</span> {lb}
@@ -976,7 +976,7 @@ const rb = '}';
         </div>
       </div>
       
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
         <pre><code><span class="comment"># CLI workspace commands</span>
 $ terraform workspace list
   default
@@ -1015,7 +1015,7 @@ Created and switched to workspace "feature-x"!
 </section>
 
 <!-- Section 9: Why Use It -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Why Use Terraform?</h2>
   
   <div class="grid md:grid-cols-2 gap-4 stagger-children">
@@ -1094,7 +1094,7 @@ Created and switched to workspace "feature-x"!
 </section>
 
 <!-- Section 10: When to Use -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use Terraform</h2>
   
   <div class="grid md:grid-cols-2 gap-6">
@@ -1128,7 +1128,7 @@ Created and switched to workspace "feature-x"!
 </section>
 
 <!-- Section 11: Trade-offs -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
   
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">

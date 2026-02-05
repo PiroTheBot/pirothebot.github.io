@@ -17,27 +17,27 @@ const rb = '}';
 >
 
 <!-- Section 1: The Hook -->
-<section class="mb-20 fade-in">
-  <div class="bg-bg-card border border-border-subtle rounded-xl p-8 text-center">
-    <p class="text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
-    <p class="text-4xl font-bold text-primary mb-4">Translator</p>
-    <p class="text-text-secondary">between your code and your database</p>
+<section class="mb-12 md:mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+    <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
+    <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Translator</p>
+    <p class="text-text-secondary text-sm md:text-base">between your code and your database</p>
   </div>
 </section>
 
 <!-- Section 2: Restaurant Metaphor -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Restaurant Analogy</h2>
   
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
-    <p class="text-text-secondary mb-8">
+    <p class="text-text-secondary text-sm md:text-base mb-6 md:mb-8">
       Imagine you're at a restaurant. You don't walk into the kitchen and grab ingredients yourself — 
       you tell the <span class="text-primary font-medium">waiter</span> what you want, and they handle everything.
     </p>
     
     <!-- Animated Restaurant SVG -->
-    <div class="restaurant-scene relative" id="restaurant-scene">
-      <svg viewBox="0 0 600 200" class="w-full h-auto">
+    <div class="restaurant-scene relative overflow-x-auto" id="restaurant-scene">
+      <svg viewBox="0 0 600 200" class="w-full h-auto min-w-[480px]">
         <!-- Customer (Your Code) -->
         <g class="customer" id="customer">
           <rect x="30" y="80" width="100" height="60" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
@@ -111,7 +111,7 @@ const rb = '}';
 </section>
 
 <!-- Section 3: The Problem -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
   
   <div class="grid md:grid-cols-2 gap-6">
@@ -121,7 +121,7 @@ const rb = '}';
         <span class="text-red-500 text-lg">✗</span>
         <span class="font-medium text-red-400">Without Repository</span>
       </div>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1">
         <pre><code><span class="comment">// SQL scattered everywhere</span>
 <span class="keyword">fn</span> <span class="function">register_user</span>() {lb}
     <span class="macro">sqlx::query!</span>(<span class="string">"INSERT INTO..."</span>)
@@ -146,7 +146,7 @@ const rb = '}';
         <span class="text-primary text-lg">✓</span>
         <span class="font-medium text-primary">With Repository</span>
       </div>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto flex-1">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1">
         <pre><code><span class="comment">// Clean, testable code</span>
 <span class="keyword">fn</span> <span class="function">register_user</span>(repo: &amp;<span class="keyword">dyn</span> <span class="type">UserRepo</span>) {lb}
     repo.<span class="function">save</span>(user)
@@ -168,7 +168,7 @@ const rb = '}';
 </section>
 
 <!-- Section 4: How It Works -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">How It Works</h2>
   
   <!-- Step 1: Define the trait -->
@@ -181,7 +181,7 @@ const rb = '}';
       <p class="text-text-secondary text-sm mb-4">
         This is the contract. It says <em>what</em> operations are available, not <em>how</em> they work.
       </p>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
         <pre><code><span class="keyword">pub trait</span> <span class="type">UserRepository</span> {lb}
     <span class="keyword">fn</span> <span class="function">find_by_id</span>(&amp;<span class="keyword">self</span>, id: <span class="type">Uuid</span>) -&gt; <span class="type">Result</span>&lt;<span class="type">User</span>&gt;;
     <span class="keyword">fn</span> <span class="function">find_by_email</span>(&amp;<span class="keyword">self</span>, email: &amp;<span class="type">str</span>) -&gt; <span class="type">Result</span>&lt;<span class="type">Option</span>&lt;<span class="type">User</span>&gt;&gt;;
@@ -215,7 +215,7 @@ const rb = '}';
       
       <!-- PostgreSQL implementation -->
       <div class="impl-content" id="impl-postgres">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="keyword">pub struct</span> <span class="type">PostgresUserRepo</span> {lb}
     pool: <span class="type">PgPool</span>,
 {rb}
@@ -232,7 +232,7 @@ const rb = '}';
       
       <!-- In-Memory implementation (hidden by default) -->
       <div class="impl-content hidden" id="impl-memory">
-        <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
           <pre><code><span class="keyword">pub struct</span> <span class="type">InMemoryUserRepo</span> {lb}
     users: <span class="type">RwLock</span>&lt;<span class="type">HashMap</span>&lt;<span class="type">Uuid</span>, <span class="type">User</span>&gt;&gt;,
 {rb}
@@ -260,7 +260,7 @@ const rb = '}';
       <p class="text-text-secondary text-sm mb-4">
         Your business logic only knows about the trait — it doesn't care which implementation is used.
       </p>
-      <div class="bg-bg-code rounded-lg p-4 text-sm overflow-x-auto">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
         <pre><code><span class="keyword">pub struct</span> <span class="type">UserService</span>&lt;<span class="type">R</span>: <span class="type">UserRepository</span>&gt; {lb}
     repo: <span class="type">R</span>,
 {rb}
@@ -282,11 +282,11 @@ const rb = '}';
 </section>
 
 <!-- Section 5: Architecture Diagram -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Architecture</h2>
   
-  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
-    <svg viewBox="0 0 600 180" class="w-full h-auto" id="architecture-diagram">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-8 fade-in overflow-x-auto">
+    <svg viewBox="0 0 600 180" class="w-full h-auto min-w-[480px]" id="architecture-diagram">
       <!-- Layer labels -->
       <text x="300" y="20" text-anchor="middle" fill="#525252" font-size="10" font-weight="500">CLEAN ARCHITECTURE LAYERS</text>
       
@@ -353,7 +353,7 @@ const rb = '}';
 </section>
 
 <!-- Section 6: Why Use It -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Why Use It?</h2>
   
   <div class="grid md:grid-cols-2 gap-4 stagger-children">
@@ -408,7 +408,7 @@ const rb = '}';
 </section>
 
 <!-- Section 7: When to Use -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use It</h2>
   
   <div class="grid md:grid-cols-2 gap-6">
@@ -439,7 +439,7 @@ const rb = '}';
 </section>
 
 <!-- Section 8: Trade-offs -->
-<section class="mb-20">
+<section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
   
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">

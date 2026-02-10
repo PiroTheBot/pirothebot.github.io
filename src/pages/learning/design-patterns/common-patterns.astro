@@ -1,0 +1,1024 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout
+  title="Common Design Patterns"
+  description="Master the Gang of Four patterns — creational, structural, and behavioral solutions to recurring software problems"
+  category="Design Patterns"
+  categoryHref="/learning/design-patterns"
+  difficulty="Advanced"
+  readTime="18 min read"
+>
+
+  <!-- Hook -->
+  <section class="mb-12 md:mb-20 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+      <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of design patterns as</p>
+      <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Battle-Tested Blueprints</p>
+      <p class="text-text-secondary text-sm md:text-base">Proven solutions to problems that developers have solved thousands of times before</p>
+    </div>
+  </section>
+
+  <!-- Why Patterns Matter -->
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-xl md:text-2xl font-bold mb-6 fade-in">Why Learn Design Patterns?</h2>
+    
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-red-500 text-lg">✗</span>
+          <span class="font-medium text-red-400">Without Patterns</span>
+        </div>
+        <div class="flex-1">
+          <BulletList color="red" items={[
+            "Reinvent solutions to common problems",
+            "Code becomes tangled and hard to change",
+            "Team communication suffers — no shared vocabulary",
+            "Refactoring is painful and risky",
+            "Technical debt accumulates faster"
+          ]} />
+        </div>
+      </div>
+      <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-primary text-lg">✓</span>
+          <span class="font-medium text-primary">With Patterns</span>
+        </div>
+        <div class="flex-1">
+          <BulletList color="primary" items={[
+            "Apply proven solutions immediately",
+            "Code is modular and extensible",
+            "\"Use a Factory here\" — everyone understands",
+            "Changes are isolated and predictable",
+            "Architecture scales with complexity"
+          ]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pattern Categories Overview -->
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-xl md:text-2xl font-bold mb-6 fade-in">The Three Categories</h2>
+    
+    <div class="overflow-x-auto fade-in">
+      <svg viewBox="0 0 700 220" class="w-full h-auto min-w-[600px]">
+        <!-- Creational -->
+        <rect x="20" y="20" width="200" height="180" rx="12" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="120" y="50" text-anchor="middle" fill="#3b82f6" font-size="14" font-weight="600">CREATIONAL</text>
+        <text x="120" y="75" text-anchor="middle" fill="#a3a3a3" font-size="11">How objects are created</text>
+        <line x1="40" y1="90" x2="200" y2="90" stroke="#262626" stroke-width="1"/>
+        <text x="120" y="115" text-anchor="middle" fill="#ffffff" font-size="11">Factory</text>
+        <text x="120" y="135" text-anchor="middle" fill="#ffffff" font-size="11">Builder</text>
+        <text x="120" y="155" text-anchor="middle" fill="#ffffff" font-size="11">Singleton</text>
+        <text x="120" y="175" text-anchor="middle" fill="#ffffff" font-size="11">Prototype</text>
+        
+        <!-- Structural -->
+        <rect x="250" y="20" width="200" height="180" rx="12" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="350" y="50" text-anchor="middle" fill="#00FF88" font-size="14" font-weight="600">STRUCTURAL</text>
+        <text x="350" y="75" text-anchor="middle" fill="#a3a3a3" font-size="11">How objects compose</text>
+        <line x1="270" y1="90" x2="430" y2="90" stroke="#262626" stroke-width="1"/>
+        <text x="350" y="115" text-anchor="middle" fill="#ffffff" font-size="11">Adapter</text>
+        <text x="350" y="135" text-anchor="middle" fill="#ffffff" font-size="11">Decorator</text>
+        <text x="350" y="155" text-anchor="middle" fill="#ffffff" font-size="11">Facade</text>
+        <text x="350" y="175" text-anchor="middle" fill="#ffffff" font-size="11">Proxy</text>
+        
+        <!-- Behavioral -->
+        <rect x="480" y="20" width="200" height="180" rx="12" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="580" y="50" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="600">BEHAVIORAL</text>
+        <text x="580" y="75" text-anchor="middle" fill="#a3a3a3" font-size="11">How objects communicate</text>
+        <line x1="500" y1="90" x2="660" y2="90" stroke="#262626" stroke-width="1"/>
+        <text x="580" y="115" text-anchor="middle" fill="#ffffff" font-size="11">Strategy</text>
+        <text x="580" y="135" text-anchor="middle" fill="#ffffff" font-size="11">Observer</text>
+        <text x="580" y="155" text-anchor="middle" fill="#ffffff" font-size="11">Command</text>
+        <text x="580" y="175" text-anchor="middle" fill="#ffffff" font-size="11">State</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- CREATIONAL PATTERNS -->
+  <!-- ============================================ -->
+
+  <section class="mb-12 md:mb-20">
+    <div class="flex items-center gap-3 mb-8 fade-in">
+      <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+        <span class="text-blue-500 text-xl">🏭</span>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold text-blue-400">Creational Patterns</h2>
+    </div>
+    <p class="text-text-secondary mb-8 fade-in">Control how objects are instantiated. Hide creation logic, reduce coupling to concrete classes.</p>
+
+    <!-- Factory Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-blue-500/20 rounded flex items-center justify-center text-blue-400 text-sm font-bold">1</span>
+        Factory Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Delegate object creation to a factory method instead of calling constructors directly.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> You don't know the exact type until runtime, or you want to centralize creation logic.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Define a common interface</span>
+<span class="keyword">interface</span> <span class="type">PaymentProcessor</span> {lb}
+  <span class="function">process</span>(amount: <span class="type">number</span>): <span class="type">Promise</span>&lt;<span class="type">void</span>&gt;;
+{rb}
+
+<span class="comment">// Concrete implementations</span>
+<span class="keyword">class</span> <span class="type">StripeProcessor</span> <span class="keyword">implements</span> <span class="type">PaymentProcessor</span> {lb}
+  <span class="keyword">async</span> <span class="function">process</span>(amount: <span class="type">number</span>) {lb}
+    <span class="comment">// Stripe-specific logic</span>
+  {rb}
+{rb}
+
+<span class="keyword">class</span> <span class="type">PayPalProcessor</span> <span class="keyword">implements</span> <span class="type">PaymentProcessor</span> {lb}
+  <span class="keyword">async</span> <span class="function">process</span>(amount: <span class="type">number</span>) {lb}
+    <span class="comment">// PayPal-specific logic</span>
+  {rb}
+{rb}
+
+<span class="comment">// Factory function</span>
+<span class="keyword">function</span> <span class="function">createPaymentProcessor</span>(type: <span class="string">'stripe'</span> | <span class="string">'paypal'</span>): <span class="type">PaymentProcessor</span> {lb}
+  <span class="keyword">switch</span> (type) {lb}
+    <span class="keyword">case</span> <span class="string">'stripe'</span>: <span class="keyword">return new</span> <span class="type">StripeProcessor</span>();
+    <span class="keyword">case</span> <span class="string">'paypal'</span>: <span class="keyword">return new</span> <span class="type">PayPalProcessor</span>();
+  {rb}
+{rb}
+
+<span class="comment">// Usage — client doesn't know concrete class</span>
+<span class="keyword">const</span> processor = <span class="function">createPaymentProcessor</span>(config.paymentType);
+<span class="keyword">await</span> processor.<span class="function">process</span>(<span class="string">99.99</span>);</code></pre>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-4">
+          <h4 class="font-medium text-primary mb-2 text-sm">✓ Use when</h4>
+          <BulletList color="primary" items={[
+            "Type is determined by config/user input",
+            "Creation logic is complex",
+            "You need to swap implementations easily"
+          ]} />
+        </div>
+        <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-4">
+          <h4 class="font-medium text-yellow-500 mb-2 text-sm">⚠️ Skip if</h4>
+          <BulletList color="yellow" items={[
+            "Only one implementation exists",
+            "Creation is trivial (new X())",
+            "Adds unnecessary abstraction"
+          ]} />
+        </div>
+      </div>
+    </div>
+
+    <!-- Builder Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-blue-500/20 rounded flex items-center justify-center text-blue-400 text-sm font-bold">2</span>
+        Builder Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Construct complex objects step-by-step. Separate construction from representation.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Object has many optional parameters, or construction requires multiple steps.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">class</span> <span class="type">HttpRequestBuilder</span> {lb}
+  <span class="keyword">private</span> method: <span class="type">string</span> = <span class="string">'GET'</span>;
+  <span class="keyword">private</span> url: <span class="type">string</span> = <span class="string">''</span>;
+  <span class="keyword">private</span> headers: <span class="type">Record</span>&lt;<span class="type">string</span>, <span class="type">string</span>&gt; = {lb}{rb};
+  <span class="keyword">private</span> body?: <span class="type">unknown</span>;
+  <span class="keyword">private</span> timeout: <span class="type">number</span> = 30000;
+
+  <span class="function">setMethod</span>(method: <span class="type">string</span>) {lb}
+    <span class="keyword">this</span>.method = method;
+    <span class="keyword">return this</span>;  <span class="comment">// Enable chaining</span>
+  {rb}
+
+  <span class="function">setUrl</span>(url: <span class="type">string</span>) {lb}
+    <span class="keyword">this</span>.url = url;
+    <span class="keyword">return this</span>;
+  {rb}
+
+  <span class="function">addHeader</span>(key: <span class="type">string</span>, value: <span class="type">string</span>) {lb}
+    <span class="keyword">this</span>.headers[key] = value;
+    <span class="keyword">return this</span>;
+  {rb}
+
+  <span class="function">setBody</span>(body: <span class="type">unknown</span>) {lb}
+    <span class="keyword">this</span>.body = body;
+    <span class="keyword">return this</span>;
+  {rb}
+
+  <span class="function">setTimeout</span>(ms: <span class="type">number</span>) {lb}
+    <span class="keyword">this</span>.timeout = ms;
+    <span class="keyword">return this</span>;
+  {rb}
+
+  <span class="function">build</span>(): <span class="type">HttpRequest</span> {lb}
+    <span class="keyword">return new</span> <span class="type">HttpRequest</span>(<span class="keyword">this</span>.method, <span class="keyword">this</span>.url, <span class="keyword">this</span>.headers, <span class="keyword">this</span>.body, <span class="keyword">this</span>.timeout);
+  {rb}
+{rb}
+
+<span class="comment">// Usage — readable, flexible construction</span>
+<span class="keyword">const</span> request = <span class="keyword">new</span> <span class="type">HttpRequestBuilder</span>()
+  .<span class="function">setMethod</span>(<span class="string">'POST'</span>)
+  .<span class="function">setUrl</span>(<span class="string">'/api/users'</span>)
+  .<span class="function">addHeader</span>(<span class="string">'Content-Type'</span>, <span class="string">'application/json'</span>)
+  .<span class="function">addHeader</span>(<span class="string">'Authorization'</span>, <span class="string">`Bearer ${lb}token{rb}`</span>)
+  .<span class="function">setBody</span>({lb} name: <span class="string">'Alice'</span> {rb})
+  .<span class="function">setTimeout</span>(<span class="string">5000</span>)
+  .<span class="function">build</span>();</code></pre>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-4">
+          <h4 class="font-medium text-primary mb-2 text-sm">✓ Use when</h4>
+          <BulletList color="primary" items={[
+            "Many optional parameters (5+)",
+            "Construction order matters",
+            "Same process, different representations"
+          ]} />
+        </div>
+        <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-4">
+          <h4 class="font-medium text-yellow-500 mb-2 text-sm">⚠️ Skip if</h4>
+          <BulletList color="yellow" items={[
+            "Object is simple (2-3 required params)",
+            "No optional configuration",
+            "Object is immutable and small"
+          ]} />
+        </div>
+      </div>
+    </div>
+
+    <!-- Singleton Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-blue-500/20 rounded flex items-center justify-center text-blue-400 text-sm font-bold">3</span>
+        Singleton Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Ensure only one instance exists. Provide global access point.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Shared resource (config, logging, connection pool). Use sparingly — often a code smell.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Modern TypeScript singleton</span>
+<span class="keyword">class</span> <span class="type">Logger</span> {lb}
+  <span class="keyword">private static</span> instance: <span class="type">Logger</span>;
+  <span class="keyword">private</span> logs: <span class="type">string</span>[] = [];
+
+  <span class="keyword">private constructor</span>() {lb}{rb} <span class="comment">// Prevent direct construction</span>
+
+  <span class="keyword">static</span> <span class="function">getInstance</span>(): <span class="type">Logger</span> {lb}
+    <span class="keyword">if</span> (!<span class="type">Logger</span>.instance) {lb}
+      <span class="type">Logger</span>.instance = <span class="keyword">new</span> <span class="type">Logger</span>();
+    {rb}
+    <span class="keyword">return</span> <span class="type">Logger</span>.instance;
+  {rb}
+
+  <span class="function">log</span>(message: <span class="type">string</span>) {lb}
+    <span class="keyword">this</span>.logs.<span class="function">push</span>(<span class="string">`[${lb}<span class="keyword">new</span> <span class="type">Date</span>().<span class="function">toISOString</span>(){rb}] ${lb}message{rb}`</span>);
+  {rb}
+{rb}
+
+<span class="comment">// Usage — always same instance</span>
+<span class="type">Logger</span>.<span class="function">getInstance</span>().<span class="function">log</span>(<span class="string">'App started'</span>);
+<span class="type">Logger</span>.<span class="function">getInstance</span>().<span class="function">log</span>(<span class="string">'User logged in'</span>);
+
+<span class="comment">// Or export a singleton instance (simpler)</span>
+<span class="keyword">export const</span> logger = <span class="type">Logger</span>.<span class="function">getInstance</span>();</code></pre>
+        </div>
+      </div>
+
+      <div class="bg-bg-card border border-red-500/30 rounded-xl p-4">
+        <h4 class="font-medium text-red-400 mb-2 text-sm">⚠️ Warning: Singleton Dangers</h4>
+        <BulletList color="red" items={[
+          "Global state — hidden dependencies, hard to test",
+          "Violates single responsibility (manages own lifecycle)",
+          "Complicates parallel testing",
+          "Often misused — consider dependency injection instead"
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- STRUCTURAL PATTERNS -->
+  <!-- ============================================ -->
+
+  <section class="mb-12 md:mb-20">
+    <div class="flex items-center gap-3 mb-8 fade-in">
+      <div class="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+        <span class="text-primary text-xl">🧱</span>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold text-primary">Structural Patterns</h2>
+    </div>
+    <p class="text-text-secondary mb-8 fade-in">Compose objects into larger structures while keeping them flexible and efficient.</p>
+
+    <!-- Adapter Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-primary/20 rounded flex items-center justify-center text-primary text-sm font-bold">1</span>
+        Adapter Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Convert one interface to another. Make incompatible things work together.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Integrating legacy code, third-party libs, or APIs with different shapes.
+        </p>
+        
+        <div class="overflow-x-auto mb-4">
+          <svg viewBox="0 0 600 120" class="w-full h-auto min-w-[500px]">
+            <!-- Your Code -->
+            <rect x="20" y="35" width="120" height="50" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+            <text x="80" y="65" text-anchor="middle" fill="#ffffff" font-size="12">Your Code</text>
+            
+            <!-- Arrow -->
+            <path d="M 145 60 L 195 60" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Adapter -->
+            <rect x="200" y="25" width="100" height="70" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+            <text x="250" y="55" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">ADAPTER</text>
+            <text x="250" y="75" text-anchor="middle" fill="#a3a3a3" font-size="9">Translates</text>
+            
+            <!-- Arrow -->
+            <path d="M 305 60 L 355 60" stroke="#525252" stroke-width="2" marker-end="url(#arrow)"/>
+            
+            <!-- Legacy API -->
+            <rect x="360" y="35" width="140" height="50" rx="8" fill="#1a1a1a" stroke="#ef4444" stroke-width="2"/>
+            <text x="430" y="55" text-anchor="middle" fill="#ef4444" font-size="11">Legacy API</text>
+            <text x="430" y="72" text-anchor="middle" fill="#a3a3a3" font-size="9">(different interface)</text>
+            
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#525252"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Your expected interface</span>
+<span class="keyword">interface</span> <span class="type">EmailService</span> {lb}
+  <span class="function">send</span>(to: <span class="type">string</span>, subject: <span class="type">string</span>, body: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">void</span>&gt;;
+{rb}
+
+<span class="comment">// Third-party SDK with different interface</span>
+<span class="keyword">class</span> <span class="type">SendGridClient</span> {lb}
+  <span class="function">sendEmail</span>(params: {lb} recipient: <span class="type">string</span>; title: <span class="type">string</span>; content: <span class="type">string</span> {rb}) {lb}
+    <span class="comment">// SendGrid implementation</span>
+  {rb}
+{rb}
+
+<span class="comment">// Adapter — wraps SendGrid to match your interface</span>
+<span class="keyword">class</span> <span class="type">SendGridAdapter</span> <span class="keyword">implements</span> <span class="type">EmailService</span> {lb}
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> client: <span class="type">SendGridClient</span>) {lb}{rb}
+
+  <span class="keyword">async</span> <span class="function">send</span>(to: <span class="type">string</span>, subject: <span class="type">string</span>, body: <span class="type">string</span>) {lb}
+    <span class="keyword">await this</span>.client.<span class="function">sendEmail</span>({lb}
+      recipient: to,
+      title: subject,
+      content: body,
+    {rb});
+  {rb}
+{rb}
+
+<span class="comment">// Usage — your code stays clean</span>
+<span class="keyword">const</span> emailService: <span class="type">EmailService</span> = <span class="keyword">new</span> <span class="type">SendGridAdapter</span>(<span class="keyword">new</span> <span class="type">SendGridClient</span>());
+<span class="keyword">await</span> emailService.<span class="function">send</span>(<span class="string">'user@example.com'</span>, <span class="string">'Hello'</span>, <span class="string">'Welcome!'</span>);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorator Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-primary/20 rounded flex items-center justify-center text-primary text-sm font-bold">2</span>
+        Decorator Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Add behavior to objects dynamically by wrapping them. Like layering clothes.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Need to add responsibilities without subclassing. Compose behaviors flexibly.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">interface</span> <span class="type">DataSource</span> {lb}
+  <span class="function">read</span>(): <span class="type">string</span>;
+  <span class="function">write</span>(data: <span class="type">string</span>): <span class="type">void</span>;
+{rb}
+
+<span class="comment">// Base implementation</span>
+<span class="keyword">class</span> <span class="type">FileDataSource</span> <span class="keyword">implements</span> <span class="type">DataSource</span> {lb}
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> filename: <span class="type">string</span>) {lb}{rb}
+  <span class="function">read</span>() {lb} <span class="keyword">return</span> fs.<span class="function">readFileSync</span>(<span class="keyword">this</span>.filename, <span class="string">'utf8'</span>); {rb}
+  <span class="function">write</span>(data: <span class="type">string</span>) {lb} fs.<span class="function">writeFileSync</span>(<span class="keyword">this</span>.filename, data); {rb}
+{rb}
+
+<span class="comment">// Decorator — adds encryption</span>
+<span class="keyword">class</span> <span class="type">EncryptedDataSource</span> <span class="keyword">implements</span> <span class="type">DataSource</span> {lb}
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> wrapped: <span class="type">DataSource</span>) {lb}{rb}
+
+  <span class="function">read</span>() {lb}
+    <span class="keyword">return</span> <span class="function">decrypt</span>(<span class="keyword">this</span>.wrapped.<span class="function">read</span>());
+  {rb}
+
+  <span class="function">write</span>(data: <span class="type">string</span>) {lb}
+    <span class="keyword">this</span>.wrapped.<span class="function">write</span>(<span class="function">encrypt</span>(data));
+  {rb}
+{rb}
+
+<span class="comment">// Decorator — adds compression</span>
+<span class="keyword">class</span> <span class="type">CompressedDataSource</span> <span class="keyword">implements</span> <span class="type">DataSource</span> {lb}
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> wrapped: <span class="type">DataSource</span>) {lb}{rb}
+
+  <span class="function">read</span>() {lb}
+    <span class="keyword">return</span> <span class="function">decompress</span>(<span class="keyword">this</span>.wrapped.<span class="function">read</span>());
+  {rb}
+
+  <span class="function">write</span>(data: <span class="type">string</span>) {lb}
+    <span class="keyword">this</span>.wrapped.<span class="function">write</span>(<span class="function">compress</span>(data));
+  {rb}
+{rb}
+
+<span class="comment">// Compose behaviors — encryption + compression</span>
+<span class="keyword">const</span> source = <span class="keyword">new</span> <span class="type">EncryptedDataSource</span>(
+  <span class="keyword">new</span> <span class="type">CompressedDataSource</span>(
+    <span class="keyword">new</span> <span class="type">FileDataSource</span>(<span class="string">'data.txt'</span>)
+  )
+);
+source.<span class="function">write</span>(<span class="string">'secret data'</span>); <span class="comment">// Encrypted → Compressed → File</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Facade Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-primary/20 rounded flex items-center justify-center text-primary text-sm font-bold">3</span>
+        Facade Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Provide a simplified interface to a complex subsystem. Hide the mess.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Complex library with many classes, or you want to expose only what clients need.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Complex subsystem classes</span>
+<span class="keyword">class</span> <span class="type">VideoDecoder</span> {lb} <span class="function">decode</span>(file: <span class="type">string</span>) {lb} <span class="comment">/*...*/</span> {rb} {rb}
+<span class="keyword">class</span> <span class="type">AudioDecoder</span> {lb} <span class="function">decode</span>(file: <span class="type">string</span>) {lb} <span class="comment">/*...*/</span> {rb} {rb}
+<span class="keyword">class</span> <span class="type">SubtitleParser</span> {lb} <span class="function">parse</span>(file: <span class="type">string</span>) {lb} <span class="comment">/*...*/</span> {rb} {rb}
+<span class="keyword">class</span> <span class="type">VideoRenderer</span> {lb} <span class="function">render</span>(video: <span class="type">any</span>, audio: <span class="type">any</span>) {lb} <span class="comment">/*...*/</span> {rb} {rb}
+<span class="keyword">class</span> <span class="type">SubtitleRenderer</span> {lb} <span class="function">overlay</span>(subs: <span class="type">any</span>) {lb} <span class="comment">/*...*/</span> {rb} {rb}
+
+<span class="comment">// Facade — simple interface to all of the above</span>
+<span class="keyword">class</span> <span class="type">VideoPlayer</span> {lb}
+  <span class="keyword">private</span> videoDecoder = <span class="keyword">new</span> <span class="type">VideoDecoder</span>();
+  <span class="keyword">private</span> audioDecoder = <span class="keyword">new</span> <span class="type">AudioDecoder</span>();
+  <span class="keyword">private</span> subtitleParser = <span class="keyword">new</span> <span class="type">SubtitleParser</span>();
+  <span class="keyword">private</span> videoRenderer = <span class="keyword">new</span> <span class="type">VideoRenderer</span>();
+  <span class="keyword">private</span> subtitleRenderer = <span class="keyword">new</span> <span class="type">SubtitleRenderer</span>();
+
+  <span class="function">play</span>(videoFile: <span class="type">string</span>, subtitleFile?: <span class="type">string</span>) {lb}
+    <span class="keyword">const</span> video = <span class="keyword">this</span>.videoDecoder.<span class="function">decode</span>(videoFile);
+    <span class="keyword">const</span> audio = <span class="keyword">this</span>.audioDecoder.<span class="function">decode</span>(videoFile);
+    <span class="keyword">this</span>.videoRenderer.<span class="function">render</span>(video, audio);
+    
+    <span class="keyword">if</span> (subtitleFile) {lb}
+      <span class="keyword">const</span> subs = <span class="keyword">this</span>.subtitleParser.<span class="function">parse</span>(subtitleFile);
+      <span class="keyword">this</span>.subtitleRenderer.<span class="function">overlay</span>(subs);
+    {rb}
+  {rb}
+{rb}
+
+<span class="comment">// Client code — blissfully simple</span>
+<span class="keyword">const</span> player = <span class="keyword">new</span> <span class="type">VideoPlayer</span>();
+player.<span class="function">play</span>(<span class="string">'movie.mp4'</span>, <span class="string">'subs.srt'</span>);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proxy Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-primary/20 rounded flex items-center justify-center text-primary text-sm font-bold">4</span>
+        Proxy Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Provide a surrogate or placeholder. Control access to the real object.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Lazy loading, access control, logging, caching, remote objects.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">interface</span> <span class="type">Database</span> {lb}
+  <span class="function">query</span>(sql: <span class="type">string</span>): <span class="type">Promise</span>&lt;<span class="type">any</span>[]&gt;;
+{rb}
+
+<span class="keyword">class</span> <span class="type">RealDatabase</span> <span class="keyword">implements</span> <span class="type">Database</span> {lb}
+  <span class="keyword">async</span> <span class="function">query</span>(sql: <span class="type">string</span>) {lb}
+    <span class="comment">// Expensive database call</span>
+    <span class="keyword">return</span> db.<span class="function">execute</span>(sql);
+  {rb}
+{rb}
+
+<span class="comment">// Caching proxy</span>
+<span class="keyword">class</span> <span class="type">CachingDatabaseProxy</span> <span class="keyword">implements</span> <span class="type">Database</span> {lb}
+  <span class="keyword">private</span> cache = <span class="keyword">new</span> <span class="type">Map</span>&lt;<span class="type">string</span>, <span class="type">any</span>[]&gt;();
+  
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> db: <span class="type">Database</span>) {lb}{rb}
+
+  <span class="keyword">async</span> <span class="function">query</span>(sql: <span class="type">string</span>) {lb}
+    <span class="keyword">if</span> (<span class="keyword">this</span>.cache.<span class="function">has</span>(sql)) {lb}
+      console.<span class="function">log</span>(<span class="string">'Cache hit'</span>);
+      <span class="keyword">return this</span>.cache.<span class="function">get</span>(sql)!;
+    {rb}
+    
+    <span class="keyword">const</span> result = <span class="keyword">await this</span>.db.<span class="function">query</span>(sql);
+    <span class="keyword">this</span>.cache.<span class="function">set</span>(sql, result);
+    <span class="keyword">return</span> result;
+  {rb}
+{rb}
+
+<span class="comment">// Logging proxy</span>
+<span class="keyword">class</span> <span class="type">LoggingDatabaseProxy</span> <span class="keyword">implements</span> <span class="type">Database</span> {lb}
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> db: <span class="type">Database</span>) {lb}{rb}
+
+  <span class="keyword">async</span> <span class="function">query</span>(sql: <span class="type">string</span>) {lb}
+    console.<span class="function">log</span>(<span class="string">`[SQL] ${lb}sql{rb}`</span>);
+    <span class="keyword">const</span> start = <span class="type">Date</span>.<span class="function">now</span>();
+    <span class="keyword">const</span> result = <span class="keyword">await this</span>.db.<span class="function">query</span>(sql);
+    console.<span class="function">log</span>(<span class="string">`[SQL] Completed in ${lb}<span class="type">Date</span>.<span class="function">now</span>() - start{rb}ms`</span>);
+    <span class="keyword">return</span> result;
+  {rb}
+{rb}
+
+<span class="comment">// Stack proxies</span>
+<span class="keyword">const</span> db = <span class="keyword">new</span> <span class="type">LoggingDatabaseProxy</span>(
+  <span class="keyword">new</span> <span class="type">CachingDatabaseProxy</span>(
+    <span class="keyword">new</span> <span class="type">RealDatabase</span>()
+  )
+);</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- BEHAVIORAL PATTERNS -->
+  <!-- ============================================ -->
+
+  <section class="mb-12 md:mb-20">
+    <div class="flex items-center gap-3 mb-8 fade-in">
+      <div class="w-10 h-10 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+        <span class="text-yellow-500 text-xl">🔄</span>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold text-yellow-400">Behavioral Patterns</h2>
+    </div>
+    <p class="text-text-secondary mb-8 fade-in">Define how objects interact and distribute responsibility.</p>
+
+    <!-- Strategy Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-yellow-500/20 rounded flex items-center justify-center text-yellow-400 text-sm font-bold">1</span>
+        Strategy Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Define a family of algorithms, encapsulate each, make them interchangeable.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Multiple ways to do something, selected at runtime. Avoid switch/if-else chains.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Strategy interface</span>
+<span class="keyword">interface</span> <span class="type">CompressionStrategy</span> {lb}
+  <span class="function">compress</span>(data: <span class="type">Buffer</span>): <span class="type">Buffer</span>;
+{rb}
+
+<span class="comment">// Concrete strategies</span>
+<span class="keyword">class</span> <span class="type">GzipStrategy</span> <span class="keyword">implements</span> <span class="type">CompressionStrategy</span> {lb}
+  <span class="function">compress</span>(data: <span class="type">Buffer</span>) {lb} <span class="keyword">return</span> zlib.<span class="function">gzipSync</span>(data); {rb}
+{rb}
+
+<span class="keyword">class</span> <span class="type">BrotliStrategy</span> <span class="keyword">implements</span> <span class="type">CompressionStrategy</span> {lb}
+  <span class="function">compress</span>(data: <span class="type">Buffer</span>) {lb} <span class="keyword">return</span> zlib.<span class="function">brotliCompressSync</span>(data); {rb}
+{rb}
+
+<span class="keyword">class</span> <span class="type">NoCompressionStrategy</span> <span class="keyword">implements</span> <span class="type">CompressionStrategy</span> {lb}
+  <span class="function">compress</span>(data: <span class="type">Buffer</span>) {lb} <span class="keyword">return</span> data; {rb}
+{rb}
+
+<span class="comment">// Context — uses strategy</span>
+<span class="keyword">class</span> <span class="type">FileUploader</span> {lb}
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> strategy: <span class="type">CompressionStrategy</span>) {lb}{rb}
+
+  <span class="function">setStrategy</span>(strategy: <span class="type">CompressionStrategy</span>) {lb}
+    <span class="keyword">this</span>.strategy = strategy;
+  {rb}
+
+  <span class="function">upload</span>(file: <span class="type">Buffer</span>) {lb}
+    <span class="keyword">const</span> compressed = <span class="keyword">this</span>.strategy.<span class="function">compress</span>(file);
+    <span class="comment">// Upload compressed data</span>
+  {rb}
+{rb}
+
+<span class="comment">// Usage — swap algorithms</span>
+<span class="keyword">const</span> uploader = <span class="keyword">new</span> <span class="type">FileUploader</span>(<span class="keyword">new</span> <span class="type">GzipStrategy</span>());
+uploader.<span class="function">upload</span>(smallFile);
+
+uploader.<span class="function">setStrategy</span>(<span class="keyword">new</span> <span class="type">BrotliStrategy</span>()); <span class="comment">// Switch to better compression</span>
+uploader.<span class="function">upload</span>(largeFile);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observer Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-yellow-500/20 rounded flex items-center justify-center text-yellow-400 text-sm font-bold">2</span>
+        Observer Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> One-to-many dependency. When one object changes, all dependents are notified.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Event systems, pub/sub, reactive updates. Think: EventEmitter, RxJS, React state.
+        </p>
+        
+        <div class="overflow-x-auto mb-4">
+          <svg viewBox="0 0 600 160" class="w-full h-auto min-w-[500px]">
+            <!-- Subject -->
+            <rect x="220" y="10" width="160" height="60" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+            <text x="300" y="35" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="600">Subject</text>
+            <text x="300" y="55" text-anchor="middle" fill="#a3a3a3" font-size="10">notify()</text>
+            
+            <!-- Arrows -->
+            <path d="M 250 75 L 100 115" stroke="#525252" stroke-width="2" stroke-dasharray="4,4"/>
+            <path d="M 300 75 L 300 115" stroke="#525252" stroke-width="2" stroke-dasharray="4,4"/>
+            <path d="M 350 75 L 500 115" stroke="#525252" stroke-width="2" stroke-dasharray="4,4"/>
+            
+            <!-- Observers -->
+            <rect x="30" y="120" width="140" height="35" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="1.5"/>
+            <text x="100" y="143" text-anchor="middle" fill="#00FF88" font-size="11">Observer A</text>
+            
+            <rect x="230" y="120" width="140" height="35" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="1.5"/>
+            <text x="300" y="143" text-anchor="middle" fill="#00FF88" font-size="11">Observer B</text>
+            
+            <rect x="430" y="120" width="140" height="35" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="1.5"/>
+            <text x="500" y="143" text-anchor="middle" fill="#00FF88" font-size="11">Observer C</text>
+          </svg>
+        </div>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">type</span> <span class="type">Listener</span>&lt;T&gt; = (data: T) =&gt; <span class="type">void</span>;
+
+<span class="keyword">class</span> <span class="type">EventEmitter</span>&lt;T&gt; {lb}
+  <span class="keyword">private</span> listeners: <span class="type">Set</span>&lt;<span class="type">Listener</span>&lt;T&gt;&gt; = <span class="keyword">new</span> <span class="type">Set</span>();
+
+  <span class="function">subscribe</span>(listener: <span class="type">Listener</span>&lt;T&gt;) {lb}
+    <span class="keyword">this</span>.listeners.<span class="function">add</span>(listener);
+    <span class="keyword">return</span> () =&gt; <span class="keyword">this</span>.listeners.<span class="function">delete</span>(listener); <span class="comment">// Unsubscribe fn</span>
+  {rb}
+
+  <span class="function">emit</span>(data: T) {lb}
+    <span class="keyword">this</span>.listeners.<span class="function">forEach</span>(listener =&gt; <span class="function">listener</span>(data));
+  {rb}
+{rb}
+
+<span class="comment">// Usage</span>
+<span class="keyword">const</span> priceUpdates = <span class="keyword">new</span> <span class="type">EventEmitter</span>&lt;{lb} symbol: <span class="type">string</span>; price: <span class="type">number</span> {rb}&gt;();
+
+<span class="comment">// Observer A — UI update</span>
+<span class="keyword">const</span> unsubUI = priceUpdates.<span class="function">subscribe</span>(({lb} symbol, price {rb}) =&gt; {lb}
+  <span class="function">updatePriceDisplay</span>(symbol, price);
+{rb});
+
+<span class="comment">// Observer B — Alert system</span>
+priceUpdates.<span class="function">subscribe</span>(({lb} symbol, price {rb}) =&gt; {lb}
+  <span class="keyword">if</span> (price &gt; threshold) <span class="function">sendAlert</span>(symbol);
+{rb});
+
+<span class="comment">// Subject emits — all observers notified</span>
+priceUpdates.<span class="function">emit</span>({lb} symbol: <span class="string">'BTC'</span>, price: <span class="string">50000</span> {rb});
+
+<span class="function">unsubUI</span>(); <span class="comment">// Cleanup</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Command Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-yellow-500/20 rounded flex items-center justify-center text-yellow-400 text-sm font-bold">3</span>
+        Command Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Encapsulate a request as an object. Queue, log, or undo operations.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Undo/redo, transaction logs, macro recording, queued operations.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">interface</span> <span class="type">Command</span> {lb}
+  <span class="function">execute</span>(): <span class="type">void</span>;
+  <span class="function">undo</span>(): <span class="type">void</span>;
+{rb}
+
+<span class="keyword">class</span> <span class="type">AddTextCommand</span> <span class="keyword">implements</span> <span class="type">Command</span> {lb}
+  <span class="keyword">constructor</span>(
+    <span class="keyword">private</span> document: <span class="type">TextDocument</span>,
+    <span class="keyword">private</span> position: <span class="type">number</span>,
+    <span class="keyword">private</span> text: <span class="type">string</span>
+  ) {lb}{rb}
+
+  <span class="function">execute</span>() {lb}
+    <span class="keyword">this</span>.document.<span class="function">insert</span>(<span class="keyword">this</span>.position, <span class="keyword">this</span>.text);
+  {rb}
+
+  <span class="function">undo</span>() {lb}
+    <span class="keyword">this</span>.document.<span class="function">delete</span>(<span class="keyword">this</span>.position, <span class="keyword">this</span>.text.length);
+  {rb}
+{rb}
+
+<span class="keyword">class</span> <span class="type">CommandHistory</span> {lb}
+  <span class="keyword">private</span> history: <span class="type">Command</span>[] = [];
+  <span class="keyword">private</span> position = -<span class="string">1</span>;
+
+  <span class="function">execute</span>(command: <span class="type">Command</span>) {lb}
+    <span class="comment">// Remove any undone commands</span>
+    <span class="keyword">this</span>.history = <span class="keyword">this</span>.history.<span class="function">slice</span>(<span class="string">0</span>, <span class="keyword">this</span>.position + <span class="string">1</span>);
+    command.<span class="function">execute</span>();
+    <span class="keyword">this</span>.history.<span class="function">push</span>(command);
+    <span class="keyword">this</span>.position++;
+  {rb}
+
+  <span class="function">undo</span>() {lb}
+    <span class="keyword">if</span> (<span class="keyword">this</span>.position &gt;= <span class="string">0</span>) {lb}
+      <span class="keyword">this</span>.history[<span class="keyword">this</span>.position].<span class="function">undo</span>();
+      <span class="keyword">this</span>.position--;
+    {rb}
+  {rb}
+
+  <span class="function">redo</span>() {lb}
+    <span class="keyword">if</span> (<span class="keyword">this</span>.position &lt; <span class="keyword">this</span>.history.length - <span class="string">1</span>) {lb}
+      <span class="keyword">this</span>.position++;
+      <span class="keyword">this</span>.history[<span class="keyword">this</span>.position].<span class="function">execute</span>();
+    {rb}
+  {rb}
+{rb}
+
+<span class="comment">// Usage</span>
+<span class="keyword">const</span> history = <span class="keyword">new</span> <span class="type">CommandHistory</span>();
+history.<span class="function">execute</span>(<span class="keyword">new</span> <span class="type">AddTextCommand</span>(doc, <span class="string">0</span>, <span class="string">'Hello'</span>));
+history.<span class="function">execute</span>(<span class="keyword">new</span> <span class="type">AddTextCommand</span>(doc, <span class="string">5</span>, <span class="string">' World'</span>));
+history.<span class="function">undo</span>();  <span class="comment">// Removes ' World'</span>
+history.<span class="function">redo</span>();  <span class="comment">// Adds ' World' back</span></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- State Pattern -->
+    <div class="mb-12 fade-in">
+      <h3 class="text-lg md:text-xl font-semibold mb-4 text-white flex items-center gap-2">
+        <span class="w-6 h-6 bg-yellow-500/20 rounded flex items-center justify-center text-yellow-400 text-sm font-bold">4</span>
+        State Pattern
+      </h3>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-4">
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">What:</strong> Object behavior changes based on internal state. State machines without switch statements.
+        </p>
+        <p class="text-text-secondary text-sm mb-4">
+          <strong class="text-white">When:</strong> Complex state logic, order workflows, connection states, game states.
+        </p>
+        
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">interface</span> <span class="type">OrderState</span> {lb}
+  <span class="function">cancel</span>(order: <span class="type">Order</span>): <span class="type">void</span>;
+  <span class="function">ship</span>(order: <span class="type">Order</span>): <span class="type">void</span>;
+  <span class="function">deliver</span>(order: <span class="type">Order</span>): <span class="type">void</span>;
+{rb}
+
+<span class="keyword">class</span> <span class="type">PendingState</span> <span class="keyword">implements</span> <span class="type">OrderState</span> {lb}
+  <span class="function">cancel</span>(order: <span class="type">Order</span>) {lb}
+    order.<span class="function">setState</span>(<span class="keyword">new</span> <span class="type">CancelledState</span>());
+    <span class="function">refund</span>(order);
+  {rb}
+  <span class="function">ship</span>(order: <span class="type">Order</span>) {lb}
+    order.<span class="function">setState</span>(<span class="keyword">new</span> <span class="type">ShippedState</span>());
+    <span class="function">sendShippingNotification</span>(order);
+  {rb}
+  <span class="function">deliver</span>(order: <span class="type">Order</span>) {lb}
+    <span class="keyword">throw new</span> <span class="type">Error</span>(<span class="string">'Cannot deliver pending order'</span>);
+  {rb}
+{rb}
+
+<span class="keyword">class</span> <span class="type">ShippedState</span> <span class="keyword">implements</span> <span class="type">OrderState</span> {lb}
+  <span class="function">cancel</span>(order: <span class="type">Order</span>) {lb}
+    <span class="keyword">throw new</span> <span class="type">Error</span>(<span class="string">'Cannot cancel shipped order'</span>);
+  {rb}
+  <span class="function">ship</span>(order: <span class="type">Order</span>) {lb}
+    <span class="keyword">throw new</span> <span class="type">Error</span>(<span class="string">'Already shipped'</span>);
+  {rb}
+  <span class="function">deliver</span>(order: <span class="type">Order</span>) {lb}
+    order.<span class="function">setState</span>(<span class="keyword">new</span> <span class="type">DeliveredState</span>());
+    <span class="function">sendDeliveryConfirmation</span>(order);
+  {rb}
+{rb}
+
+<span class="keyword">class</span> <span class="type">Order</span> {lb}
+  <span class="keyword">private</span> state: <span class="type">OrderState</span> = <span class="keyword">new</span> <span class="type">PendingState</span>();
+
+  <span class="function">setState</span>(state: <span class="type">OrderState</span>) {lb} <span class="keyword">this</span>.state = state; {rb}
+  <span class="function">cancel</span>() {lb} <span class="keyword">this</span>.state.<span class="function">cancel</span>(<span class="keyword">this</span>); {rb}
+  <span class="function">ship</span>() {lb} <span class="keyword">this</span>.state.<span class="function">ship</span>(<span class="keyword">this</span>); {rb}
+  <span class="function">deliver</span>() {lb} <span class="keyword">this</span>.state.<span class="function">deliver</span>(<span class="keyword">this</span>); {rb}
+{rb}
+
+<span class="comment">// State-specific behavior automatic</span>
+<span class="keyword">const</span> order = <span class="keyword">new</span> <span class="type">Order</span>();
+order.<span class="function">ship</span>();     <span class="comment">// ✓ Works — pending → shipped</span>
+order.<span class="function">deliver</span>();  <span class="comment">// ✓ Works — shipped → delivered</span>
+order.<span class="function">cancel</span>();   <span class="comment">// ✗ Throws — can't cancel delivered</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- COMPARISON & DECISION TREE -->
+  <!-- ============================================ -->
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-xl md:text-2xl font-bold mb-6 fade-in">Pattern Selection Cheatsheet</h2>
+    
+    <div class="space-y-4 stagger-children">
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-3">Need to create objects?</h3>
+        <div class="space-y-2 text-sm text-text-secondary">
+          <p>→ <span class="text-blue-400">Factory</span> if type determined at runtime</p>
+          <p>→ <span class="text-blue-400">Builder</span> if many optional params or step-by-step construction</p>
+          <p>→ <span class="text-blue-400">Singleton</span> if exactly one instance (use sparingly!)</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-3">Need to connect incompatible interfaces?</h3>
+        <div class="space-y-2 text-sm text-text-secondary">
+          <p>→ <span class="text-primary">Adapter</span> if wrapping external code to match your interface</p>
+          <p>→ <span class="text-primary">Facade</span> if simplifying a complex subsystem</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-3">Need to add behavior?</h3>
+        <div class="space-y-2 text-sm text-text-secondary">
+          <p>→ <span class="text-primary">Decorator</span> if composing behaviors dynamically</p>
+          <p>→ <span class="text-primary">Proxy</span> if controlling access (caching, logging, lazy load)</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-3">Need flexible algorithms?</h3>
+        <div class="space-y-2 text-sm text-text-secondary">
+          <p>→ <span class="text-yellow-400">Strategy</span> if swapping algorithms at runtime</p>
+          <p>→ <span class="text-yellow-400">State</span> if behavior changes based on internal state</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-3">Need event-driven communication?</h3>
+        <div class="space-y-2 text-sm text-text-secondary">
+          <p>→ <span class="text-yellow-400">Observer</span> if one-to-many notifications</p>
+          <p>→ <span class="text-yellow-400">Command</span> if encapsulating operations (undo/redo, queues)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- TRADE-OFFS -->
+  <!-- ============================================ -->
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-xl md:text-2xl font-bold mb-6 fade-in">Trade-offs</h2>
+    
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex-1">
+          <h3 class="font-medium text-primary mb-3">Pros</h3>
+          <BulletList bullet="+" color="primary" items={[
+            "Proven solutions — don't reinvent the wheel",
+            "Common vocabulary — \"use a Strategy here\"",
+            "Flexible, maintainable code",
+            "Easier to extend without breaking existing code",
+            "Encapsulation of change"
+          ]} />
+        </div>
+        <div class="w-px bg-border-subtle hidden md:block"></div>
+        <div class="flex-1">
+          <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+          <BulletList bullet="−" color="yellow" items={[
+            "Over-engineering — pattern for pattern's sake",
+            "Added complexity — more classes, indirection",
+            "Learning curve for the team",
+            "Can obscure simple solutions",
+            "Premature abstraction risk"
+          ]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- KEY TAKEAWAYS -->
+  <!-- ============================================ -->
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-xl md:text-2xl font-bold mb-6 fade-in">Key Takeaways</h2>
+    
+    <div class="space-y-4 stagger-children">
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+        <div>
+          <h3 class="font-medium text-white">Patterns are tools, not rules</h3>
+          <p class="text-text-muted text-sm mt-1">Use them when they solve a real problem, not to tick a checkbox.</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+        <div>
+          <h3 class="font-medium text-white">Start simple, refactor to patterns</h3>
+          <p class="text-text-muted text-sm mt-1">Don't force patterns upfront. Let complexity emerge, then apply patterns.</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+        <div>
+          <h3 class="font-medium text-white">Composition over inheritance</h3>
+          <p class="text-text-muted text-sm mt-1">Most patterns favor object composition. Decorator, Strategy, Observer — all composable.</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+        <div>
+          <h3 class="font-medium text-white">Modern TS has shortcuts</h3>
+          <p class="text-text-muted text-sm mt-1">Generics, unions, and functions often replace class-heavy GoF patterns.</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+        <div>
+          <h3 class="font-medium text-white">Patterns combine</h3>
+          <p class="text-text-muted text-sm mt-1">Factory + Strategy, Decorator + Proxy — patterns work together in real systems.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</LearningLayout>

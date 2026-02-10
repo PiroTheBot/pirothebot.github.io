@@ -42,6 +42,25 @@ import '../../styles/global.css'
       <h2 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-6">Available Topics</h2>
       
       <div class="space-y-4">
+        <!-- Common Design Patterns -->
+        <a href="/learning/design-patterns/common-patterns" class="group block bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-xs font-medium text-red-500 bg-red-500/10 px-2 py-1 rounded">Advanced</span>
+                <span class="text-text-muted text-sm">18 min read</span>
+              </div>
+              <h3 class="text-lg font-semibold text-white group-hover:text-primary transition-colors">Common Design Patterns</h3>
+              <p class="text-text-muted text-sm mt-1">Master the Gang of Four patterns — creational, structural, and behavioral solutions</p>
+            </div>
+            <div class="ml-4">
+              <svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+        
         <!-- Repository Pattern -->
         <a href="/learning/design-patterns/repository-pattern" class="group block bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
           <div class="flex items-center justify-between">
@@ -71,20 +90,20 @@ import '../../styles/global.css'
       
       <div class="grid md:grid-cols-2 gap-4">
         <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
-          <h3 class="font-medium text-white mb-1">Factory Pattern</h3>
-          <p class="text-text-muted text-sm">Create objects without specifying exact class</p>
+          <h3 class="font-medium text-white mb-1">Dependency Injection</h3>
+          <p class="text-text-muted text-sm">Invert control for testable, flexible code</p>
         </div>
         <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
-          <h3 class="font-medium text-white mb-1">Observer Pattern</h3>
-          <p class="text-text-muted text-sm">Subscribe and react to state changes</p>
+          <h3 class="font-medium text-white mb-1">CQRS</h3>
+          <p class="text-text-muted text-sm">Separate read and write models</p>
         </div>
         <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
-          <h3 class="font-medium text-white mb-1">Strategy Pattern</h3>
-          <p class="text-text-muted text-sm">Swap algorithms at runtime</p>
+          <h3 class="font-medium text-white mb-1">Event Sourcing</h3>
+          <p class="text-text-muted text-sm">Store events, derive state</p>
         </div>
         <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
-          <h3 class="font-medium text-white mb-1">Builder Pattern</h3>
-          <p class="text-text-muted text-sm">Construct complex objects step by step</p>
+          <h3 class="font-medium text-white mb-1">Saga Pattern</h3>
+          <p class="text-text-muted text-sm">Manage distributed transactions</p>
         </div>
       </div>
     </div>

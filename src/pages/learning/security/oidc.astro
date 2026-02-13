@@ -1,0 +1,969 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout 
+  title="OpenID Connect (OIDC)"
+  description="Modern identity layer on OAuth 2.0 — verify users across apps with ID tokens"
+  category="Security"
+  categoryHref="/learning/security"
+  difficulty="Intermediate"
+  readTime="12 min read"
+>
+
+<!-- Section 1: The Hook -->
+<section class="mb-12 md:mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+    <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
+    <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Digital Passport</p>
+    <p class="text-text-secondary text-sm md:text-base">issued by providers you already trust</p>
+  </div>
+</section>
+
+<!-- Section 2: Airport Analogy -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Airport Analogy</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary text-sm md:text-base mb-6 md:mb-8">
+      Imagine you're at an airport. You don't need to prove your identity to every shop, lounge, and gate separately. 
+      You show your <span class="text-primary font-medium">passport</span> once at security, get a 
+      <span class="text-primary font-medium">boarding pass</span>, and that pass grants you access everywhere.
+      OIDC works the same way — one trusted authority verifies who you are, and everyone else trusts that verification.
+    </p>
+    
+    <!-- Airport Security Diagram -->
+    <div class="relative overflow-x-auto" id="airport-scene">
+      <svg viewBox="0 0 600 200" class="w-full h-auto min-w-[480px]">
+        <!-- You (Passenger) -->
+        <g class="passenger">
+          <rect x="10" y="55" width="100" height="75" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="60" y="82" text-anchor="middle" fill="#3b82f6" font-size="13" font-weight="600">YOU</text>
+          <text x="60" y="100" text-anchor="middle" fill="#666" font-size="10">User</text>
+          <text x="60" y="116" text-anchor="middle" fill="#666" font-size="9">w/ credentials</text>
+        </g>
+        
+        <!-- Security (Identity Provider) -->
+        <g class="security">
+          <rect x="170" y="35" width="130" height="115" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="235" y="60" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">SECURITY</text>
+          <text x="235" y="78" text-anchor="middle" fill="#666" font-size="10">(Identity Provider)</text>
+          
+          <!-- Passport icon -->
+          <rect x="205" y="88" width="60" height="40" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1"/>
+          <text x="235" y="113" text-anchor="middle" fill="#00FF88" font-size="9">ID Token</text>
+        </g>
+        
+        <!-- Destinations (Relying Parties) -->
+        <g class="destinations">
+          <rect x="370" y="20" width="220" height="155" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+          <text x="480" y="45" text-anchor="middle" fill="#888" font-size="11" font-weight="500">YOUR APPS (Relying Parties)</text>
+          
+          <!-- Shop -->
+          <rect x="385" y="58" width="60" height="38" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+          <text x="415" y="82" text-anchor="middle" fill="#fbbf24" font-size="9">App 1</text>
+          
+          <!-- Lounge -->
+          <rect x="455" y="58" width="60" height="38" rx="4" fill="#0a0a0a" stroke="#60a5fa" stroke-width="1"/>
+          <text x="485" y="82" text-anchor="middle" fill="#60a5fa" font-size="9">App 2</text>
+          
+          <!-- Gate -->
+          <rect x="525" y="58" width="50" height="38" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="550" y="82" text-anchor="middle" fill="#34d399" font-size="9">API</text>
+          
+          <!-- More apps -->
+          <rect x="385" y="108" width="60" height="38" rx="4" fill="#0a0a0a" stroke="#f472b6" stroke-width="1"/>
+          <text x="415" y="132" text-anchor="middle" fill="#f472b6" font-size="9">Mobile</text>
+          
+          <rect x="455" y="108" width="60" height="38" rx="4" fill="#0a0a0a" stroke="#a78bfa" stroke-width="1"/>
+          <text x="485" y="132" text-anchor="middle" fill="#a78bfa" font-size="9">SaaS</text>
+          
+          <rect x="525" y="108" width="50" height="38" rx="4" fill="#0a0a0a" stroke="#22d3ee" stroke-width="1"/>
+          <text x="550" y="132" text-anchor="middle" fill="#22d3ee" font-size="9">Admin</text>
+        </g>
+        
+        <!-- Flow arrows -->
+        <g class="arrows">
+          <path d="M115 93 L165 93" class="flow-path" stroke="#3b82f6" stroke-width="2" fill="none"/>
+          <polygon points="165,93 158,88 158,98" fill="#3b82f6"/>
+          
+          <path d="M305 93 L365 93" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
+          <polygon points="365,93 358,88 358,98" fill="#00FF88"/>
+        </g>
+        
+        <!-- Labels -->
+        <text x="140" y="113" text-anchor="middle" fill="#525252" font-size="9">login</text>
+        <text x="335" y="113" text-anchor="middle" fill="#525252" font-size="9">token</text>
+        
+        <!-- Animated packets -->
+        <circle class="pulse-dot" cx="140" cy="93" r="5" fill="#3b82f6"/>
+        <circle class="pulse-dot" cx="335" cy="93" r="5" fill="#00FF88" style="animation-delay: 0.5s"/>
+      </svg>
+    </div>
+    
+    <div class="mt-8 grid md:grid-cols-3 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">🧑</div>
+        <p class="text-sm font-medium text-blue-400">You (User)</p>
+        <p class="text-xs text-text-muted mt-1">Have credentials with IdP</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-primary/30">
+        <div class="text-3xl mb-2">🛂</div>
+        <p class="text-sm font-medium text-primary">Identity Provider</p>
+        <p class="text-xs text-text-muted mt-1">Verifies you, issues ID token</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">🏢</div>
+        <p class="text-sm font-medium text-text-secondary">Relying Parties</p>
+        <p class="text-xs text-text-muted mt-1">Trust the token, know who you are</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: The Problem -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Without OIDC -->
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-500 text-lg">✗</span>
+        <span class="font-medium text-red-400">Roll Your Own Auth</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre class="text-text-muted"><code><span class="comment">// Every app builds its own auth 😰</span>
+
+<span class="comment">// App 1: Store passwords</span>
+users_table: email, password_hash, salt
+
+<span class="comment">// App 2: Different password format</span>
+accounts: username, bcrypt_hash
+
+<span class="comment">// App 3: Oh no, we got hacked</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users; <span class="comment">-- leaked!</span>
+
+<span class="comment">// User has 47 passwords to remember</span>
+<span class="comment">// Each app handles MFA differently</span>
+<span class="comment">// No SSO between your own apps</span></code></pre>
+      </div>
+      <BulletList color="red" items={[
+        "Every app stores credentials separately",
+        "Password reuse across services",
+        "Each app implements MFA from scratch",
+        "No single sign-on experience",
+        "Security breaches affect one app at a time"
+      ]} />
+    </div>
+    
+    <!-- With OIDC -->
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-primary text-lg">✓</span>
+        <span class="font-medium text-primary">OpenID Connect</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre><code><span class="comment">// All apps trust one identity provider</span>
+
+<span class="comment">// User clicks "Sign in with Google"</span>
+redirect → accounts.google.com
+
+<span class="comment">// Google handles auth, returns token</span>
+{lb}
+  "<span class="type">sub</span>": "<span class="string">user-123</span>",
+  "<span class="type">email</span>": "<span class="string">nami@example.com</span>",
+  "<span class="type">name</span>": "<span class="string">Nami</span>",
+  "<span class="type">email_verified</span>": <span class="keyword">true</span>
+{rb}
+
+<span class="comment">// Your app trusts this. Done. ✓</span></code></pre>
+      </div>
+      <BulletList color="primary" items={[
+        "One login for all connected apps",
+        "No passwords stored in your database",
+        "MFA handled by the identity provider",
+        "Standardized, audited, battle-tested",
+        "Users trust familiar providers"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: OAuth vs OIDC -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">OAuth 2.0 vs OIDC</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary text-sm md:text-base mb-6">
+      OIDC is built <span class="text-primary font-medium">on top of</span> OAuth 2.0. They're not competing standards — they solve different problems.
+    </p>
+    
+    <div class="overflow-x-auto">
+      <svg viewBox="0 0 600 180" class="w-full h-auto min-w-[480px]">
+        <!-- OAuth box -->
+        <rect x="20" y="20" width="260" height="140" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="150" y="50" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="600">OAuth 2.0</text>
+        <text x="150" y="75" text-anchor="middle" fill="#666" font-size="11">"Can this app access my data?"</text>
+        <text x="150" y="100" text-anchor="middle" fill="#888" font-size="10">Authorization</text>
+        
+        <rect x="50" y="115" width="80" height="30" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+        <text x="90" y="135" text-anchor="middle" fill="#fbbf24" font-size="10">Access Token</text>
+        
+        <text x="180" y="135" text-anchor="middle" fill="#525252" font-size="9">→ API access</text>
+        
+        <!-- OIDC box -->
+        <rect x="320" y="20" width="260" height="140" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="450" y="50" text-anchor="middle" fill="#00FF88" font-size="14" font-weight="600">OpenID Connect</text>
+        <text x="450" y="75" text-anchor="middle" fill="#666" font-size="11">"Who is this user?"</text>
+        <text x="450" y="100" text-anchor="middle" fill="#888" font-size="10">Authentication + Identity</text>
+        
+        <rect x="350" y="115" width="80" height="30" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1"/>
+        <text x="390" y="135" text-anchor="middle" fill="#00FF88" font-size="10">ID Token</text>
+        
+        <text x="480" y="135" text-anchor="middle" fill="#525252" font-size="9">→ user info</text>
+        
+        <!-- Plus sign -->
+        <text x="300" y="95" text-anchor="middle" fill="#525252" font-size="24">+</text>
+      </svg>
+    </div>
+    
+    <div class="mt-6 grid md:grid-cols-2 gap-4 stagger-children">
+      <div class="bg-bg-main rounded-lg p-4 border border-yellow-500/20">
+        <h4 class="text-sm font-medium text-yellow-400 mb-2">OAuth 2.0 alone</h4>
+        <p class="text-text-muted text-sm">Grants access to resources. Doesn't tell you <em>who</em> the user is. Like a valet key — it opens the door, but doesn't identify the driver.</p>
+      </div>
+      <div class="bg-bg-main rounded-lg p-4 border border-primary/20">
+        <h4 class="text-sm font-medium text-primary mb-2">OIDC adds identity</h4>
+        <p class="text-text-muted text-sm">Returns a standardized ID token with user info (sub, email, name). Now you know exactly who logged in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Core Concepts -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Core Concepts</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <!-- ID Token -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🎫</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">ID Token</h3>
+          <p class="text-text-muted text-sm">A signed JWT containing user identity. Always a JWT, always signed by the provider. This is what makes OIDC different from OAuth.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Claims -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📋</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Claims</h3>
+          <p class="text-text-muted text-sm">Key-value pairs inside the ID token. Standard claims: <code class="text-primary">sub</code> (user ID), <code class="text-primary">email</code>, <code class="text-primary">name</code>, <code class="text-primary">iat</code> (issued at).</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scopes -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔑</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Scopes</h3>
+          <p class="text-text-muted text-sm">Define what info you're requesting. <code class="text-primary">openid</code> (required), <code class="text-primary">profile</code>, <code class="text-primary">email</code>, <code class="text-primary">address</code>, <code class="text-primary">phone</code>.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Identity Provider -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🏛️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Identity Provider (IdP)</h3>
+          <p class="text-text-muted text-sm">The authority that authenticates users. Google, Okta, Auth0, Azure AD, AWS Cognito, or your own.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Relying Party -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🏢</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Relying Party (RP)</h3>
+          <p class="text-text-muted text-sm">Your application. It "relies" on the IdP to verify users. Validates the ID token and extracts claims.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Discovery -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔍</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Discovery Document</h3>
+          <p class="text-text-muted text-sm">JSON at <code class="text-primary">/.well-known/openid-configuration</code> listing all endpoints and supported features.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: How It Works (Authorization Code Flow) -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Authorization Code Flow (with PKCE)</h2>
+  
+  <p class="text-text-secondary text-sm mb-6 fade-in">
+    The most secure flow for web apps and SPAs. PKCE (Proof Key for Code Exchange) protects against authorization code interception.
+  </p>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-8 fade-in overflow-x-auto">
+    <svg viewBox="0 0 600 360" class="w-full h-auto min-w-[480px]" id="flow-diagram">
+      <!-- Actors -->
+      <!-- User/Browser -->
+      <rect x="20" y="20" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+      <text x="70" y="45" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">Browser</text>
+      
+      <!-- Your App -->
+      <rect x="250" y="20" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+      <text x="300" y="45" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">Your App</text>
+      
+      <!-- IdP -->
+      <rect x="480" y="20" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+      <text x="530" y="45" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">IdP</text>
+      
+      <!-- Vertical lines -->
+      <line x1="70" y1="65" x2="70" y2="340" stroke="#3b82f6" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="300" y1="65" x2="300" y2="340" stroke="#00FF88" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="530" y1="65" x2="530" y2="340" stroke="#fbbf24" stroke-width="1" stroke-dasharray="4"/>
+      
+      <!-- Step 1: Click Login -->
+      <path d="M75 90 L295 90" stroke="#3b82f6" stroke-width="1.5" fill="none" marker-end="url(#arrowBlue)"/>
+      <rect x="120" y="75" width="130" height="20" rx="3" fill="#0a0a0a"/>
+      <text x="185" y="89" text-anchor="middle" fill="#888" font-size="9">1. Click "Login"</text>
+      
+      <!-- Step 2: Generate PKCE -->
+      <rect x="240" y="105" width="120" height="30" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1"/>
+      <text x="300" y="125" text-anchor="middle" fill="#00FF88" font-size="9">2. Generate PKCE</text>
+      
+      <!-- Step 3: Redirect to IdP -->
+      <path d="M305 145 L525 145" stroke="#00FF88" stroke-width="1.5" fill="none" marker-end="url(#arrowGreen)"/>
+      <rect x="350" y="130" width="130" height="20" rx="3" fill="#0a0a0a"/>
+      <text x="415" y="144" text-anchor="middle" fill="#888" font-size="9">3. Redirect + code_challenge</text>
+      
+      <!-- Step 4: User authenticates -->
+      <rect x="470" y="160" width="120" height="30" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+      <text x="530" y="180" text-anchor="middle" fill="#fbbf24" font-size="9">4. User logs in</text>
+      
+      <!-- Step 5: Redirect back with code -->
+      <path d="M525 200 L305 200" stroke="#fbbf24" stroke-width="1.5" fill="none" marker-end="url(#arrowYellow)"/>
+      <rect x="350" y="185" width="130" height="20" rx="3" fill="#0a0a0a"/>
+      <text x="415" y="199" text-anchor="middle" fill="#888" font-size="9">5. Redirect + auth code</text>
+      
+      <!-- Step 6: Exchange code for tokens -->
+      <path d="M305 230 L525 230" stroke="#00FF88" stroke-width="1.5" fill="none" marker-end="url(#arrowGreen)"/>
+      <rect x="340" y="215" width="150" height="20" rx="3" fill="#0a0a0a"/>
+      <text x="415" y="229" text-anchor="middle" fill="#888" font-size="9">6. code + code_verifier</text>
+      
+      <!-- Step 7: Return tokens -->
+      <path d="M525 260 L305 260" stroke="#fbbf24" stroke-width="1.5" fill="none" marker-end="url(#arrowYellow)"/>
+      <rect x="350" y="245" width="130" height="20" rx="3" fill="#0a0a0a"/>
+      <text x="415" y="259" text-anchor="middle" fill="#888" font-size="9">7. ID token + access token</text>
+      
+      <!-- Step 8: Validate & create session -->
+      <rect x="240" y="275" width="120" height="30" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1"/>
+      <text x="300" y="295" text-anchor="middle" fill="#00FF88" font-size="9">8. Validate tokens</text>
+      
+      <!-- Step 9: Logged in! -->
+      <path d="M295 315 L75 315" stroke="#00FF88" stroke-width="1.5" fill="none" marker-end="url(#arrowGreen)"/>
+      <rect x="130" y="300" width="120" height="20" rx="3" fill="#0a0a0a"/>
+      <text x="190" y="314" text-anchor="middle" fill="#888" font-size="9">9. Session created ✓</text>
+      
+      <!-- Arrow markers -->
+      <defs>
+        <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+          <polygon points="0,0 8,4 0,8" fill="#3b82f6"/>
+        </marker>
+        <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+          <polygon points="0,0 8,4 0,8" fill="#00FF88"/>
+        </marker>
+        <marker id="arrowYellow" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+          <polygon points="0,0 8,4 0,8" fill="#fbbf24"/>
+        </marker>
+      </defs>
+    </svg>
+    
+    <div class="mt-6 grid md:grid-cols-3 gap-4 text-center">
+      <div>
+        <code class="text-primary text-sm">code_verifier</code>
+        <p class="text-text-muted text-xs mt-1">Random secret, kept by your app</p>
+      </div>
+      <div>
+        <code class="text-yellow-400 text-sm">code_challenge</code>
+        <p class="text-text-muted text-xs mt-1">Hash of verifier, sent to IdP</p>
+      </div>
+      <div>
+        <code class="text-blue-400 text-sm">auth code</code>
+        <p class="text-text-muted text-xs mt-1">One-time code, exchanged for tokens</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7: ID Token Structure -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Inside an ID Token</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <p class="text-text-secondary text-sm mb-4">
+      An ID token is a <span class="text-primary font-medium">JWT</span> (JSON Web Token) with three parts: header, payload, and signature.
+    </p>
+    
+    <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-6">
+      <pre><code><span class="comment">// Decoded ID Token</span>
+
+<span class="comment">// Header</span>
+{lb}
+  "<span class="type">alg</span>": "<span class="string">RS256</span>",      <span class="comment">// Signing algorithm</span>
+  "<span class="type">typ</span>": "<span class="string">JWT</span>",
+  "<span class="type">kid</span>": "<span class="string">abc123</span>"       <span class="comment">// Key ID for verification</span>
+{rb}
+
+<span class="comment">// Payload (the claims)</span>
+{lb}
+  "<span class="type">iss</span>": "<span class="string">https://accounts.google.com</span>",  <span class="comment">// Issuer</span>
+  "<span class="type">sub</span>": "<span class="string">110248495921238986420</span>",        <span class="comment">// Subject (user ID)</span>
+  "<span class="type">aud</span>": "<span class="string">your-client-id.apps.google</span>",  <span class="comment">// Audience (your app)</span>
+  "<span class="type">exp</span>": <span class="string">1707858400</span>,                     <span class="comment">// Expiration</span>
+  "<span class="type">iat</span>": <span class="string">1707854800</span>,                     <span class="comment">// Issued at</span>
+  "<span class="type">nonce</span>": "<span class="string">abc123xyz</span>",                   <span class="comment">// Replay protection</span>
+  
+  <span class="comment">// Standard profile claims</span>
+  "<span class="type">email</span>": "<span class="string">nami@example.com</span>",
+  "<span class="type">email_verified</span>": <span class="keyword">true</span>,
+  "<span class="type">name</span>": "<span class="string">Nami</span>",
+  "<span class="type">picture</span>": "<span class="string">https://...</span>"
+{rb}
+
+<span class="comment">// Signature</span>
+<span class="string">RSASHA256(base64(header) + "." + base64(payload), privateKey)</span></code></pre>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-bg-main rounded-lg p-4 border border-primary/20">
+        <h4 class="text-sm font-medium text-primary mb-2">✅ Always Validate</h4>
+        <BulletList color="primary" items={[
+          "Signature matches (use IdP's public keys)",
+          "iss matches expected issuer",
+          "aud matches your client ID",
+          "exp hasn't passed",
+          "nonce matches (if you sent one)"
+        ]} />
+      </div>
+      <div class="bg-bg-main rounded-lg p-4 border border-red-500/20">
+        <h4 class="text-sm font-medium text-red-400 mb-2">❌ Never Trust Blindly</h4>
+        <BulletList color="red" items={[
+          "Don't decode without verifying signature",
+          "Don't accept tokens from wrong issuer",
+          "Don't skip expiration checks",
+          "Don't use tokens from URL fragments in logs"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Provider Integrations -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Provider Integrations</h2>
+  
+  <!-- Provider Switcher -->
+  <div class="mb-6 fade-in">
+    <div class="flex flex-wrap gap-2" id="provider-switcher">
+      <button class="provider-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-provider="cognito">
+        <span class="text-lg">🟠</span> AWS Cognito
+      </button>
+      <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="okta">
+        <span class="text-lg">🔵</span> Okta
+      </button>
+      <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="azure">
+        <span class="text-lg">🟦</span> Azure AD
+      </button>
+      <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="auth0">
+        <span class="text-lg">🟥</span> Auth0
+      </button>
+    </div>
+  </div>
+  
+  <!-- AWS Cognito -->
+  <div class="provider-content" id="provider-cognito">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in mb-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🟠</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">AWS Cognito</h3>
+          <p class="text-text-muted text-sm">Managed user pools with built-in OIDC. Great for AWS-native apps.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+        <pre><code><span class="comment"># Discovery endpoint</span>
+https://cognito-idp.<span class="type">{lb}region{rb}</span>.amazonaws.com/<span class="type">{lb}userPoolId{rb}</span>/.well-known/openid-configuration
+
+<span class="comment"># Example authorize URL</span>
+https://<span class="type">{lb}domain{rb}</span>.auth.<span class="type">{lb}region{rb}</span>.amazoncognito.com/oauth2/authorize?
+  client_id=<span class="string">your-client-id</span>&
+  response_type=<span class="string">code</span>&
+  scope=<span class="string">openid email profile</span>&
+  redirect_uri=<span class="string">https://yourapp.com/callback</span>&
+  code_challenge=<span class="string">{lb}challenge{rb}</span>&
+  code_challenge_method=<span class="string">S256</span></code></pre>
+      </div>
+      
+      <BulletList color="primary" items={[
+        "User Pools handle registration, login, MFA",
+        "Hosted UI or custom UI with SDK",
+        "Integrates with API Gateway, ALB, AppSync",
+        "Supports social providers (Google, Facebook, Apple)"
+      ]} />
+    </div>
+  </div>
+  
+  <!-- Okta -->
+  <div class="provider-content hidden" id="provider-okta">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in mb-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔵</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Okta</h3>
+          <p class="text-text-muted text-sm">Enterprise-grade identity. Popular for B2B and workforce identity.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+        <pre><code><span class="comment"># Discovery endpoint</span>
+https://<span class="type">{lb}yourOktaDomain{rb}</span>/oauth2/default/.well-known/openid-configuration
+
+<span class="comment"># Example authorize URL</span>
+https://<span class="type">{lb}yourOktaDomain{rb}</span>/oauth2/default/v1/authorize?
+  client_id=<span class="string">your-client-id</span>&
+  response_type=<span class="string">code</span>&
+  scope=<span class="string">openid email profile</span>&
+  redirect_uri=<span class="string">https://yourapp.com/callback</span>&
+  state=<span class="string">{lb}state{rb}</span>&
+  code_challenge=<span class="string">{lb}challenge{rb}</span>&
+  code_challenge_method=<span class="string">S256</span></code></pre>
+      </div>
+      
+      <BulletList color="primary" items={[
+        "Multiple authorization servers per tenant",
+        "Custom claims and scopes",
+        "Inline hooks for custom logic",
+        "SDKs for every major framework"
+      ]} />
+    </div>
+  </div>
+  
+  <!-- Azure AD -->
+  <div class="provider-content hidden" id="provider-azure">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in mb-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-blue-600/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🟦</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Microsoft Entra ID (Azure AD)</h3>
+          <p class="text-text-muted text-sm">Microsoft's identity platform. Tight integration with M365 and Azure.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+        <pre><code><span class="comment"># Discovery endpoint (v2.0)</span>
+https://login.microsoftonline.com/<span class="type">{lb}tenantId{rb}</span>/v2.0/.well-known/openid-configuration
+
+<span class="comment"># Example authorize URL</span>
+https://login.microsoftonline.com/<span class="type">{lb}tenantId{rb}</span>/oauth2/v2.0/authorize?
+  client_id=<span class="string">your-client-id</span>&
+  response_type=<span class="string">code</span>&
+  scope=<span class="string">openid email profile</span>&
+  redirect_uri=<span class="string">https://yourapp.com/callback</span>&
+  code_challenge=<span class="string">{lb}challenge{rb}</span>&
+  code_challenge_method=<span class="string">S256</span></code></pre>
+      </div>
+      
+      <BulletList color="primary" items={[
+        "Single-tenant or multi-tenant apps",
+        "Conditional Access policies",
+        "Groups and roles in tokens",
+        "MSAL libraries for all platforms"
+      ]} />
+    </div>
+  </div>
+  
+  <!-- Auth0 -->
+  <div class="provider-content hidden" id="provider-auth0">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in mb-6">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🟥</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white">Auth0</h3>
+          <p class="text-text-muted text-sm">Developer-friendly identity platform. Quick to set up, highly customizable.</p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+        <pre><code><span class="comment"># Discovery endpoint</span>
+https://<span class="type">{lb}yourDomain{rb}</span>.auth0.com/.well-known/openid-configuration
+
+<span class="comment"># Example authorize URL</span>
+https://<span class="type">{lb}yourDomain{rb}</span>.auth0.com/authorize?
+  client_id=<span class="string">your-client-id</span>&
+  response_type=<span class="string">code</span>&
+  scope=<span class="string">openid email profile</span>&
+  redirect_uri=<span class="string">https://yourapp.com/callback</span>&
+  audience=<span class="string">https://your-api</span>&
+  code_challenge=<span class="string">{lb}challenge{rb}</span>&
+  code_challenge_method=<span class="string">S256</span></code></pre>
+      </div>
+      
+      <BulletList color="primary" items={[
+        "Actions and Rules for custom logic",
+        "Universal Login (hosted) or embedded",
+        "50+ social and enterprise connections",
+        "Organizations feature for B2B SaaS"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 9: Code Examples -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Code Examples</h2>
+  
+  <!-- Language Switcher -->
+  <div class="mb-6 fade-in">
+    <div class="flex flex-wrap gap-2" id="lang-switcher">
+      <button class="lang-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30" data-lang="node">Node.js</button>
+      <button class="lang-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors" data-lang="python">Python</button>
+    </div>
+  </div>
+  
+  <!-- Node.js Example -->
+  <div class="lang-content" id="lang-node">
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+        <h3 class="font-medium text-text-secondary">Install Dependencies</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code>npm install express express-openid-connect</code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+        <h3 class="font-medium text-text-secondary">Configure OIDC Middleware</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">const</span> {lb} <span class="function">auth</span> {rb} = <span class="function">require</span>(<span class="string">'express-openid-connect'</span>);
+
+<span class="keyword">const</span> config = {lb}
+  <span class="type">authRequired</span>: <span class="keyword">false</span>,
+  <span class="type">auth0Logout</span>: <span class="keyword">true</span>,
+  <span class="type">secret</span>: process.env.<span class="type">SESSION_SECRET</span>,
+  <span class="type">baseURL</span>: <span class="string">'https://yourapp.com'</span>,
+  <span class="type">clientID</span>: process.env.<span class="type">OIDC_CLIENT_ID</span>,
+  <span class="type">issuerBaseURL</span>: process.env.<span class="type">OIDC_ISSUER</span>,  <span class="comment">// e.g., https://your-tenant.auth0.com</span>
+{rb};
+
+app.<span class="function">use</span>(<span class="function">auth</span>(config));
+
+<span class="comment">// Protected route</span>
+app.<span class="function">get</span>(<span class="string">'/profile'</span>, <span class="function">requiresAuth</span>(), (req, res) => {lb}
+  res.<span class="function">json</span>(req.oidc.user);  <span class="comment">// {lb} sub, email, name {rb}</span>
+{rb});</code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+        <h3 class="font-medium text-text-secondary">Manual Token Validation (if needed)</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">const</span> {lb} <span class="function">jwtVerify</span>, <span class="function">createRemoteJWKSet</span> {rb} = <span class="function">require</span>(<span class="string">'jose'</span>);
+
+<span class="keyword">const</span> JWKS = <span class="function">createRemoteJWKSet</span>(
+  <span class="keyword">new</span> <span class="type">URL</span>(<span class="string">'https://your-issuer.com/.well-known/jwks.json'</span>)
+);
+
+<span class="keyword">async function</span> <span class="function">validateToken</span>(idToken) {lb}
+  <span class="keyword">const</span> {lb} payload {rb} = <span class="keyword">await</span> <span class="function">jwtVerify</span>(idToken, JWKS, {lb}
+    <span class="type">issuer</span>: <span class="string">'https://your-issuer.com'</span>,
+    <span class="type">audience</span>: <span class="string">'your-client-id'</span>,
+  {rb});
+  
+  <span class="keyword">return</span> payload; <span class="comment">// {lb} sub, email, name {rb}</span>
+{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Python Example -->
+  <div class="lang-content hidden" id="lang-python">
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+        <h3 class="font-medium text-text-secondary">Install Dependencies</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code>pip install flask authlib</code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+        <h3 class="font-medium text-text-secondary">Configure OIDC Client</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, redirect, session, url_for
+<span class="keyword">from</span> authlib.integrations.flask_client <span class="keyword">import</span> OAuth
+
+app = <span class="type">Flask</span>(__name__)
+app.secret_key = <span class="string">'your-secret-key'</span>
+
+oauth = <span class="type">OAuth</span>(app)
+oauth.<span class="function">register</span>(
+    <span class="type">name</span>=<span class="string">'oidc'</span>,
+    <span class="type">client_id</span>=<span class="string">'your-client-id'</span>,
+    <span class="type">client_secret</span>=<span class="string">'your-client-secret'</span>,
+    <span class="type">server_metadata_url</span>=<span class="string">'https://your-issuer.com/.well-known/openid-configuration'</span>,
+    <span class="type">client_kwargs</span>={lb}<span class="string">'scope'</span>: <span class="string">'openid email profile'</span>{rb},
+)
+
+<span class="macro">@app.route</span>(<span class="string">'/login'</span>)
+<span class="keyword">def</span> <span class="function">login</span>():
+    redirect_uri = <span class="function">url_for</span>(<span class="string">'callback'</span>, _external=<span class="keyword">True</span>)
+    <span class="keyword">return</span> oauth.oidc.<span class="function">authorize_redirect</span>(redirect_uri)
+
+<span class="macro">@app.route</span>(<span class="string">'/callback'</span>)
+<span class="keyword">def</span> <span class="function">callback</span>():
+    token = oauth.oidc.<span class="function">authorize_access_token</span>()
+    user = token.<span class="function">get</span>(<span class="string">'userinfo'</span>)  <span class="comment"># {lb} sub, email, name {rb}</span>
+    session[<span class="string">'user'</span>] = user
+    <span class="keyword">return</span> <span class="function">redirect</span>(<span class="string">'/profile'</span>)</code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+        <h3 class="font-medium text-text-secondary">Protected Route</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">from</span> functools <span class="keyword">import</span> wraps
+
+<span class="keyword">def</span> <span class="function">requires_auth</span>(f):
+    <span class="macro">@wraps</span>(f)
+    <span class="keyword">def</span> <span class="function">decorated</span>(*args, **kwargs):
+        <span class="keyword">if</span> <span class="string">'user'</span> <span class="keyword">not in</span> session:
+            <span class="keyword">return</span> <span class="function">redirect</span>(<span class="string">'/login'</span>)
+        <span class="keyword">return</span> <span class="function">f</span>(*args, **kwargs)
+    <span class="keyword">return</span> decorated
+
+<span class="macro">@app.route</span>(<span class="string">'/profile'</span>)
+<span class="macro">@requires_auth</span>
+<span class="keyword">def</span> <span class="function">profile</span>():
+    <span class="keyword">return</span> {lb}<span class="string">'user'</span>: session[<span class="string">'user'</span>]{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: When to Use -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use OIDC</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
+        <span class="text-lg">✓</span> Use when:
+      </h3>
+      <BulletList color="primary" items={[
+        "You need user authentication (who is this?)",
+        "You want single sign-on across multiple apps",
+        "Users should log in with existing accounts (Google, Microsoft)",
+        "You're building a B2B SaaS with enterprise SSO",
+        "You don't want to store passwords",
+        "You need standardized identity across platforms"
+      ]} />
+    </div>
+    <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-yellow-500 mb-4 flex items-center gap-2">
+        <span class="text-lg">⚠️</span> Consider alternatives if:
+      </h3>
+      <BulletList color="yellow" items={[
+        "You only need API authorization (use OAuth 2.0 alone)",
+        "Simple API key auth is sufficient",
+        "It's a machine-to-machine flow (use client credentials)",
+        "You're building an internal tool with existing LDAP/AD",
+        "Your users are all anonymous"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 11: Trade-offs -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="flex-1">
+        <h3 class="font-medium text-primary mb-3">Pros</h3>
+        <BulletList bullet="+" color="primary" items={[
+          "Standardized protocol — libraries exist for everything",
+          "Outsource auth complexity to experts",
+          "Users get SSO and familiar login flows",
+          "Strong security with PKCE, signed tokens",
+          "Discovery documents make integration easy"
+        ]} />
+      </div>
+      <div class="w-px bg-border-subtle hidden md:block"></div>
+      <div class="flex-1">
+        <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+        <BulletList bullet="−" color="yellow" items={[
+          "Dependency on external identity provider",
+          "Complexity if you need custom flows",
+          "Token size can be large with many claims",
+          "Debugging redirect flows is tricky",
+          "Cost scales with active users (managed IdPs)"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 12: Key Takeaways -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Key Takeaways</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+      <div>
+        <h3 class="font-medium text-white">OIDC = OAuth 2.0 + Identity</h3>
+        <p class="text-text-muted text-sm mt-1">OAuth tells you what the user can access. OIDC tells you who they are. The ID token is the key difference.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+      <div>
+        <h3 class="font-medium text-white">Always Use PKCE</h3>
+        <p class="text-text-muted text-sm mt-1">Even for confidential clients. PKCE protects the authorization code exchange and is now best practice for all flows.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+      <div>
+        <h3 class="font-medium text-white">Validate Tokens Properly</h3>
+        <p class="text-text-muted text-sm mt-1">Verify the signature, check issuer and audience, confirm expiration. Never trust a token without validation.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+      <div>
+        <h3 class="font-medium text-white">Use Well-Known Discovery</h3>
+        <p class="text-text-muted text-sm mt-1">The <code class="text-primary">/.well-known/openid-configuration</code> endpoint tells you everything about the IdP — endpoints, supported scopes, algorithms.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+      <div>
+        <h3 class="font-medium text-white">Pick the Right Provider</h3>
+        <p class="text-text-muted text-sm mt-1">Cognito for AWS-native, Okta/Azure AD for enterprise, Auth0 for developer experience. Or run your own with Keycloak.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</LearningLayout>
+
+<script>
+  // Provider switcher (provider integrations section)
+  document.querySelectorAll('.provider-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.provider-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+
+      const provider = tab.getAttribute('data-provider');
+      document.querySelectorAll('.provider-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`provider-${provider}`)?.classList.remove('hidden');
+    });
+  });
+
+  // Language switcher (code examples section)
+  document.querySelectorAll('.lang-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.lang-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+
+      const lang = tab.getAttribute('data-lang');
+      document.querySelectorAll('.lang-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`lang-${lang}`)?.classList.remove('hidden');
+    });
+  });
+</script>

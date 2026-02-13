@@ -1,0 +1,109 @@
+---
+import '../../styles/global.css'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security — Learning Corner — Piro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="bg-bg-dark text-text-primary min-h-screen flex flex-col">
+  <!-- Nav -->
+  <nav class="border-b border-border-subtle py-4">
+    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <a href="/learning" class="text-text-secondary hover:text-white transition-colors text-sm font-medium">← Learning Corner</a>
+      <div class="flex items-center gap-3">
+        <span class="w-2 h-2 bg-primary rounded-full"></span>
+        <span class="text-text-secondary text-sm">Security</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="py-16 px-6 border-b border-border-subtle">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-3xl">🔐</span>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Security</h1>
+      </div>
+      <p class="text-text-secondary text-lg">Authentication, authorization, cryptography, and secure architecture patterns.</p>
+    </div>
+  </section>
+
+  <!-- Topics -->
+  <section class="py-12 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-6">Available Topics</h2>
+      
+      <div class="space-y-4">
+        <!-- OIDC -->
+        <a href="/learning/security/oidc" class="group block bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-xs font-medium text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">Intermediate</span>
+                <span class="text-text-muted text-sm">12 min read</span>
+              </div>
+              <h3 class="text-lg font-semibold text-white group-hover:text-primary transition-colors">OpenID Connect (OIDC)</h3>
+              <p class="text-text-muted text-sm mt-1">Modern identity layer on OAuth 2.0 — verify users across apps with ID tokens</p>
+            </div>
+            <div class="ml-4">
+              <svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coming Soon -->
+  <section class="py-12 px-6 border-t border-border-subtle">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-sm font-medium text-text-muted uppercase tracking-wider mb-6">Coming Soon</h2>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
+          <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Intermediate</span>
+          <h3 class="font-medium text-white mt-3">OAuth 2.0 Fundamentals</h3>
+          <p class="text-text-muted text-sm mt-1">Authorization framework — access tokens, scopes, and grant types</p>
+        </div>
+        
+        <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
+          <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Advanced</span>
+          <h3 class="font-medium text-white mt-3">JWT Deep Dive</h3>
+          <p class="text-text-muted text-sm mt-1">Structure, signing algorithms, validation, and security pitfalls</p>
+        </div>
+        
+        <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
+          <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Beginner</span>
+          <h3 class="font-medium text-white mt-3">Password Hashing</h3>
+          <p class="text-text-muted text-sm mt-1">bcrypt, scrypt, Argon2 — why MD5 and SHA aren't enough</p>
+        </div>
+        
+        <div class="bg-bg-card border border-border-subtle rounded-xl p-5 opacity-50">
+          <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Advanced</span>
+          <h3 class="font-medium text-white mt-3">Zero Trust Architecture</h3>
+          <p class="text-text-muted text-sm mt-1">Never trust, always verify — modern security perimeters</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-12 px-6 border-t border-border-subtle mt-auto">
+    <div class="max-w-6xl mx-auto text-center">
+      <a href="/learning" class="inline-flex items-center gap-2 text-text-muted hover:text-white transition-colors text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Learning Corner
+      </a>
+    </div>
+  </footer>
+</body>
+</html>

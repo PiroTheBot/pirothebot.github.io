@@ -429,9 +429,96 @@ redirect → accounts.google.com
       </div>
     </div>
   </div>
+  
+  <!-- PKCE Explanation -->
+  <div class="mt-8 bg-bg-card border border-primary/30 rounded-xl p-6 fade-in">
+    <div class="flex items-start gap-4 mb-4">
+      <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="text-xl">🔐</span>
+      </div>
+      <div>
+        <h3 class="font-medium text-white">What is PKCE?</h3>
+        <p class="text-text-muted text-sm">Proof Key for Code Exchange — protection against authorization code interception attacks.</p>
+      </div>
+    </div>
+    
+    <p class="text-text-secondary text-sm mb-4">
+      Without PKCE, if an attacker intercepts the authorization code (via malware, logs, or network sniffing), they could exchange it for tokens. PKCE prevents this by binding the code to the original requestor.
+    </p>
+    
+    <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+      <pre><code><span class="comment">// 1. Generate a random code_verifier (43-128 chars)</span>
+<span class="keyword">const</span> code_verifier = <span class="string">"dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"</span>
+
+<span class="comment">// 2. Create code_challenge = BASE64URL(SHA256(code_verifier))</span>
+<span class="keyword">const</span> code_challenge = <span class="string">"E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"</span>
+
+<span class="comment">// 3. Send code_challenge in authorize request</span>
+<span class="comment">// 4. Send code_verifier in token exchange</span>
+<span class="comment">// 5. IdP verifies: SHA256(code_verifier) === code_challenge</span>
+
+<span class="comment">// Attacker has the code but not the verifier → blocked!</span></code></pre>
+    </div>
+    
+    <BulletList color="primary" items={[
+      "Originally designed for mobile/native apps (public clients)",
+      "Now recommended for ALL clients, including server-side apps",
+      "S256 method (SHA-256) is required; plain method is deprecated"
+    ]} />
+  </div>
 </section>
 
-<!-- Section 7: ID Token Structure -->
+<!-- Section 7: Discovery Document -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Discovery Document</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <p class="text-text-secondary text-sm mb-4">
+      Every OIDC provider exposes a <code class="text-primary">/.well-known/openid-configuration</code> endpoint. This JSON document tells your app everything it needs to know — no hardcoding URLs.
+    </p>
+    
+    <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+      <pre><code><span class="comment">// GET https://accounts.google.com/.well-known/openid-configuration</span>
+{lb}
+  "<span class="type">issuer</span>": "<span class="string">https://accounts.google.com</span>",
+  "<span class="type">authorization_endpoint</span>": "<span class="string">https://accounts.google.com/o/oauth2/v2/auth</span>",
+  "<span class="type">token_endpoint</span>": "<span class="string">https://oauth2.googleapis.com/token</span>",
+  "<span class="type">userinfo_endpoint</span>": "<span class="string">https://openidconnect.googleapis.com/v1/userinfo</span>",
+  "<span class="type">jwks_uri</span>": "<span class="string">https://www.googleapis.com/oauth2/v3/certs</span>",
+  
+  "<span class="type">scopes_supported</span>": [<span class="string">"openid"</span>, <span class="string">"email"</span>, <span class="string">"profile"</span>],
+  "<span class="type">response_types_supported</span>": [<span class="string">"code"</span>, <span class="string">"token"</span>, <span class="string">"id_token"</span>],
+  "<span class="type">grant_types_supported</span>": [<span class="string">"authorization_code"</span>, <span class="string">"refresh_token"</span>],
+  
+  "<span class="type">id_token_signing_alg_values_supported</span>": [<span class="string">"RS256"</span>],
+  "<span class="type">code_challenge_methods_supported</span>": [<span class="string">"S256"</span>, <span class="string">"plain"</span>]
+{rb}</code></pre>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-bg-main rounded-lg p-4 border border-border-subtle">
+        <h4 class="text-sm font-medium text-white mb-2">Key Endpoints</h4>
+        <BulletList color="primary" items={[
+          "authorization_endpoint — where users log in",
+          "token_endpoint — exchange code for tokens",
+          "jwks_uri — public keys for token validation",
+          "userinfo_endpoint — fetch additional claims"
+        ]} />
+      </div>
+      <div class="bg-bg-main rounded-lg p-4 border border-border-subtle">
+        <h4 class="text-sm font-medium text-white mb-2">Why Use Discovery?</h4>
+        <BulletList color="primary" items={[
+          "Auto-configure your OIDC library",
+          "Endpoints can change — discovery stays current",
+          "Validate issuer matches token claims",
+          "Check supported features before using them"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: ID Token Structure -->
 <section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Inside an ID Token</h2>
   
@@ -506,12 +593,6 @@ redirect → accounts.google.com
       </button>
       <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="okta">
         <span class="text-lg">🔵</span> Okta
-      </button>
-      <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="azure">
-        <span class="text-lg">🟦</span> Azure AD
-      </button>
-      <button class="provider-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-provider="auth0">
-        <span class="text-lg">🟥</span> Auth0
       </button>
     </div>
   </div>
@@ -588,103 +669,34 @@ https://<span class="type">{lb}yourOktaDomain{rb}</span>/oauth2/default/v1/autho
       ]} />
     </div>
   </div>
-  
-  <!-- Azure AD -->
-  <div class="provider-content hidden" id="provider-azure">
-    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in mb-6">
-      <div class="flex items-start gap-4 mb-4">
-        <div class="w-10 h-10 bg-blue-600/10 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">🟦</span>
-        </div>
-        <div>
-          <h3 class="font-medium text-white">Microsoft Entra ID (Azure AD)</h3>
-          <p class="text-text-muted text-sm">Microsoft's identity platform. Tight integration with M365 and Azure.</p>
-        </div>
-      </div>
-      
-      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
-        <pre><code><span class="comment"># Discovery endpoint (v2.0)</span>
-https://login.microsoftonline.com/<span class="type">{lb}tenantId{rb}</span>/v2.0/.well-known/openid-configuration
-
-<span class="comment"># Example authorize URL</span>
-https://login.microsoftonline.com/<span class="type">{lb}tenantId{rb}</span>/oauth2/v2.0/authorize?
-  client_id=<span class="string">your-client-id</span>&
-  response_type=<span class="string">code</span>&
-  scope=<span class="string">openid email profile</span>&
-  redirect_uri=<span class="string">https://yourapp.com/callback</span>&
-  code_challenge=<span class="string">{lb}challenge{rb}</span>&
-  code_challenge_method=<span class="string">S256</span></code></pre>
-      </div>
-      
-      <BulletList color="primary" items={[
-        "Single-tenant or multi-tenant apps",
-        "Conditional Access policies",
-        "Groups and roles in tokens",
-        "MSAL libraries for all platforms"
-      ]} />
-    </div>
-  </div>
-  
-  <!-- Auth0 -->
-  <div class="provider-content hidden" id="provider-auth0">
-    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in mb-6">
-      <div class="flex items-start gap-4 mb-4">
-        <div class="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
-          <span class="text-xl">🟥</span>
-        </div>
-        <div>
-          <h3 class="font-medium text-white">Auth0</h3>
-          <p class="text-text-muted text-sm">Developer-friendly identity platform. Quick to set up, highly customizable.</p>
-        </div>
-      </div>
-      
-      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
-        <pre><code><span class="comment"># Discovery endpoint</span>
-https://<span class="type">{lb}yourDomain{rb}</span>.auth0.com/.well-known/openid-configuration
-
-<span class="comment"># Example authorize URL</span>
-https://<span class="type">{lb}yourDomain{rb}</span>.auth0.com/authorize?
-  client_id=<span class="string">your-client-id</span>&
-  response_type=<span class="string">code</span>&
-  scope=<span class="string">openid email profile</span>&
-  redirect_uri=<span class="string">https://yourapp.com/callback</span>&
-  audience=<span class="string">https://your-api</span>&
-  code_challenge=<span class="string">{lb}challenge{rb}</span>&
-  code_challenge_method=<span class="string">S256</span></code></pre>
-      </div>
-      
-      <BulletList color="primary" items={[
-        "Actions and Rules for custom logic",
-        "Universal Login (hosted) or embedded",
-        "50+ social and enterprise connections",
-        "Organizations feature for B2B SaaS"
-      ]} />
-    </div>
-  </div>
 </section>
 
-<!-- Section 9: Code Examples -->
+<!-- Section 10: SDK Code Examples -->
 <section class="mb-12 md:mb-20">
-  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Code Examples</h2>
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">SDK Examples</h2>
   
-  <!-- Language Switcher -->
+  <!-- SDK Switcher -->
   <div class="mb-6 fade-in">
-    <div class="flex flex-wrap gap-2" id="lang-switcher">
-      <button class="lang-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30" data-lang="node">Node.js</button>
-      <button class="lang-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors" data-lang="python">Python</button>
+    <div class="flex flex-wrap gap-2" id="sdk-switcher">
+      <button class="sdk-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-sdk="cognito">
+        <span class="text-lg">🟠</span> AWS Amplify
+      </button>
+      <button class="sdk-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-sdk="okta">
+        <span class="text-lg">🔵</span> Okta SDK
+      </button>
     </div>
   </div>
   
-  <!-- Node.js Example -->
-  <div class="lang-content" id="lang-node">
+  <!-- AWS Amplify Example -->
+  <div class="sdk-content" id="sdk-cognito">
     <div class="mb-8 fade-in">
       <div class="flex items-center gap-3 mb-4">
         <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
-        <h3 class="font-medium text-text-secondary">Install Dependencies</h3>
+        <h3 class="font-medium text-text-secondary">Install AWS Amplify</h3>
       </div>
       <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
         <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
-          <pre><code>npm install express express-openid-connect</code></pre>
+          <pre><code>npm install aws-amplify</code></pre>
         </div>
       </div>
     </div>
@@ -692,67 +704,94 @@ https://<span class="type">{lb}yourDomain{rb}</span>.auth0.com/authorize?
     <div class="mb-8 fade-in">
       <div class="flex items-center gap-3 mb-4">
         <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
-        <h3 class="font-medium text-text-secondary">Configure OIDC Middleware</h3>
+        <h3 class="font-medium text-text-secondary">Configure Amplify</h3>
       </div>
       <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
         <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
-          <pre><code><span class="keyword">const</span> {lb} <span class="function">auth</span> {rb} = <span class="function">require</span>(<span class="string">'express-openid-connect'</span>);
+          <pre><code><span class="keyword">import</span> {lb} <span class="type">Amplify</span> {rb} <span class="keyword">from</span> <span class="string">'aws-amplify'</span>;
 
-<span class="keyword">const</span> config = {lb}
-  <span class="type">authRequired</span>: <span class="keyword">false</span>,
-  <span class="type">auth0Logout</span>: <span class="keyword">true</span>,
-  <span class="type">secret</span>: process.env.<span class="type">SESSION_SECRET</span>,
-  <span class="type">baseURL</span>: <span class="string">'https://yourapp.com'</span>,
-  <span class="type">clientID</span>: process.env.<span class="type">OIDC_CLIENT_ID</span>,
-  <span class="type">issuerBaseURL</span>: process.env.<span class="type">OIDC_ISSUER</span>,  <span class="comment">// e.g., https://your-tenant.auth0.com</span>
-{rb};
-
-app.<span class="function">use</span>(<span class="function">auth</span>(config));
-
-<span class="comment">// Protected route</span>
-app.<span class="function">get</span>(<span class="string">'/profile'</span>, <span class="function">requiresAuth</span>(), (req, res) => {lb}
-  res.<span class="function">json</span>(req.oidc.user);  <span class="comment">// {lb} sub, email, name {rb}</span>
+<span class="type">Amplify</span>.<span class="function">configure</span>({lb}
+  <span class="type">Auth</span>: {lb}
+    <span class="type">Cognito</span>: {lb}
+      <span class="type">userPoolId</span>: <span class="string">'us-east-1_xxxxx'</span>,
+      <span class="type">userPoolClientId</span>: <span class="string">'your-client-id'</span>,
+      <span class="type">loginWith</span>: {lb}
+        <span class="type">oauth</span>: {lb}
+          <span class="type">domain</span>: <span class="string">'your-domain.auth.us-east-1.amazoncognito.com'</span>,
+          <span class="type">scopes</span>: [<span class="string">'openid'</span>, <span class="string">'email'</span>, <span class="string">'profile'</span>],
+          <span class="type">redirectSignIn</span>: [<span class="string">'https://yourapp.com/callback'</span>],
+          <span class="type">redirectSignOut</span>: [<span class="string">'https://yourapp.com/'</span>],
+          <span class="type">responseType</span>: <span class="string">'code'</span>,  <span class="comment">// PKCE enabled by default</span>
+        {rb}
+      {rb}
+    {rb}
+  {rb}
 {rb});</code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+        <h3 class="font-medium text-text-secondary">Sign In & Get User</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">import</span> {lb} <span class="function">signInWithRedirect</span>, <span class="function">getCurrentUser</span>, <span class="function">fetchAuthSession</span> {rb} <span class="keyword">from</span> <span class="string">'aws-amplify/auth'</span>;
+
+<span class="comment">// Trigger login (redirects to Cognito Hosted UI)</span>
+<span class="keyword">async function</span> <span class="function">login</span>() {lb}
+  <span class="keyword">await</span> <span class="function">signInWithRedirect</span>();
+{rb}
+
+<span class="comment">// Get current user after callback</span>
+<span class="keyword">async function</span> <span class="function">getUser</span>() {lb}
+  <span class="keyword">const</span> user = <span class="keyword">await</span> <span class="function">getCurrentUser</span>();
+  <span class="keyword">const</span> session = <span class="keyword">await</span> <span class="function">fetchAuthSession</span>();
+  
+  console.<span class="function">log</span>(user.username);              <span class="comment">// Cognito username</span>
+  console.<span class="function">log</span>(session.tokens.idToken);     <span class="comment">// JWT ID token</span>
+  console.<span class="function">log</span>(session.tokens.accessToken); <span class="comment">// JWT access token</span>
+{rb}</code></pre>
         </div>
       </div>
     </div>
     
     <div class="fade-in">
       <div class="flex items-center gap-3 mb-4">
-        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
-        <h3 class="font-medium text-text-secondary">Manual Token Validation (if needed)</h3>
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">4</span>
+        <h3 class="font-medium text-text-secondary">React Hook Example</h3>
       </div>
       <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
         <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
-          <pre><code><span class="keyword">const</span> {lb} <span class="function">jwtVerify</span>, <span class="function">createRemoteJWKSet</span> {rb} = <span class="function">require</span>(<span class="string">'jose'</span>);
+          <pre><code><span class="keyword">import</span> {lb} <span class="function">useAuthenticator</span> {rb} <span class="keyword">from</span> <span class="string">'@aws-amplify/ui-react'</span>;
 
-<span class="keyword">const</span> JWKS = <span class="function">createRemoteJWKSet</span>(
-  <span class="keyword">new</span> <span class="type">URL</span>(<span class="string">'https://your-issuer.com/.well-known/jwks.json'</span>)
-);
-
-<span class="keyword">async function</span> <span class="function">validateToken</span>(idToken) {lb}
-  <span class="keyword">const</span> {lb} payload {rb} = <span class="keyword">await</span> <span class="function">jwtVerify</span>(idToken, JWKS, {lb}
-    <span class="type">issuer</span>: <span class="string">'https://your-issuer.com'</span>,
-    <span class="type">audience</span>: <span class="string">'your-client-id'</span>,
-  {rb});
+<span class="keyword">function</span> <span class="function">Profile</span>() {lb}
+  <span class="keyword">const</span> {lb} user, signOut {rb} = <span class="function">useAuthenticator</span>();
   
-  <span class="keyword">return</span> payload; <span class="comment">// {lb} sub, email, name {rb}</span>
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span>&gt;
+      &lt;<span class="type">p</span>&gt;Welcome, {lb}user.username{rb}&lt;/<span class="type">p</span>&gt;
+      &lt;<span class="type">button</span> <span class="type">onClick</span>={lb}signOut{rb}&gt;Sign Out&lt;/<span class="type">button</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
 {rb}</code></pre>
         </div>
       </div>
     </div>
   </div>
   
-  <!-- Python Example -->
-  <div class="lang-content hidden" id="lang-python">
+  <!-- Okta SDK Example -->
+  <div class="sdk-content hidden" id="sdk-okta">
     <div class="mb-8 fade-in">
       <div class="flex items-center gap-3 mb-4">
         <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
-        <h3 class="font-medium text-text-secondary">Install Dependencies</h3>
+        <h3 class="font-medium text-text-secondary">Install Okta Auth SDK</h3>
       </div>
       <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
         <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
-          <pre><code>pip install flask authlib</code></pre>
+          <pre><code>npm install @okta/okta-auth-js</code></pre>
         </div>
       </div>
     </div>
@@ -760,61 +799,78 @@ app.<span class="function">get</span>(<span class="string">'/profile'</span>, <s
     <div class="mb-8 fade-in">
       <div class="flex items-center gap-3 mb-4">
         <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
-        <h3 class="font-medium text-text-secondary">Configure OIDC Client</h3>
+        <h3 class="font-medium text-text-secondary">Configure Okta Client</h3>
       </div>
       <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
         <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
-          <pre><code><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, redirect, session, url_for
-<span class="keyword">from</span> authlib.integrations.flask_client <span class="keyword">import</span> OAuth
+          <pre><code><span class="keyword">import</span> {lb} <span class="type">OktaAuth</span> {rb} <span class="keyword">from</span> <span class="string">'@okta/okta-auth-js'</span>;
 
-app = <span class="type">Flask</span>(__name__)
-app.secret_key = <span class="string">'your-secret-key'</span>
+<span class="keyword">const</span> oktaAuth = <span class="keyword">new</span> <span class="type">OktaAuth</span>({lb}
+  <span class="type">issuer</span>: <span class="string">'https://your-domain.okta.com/oauth2/default'</span>,
+  <span class="type">clientId</span>: <span class="string">'your-client-id'</span>,
+  <span class="type">redirectUri</span>: <span class="string">'https://yourapp.com/callback'</span>,
+  <span class="type">scopes</span>: [<span class="string">'openid'</span>, <span class="string">'profile'</span>, <span class="string">'email'</span>],
+  <span class="type">pkce</span>: <span class="keyword">true</span>,  <span class="comment">// Enable PKCE (recommended)</span>
+{rb});</code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+        <h3 class="font-medium text-text-secondary">Sign In & Handle Callback</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Trigger login (redirects to Okta)</span>
+<span class="keyword">async function</span> <span class="function">login</span>() {lb}
+  <span class="keyword">await</span> oktaAuth.<span class="function">signInWithRedirect</span>();
+{rb}
 
-oauth = <span class="type">OAuth</span>(app)
-oauth.<span class="function">register</span>(
-    <span class="type">name</span>=<span class="string">'oidc'</span>,
-    <span class="type">client_id</span>=<span class="string">'your-client-id'</span>,
-    <span class="type">client_secret</span>=<span class="string">'your-client-secret'</span>,
-    <span class="type">server_metadata_url</span>=<span class="string">'https://your-issuer.com/.well-known/openid-configuration'</span>,
-    <span class="type">client_kwargs</span>={lb}<span class="string">'scope'</span>: <span class="string">'openid email profile'</span>{rb},
-)
+<span class="comment">// Handle callback (on redirect URI page)</span>
+<span class="keyword">async function</span> <span class="function">handleCallback</span>() {lb}
+  <span class="keyword">if</span> (oktaAuth.token.<span class="function">isLoginRedirect</span>()) {lb}
+    <span class="keyword">await</span> oktaAuth.<span class="function">handleLoginRedirect</span>();
+  {rb}
+{rb}
 
-<span class="macro">@app.route</span>(<span class="string">'/login'</span>)
-<span class="keyword">def</span> <span class="function">login</span>():
-    redirect_uri = <span class="function">url_for</span>(<span class="string">'callback'</span>, _external=<span class="keyword">True</span>)
-    <span class="keyword">return</span> oauth.oidc.<span class="function">authorize_redirect</span>(redirect_uri)
-
-<span class="macro">@app.route</span>(<span class="string">'/callback'</span>)
-<span class="keyword">def</span> <span class="function">callback</span>():
-    token = oauth.oidc.<span class="function">authorize_access_token</span>()
-    user = token.<span class="function">get</span>(<span class="string">'userinfo'</span>)  <span class="comment"># {lb} sub, email, name {rb}</span>
-    session[<span class="string">'user'</span>] = user
-    <span class="keyword">return</span> <span class="function">redirect</span>(<span class="string">'/profile'</span>)</code></pre>
+<span class="comment">// Get user info</span>
+<span class="keyword">async function</span> <span class="function">getUser</span>() {lb}
+  <span class="keyword">const</span> user = <span class="keyword">await</span> oktaAuth.<span class="function">getUser</span>();
+  console.<span class="function">log</span>(user.email);  <span class="comment">// User's email</span>
+  console.<span class="function">log</span>(user.name);   <span class="comment">// User's name</span>
+  
+  <span class="keyword">const</span> idToken = oktaAuth.<span class="function">getIdToken</span>();
+  console.<span class="function">log</span>(idToken);     <span class="comment">// JWT string</span>
+{rb}</code></pre>
         </div>
       </div>
     </div>
     
     <div class="fade-in">
       <div class="flex items-center gap-3 mb-4">
-        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
-        <h3 class="font-medium text-text-secondary">Protected Route</h3>
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">4</span>
+        <h3 class="font-medium text-text-secondary">React with @okta/okta-react</h3>
       </div>
       <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
         <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
-          <pre><code><span class="keyword">from</span> functools <span class="keyword">import</span> wraps
+          <pre><code><span class="keyword">import</span> {lb} <span class="function">useOktaAuth</span> {rb} <span class="keyword">from</span> <span class="string">'@okta/okta-react'</span>;
 
-<span class="keyword">def</span> <span class="function">requires_auth</span>(f):
-    <span class="macro">@wraps</span>(f)
-    <span class="keyword">def</span> <span class="function">decorated</span>(*args, **kwargs):
-        <span class="keyword">if</span> <span class="string">'user'</span> <span class="keyword">not in</span> session:
-            <span class="keyword">return</span> <span class="function">redirect</span>(<span class="string">'/login'</span>)
-        <span class="keyword">return</span> <span class="function">f</span>(*args, **kwargs)
-    <span class="keyword">return</span> decorated
-
-<span class="macro">@app.route</span>(<span class="string">'/profile'</span>)
-<span class="macro">@requires_auth</span>
-<span class="keyword">def</span> <span class="function">profile</span>():
-    <span class="keyword">return</span> {lb}<span class="string">'user'</span>: session[<span class="string">'user'</span>]{rb}</code></pre>
+<span class="keyword">function</span> <span class="function">Profile</span>() {lb}
+  <span class="keyword">const</span> {lb} authState, oktaAuth {rb} = <span class="function">useOktaAuth</span>();
+  
+  <span class="keyword">if</span> (!authState?.isAuthenticated) {lb}
+    <span class="keyword">return</span> &lt;<span class="type">button</span> <span class="type">onClick</span>={lb}() => oktaAuth.<span class="function">signInWithRedirect</span>(){rb}&gt;Login&lt;/<span class="type">button</span>&gt;;
+  {rb}
+  
+  <span class="keyword">return</span> (
+    &lt;<span class="type">div</span>&gt;
+      &lt;<span class="type">p</span>&gt;Welcome, {lb}authState.idToken?.claims.name{rb}&lt;/<span class="type">p</span>&gt;
+      &lt;<span class="type">button</span> <span class="type">onClick</span>={lb}() => oktaAuth.<span class="function">signOut</span>(){rb}&gt;Logout&lt;/<span class="type">button</span>&gt;
+    &lt;/<span class="type">div</span>&gt;
+  );
+{rb}</code></pre>
         </div>
       </div>
     </div>
@@ -926,7 +982,7 @@ oauth.<span class="function">register</span>(
       <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
       <div>
         <h3 class="font-medium text-white">Pick the Right Provider</h3>
-        <p class="text-text-muted text-sm mt-1">Cognito for AWS-native, Okta/Azure AD for enterprise, Auth0 for developer experience. Or run your own with Keycloak.</p>
+        <p class="text-text-muted text-sm mt-1">Cognito for AWS-native apps, Okta for enterprise SSO. Or run your own with Keycloak.</p>
       </div>
     </div>
   </div>
@@ -951,19 +1007,19 @@ oauth.<span class="function">register</span>(
     });
   });
 
-  // Language switcher (code examples section)
-  document.querySelectorAll('.lang-tab').forEach(tab => {
+  // SDK switcher (code examples section)
+  document.querySelectorAll('.sdk-tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.lang-tab').forEach(t => {
+      document.querySelectorAll('.sdk-tab').forEach(t => {
         t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
         t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
       });
       tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
       tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
 
-      const lang = tab.getAttribute('data-lang');
-      document.querySelectorAll('.lang-content').forEach(c => c.classList.add('hidden'));
-      document.getElementById(`lang-${lang}`)?.classList.remove('hidden');
+      const sdk = tab.getAttribute('data-sdk');
+      document.querySelectorAll('.sdk-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`sdk-${sdk}`)?.classList.remove('hidden');
     });
   });
 </script>

@@ -910,7 +910,130 @@ https://<span class="type">{lb}yourOktaDomain{rb}</span>/oauth2/default/v1/autho
   </div>
 </section>
 
-<!-- Section 11: Trade-offs -->
+<!-- Section 11: Alternatives -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Alternatives to OIDC</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <!-- SAML -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">📜</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <h3 class="font-medium text-white">SAML 2.0</h3>
+            <span class="text-xs text-text-muted bg-bg-main px-2 py-0.5 rounded">Enterprise</span>
+          </div>
+          <p class="text-text-muted text-sm mb-2">XML-based SSO standard from 2005. Still dominant in enterprise identity (Okta, Azure AD, PingFederate).</p>
+          <div class="flex flex-wrap gap-4 text-xs">
+            <span class="text-primary">✓ Mature, widely supported</span>
+            <span class="text-primary">✓ Enterprise compliance</span>
+            <span class="text-yellow-500">− XML verbose</span>
+            <span class="text-yellow-500">− Browser-only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- OAuth 2.0 alone -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔓</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <h3 class="font-medium text-white">OAuth 2.0 (without OIDC)</h3>
+            <span class="text-xs text-text-muted bg-bg-main px-2 py-0.5 rounded">API Access</span>
+          </div>
+          <p class="text-text-muted text-sm mb-2">Authorization only — grants API access without revealing user identity. Use when you need "can they access this?" not "who are they?"</p>
+          <div class="flex flex-wrap gap-4 text-xs">
+            <span class="text-primary">✓ Simpler if no identity needed</span>
+            <span class="text-primary">✓ Scoped API access</span>
+            <span class="text-yellow-500">− No standard user info</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- API Keys -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔑</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <h3 class="font-medium text-white">API Keys</h3>
+            <span class="text-xs text-text-muted bg-bg-main px-2 py-0.5 rounded">Service-to-Service</span>
+          </div>
+          <p class="text-text-muted text-sm mb-2">Simple static tokens. Best for server-to-server calls, developer APIs, or low-security internal tools.</p>
+          <div class="flex flex-wrap gap-4 text-xs">
+            <span class="text-primary">✓ Dead simple</span>
+            <span class="text-primary">✓ No expiration headaches</span>
+            <span class="text-yellow-500">− No user context</span>
+            <span class="text-yellow-500">− Hard to rotate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Magic Links -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-pink-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">✉️</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <h3 class="font-medium text-white">Magic Links</h3>
+            <span class="text-xs text-text-muted bg-bg-main px-2 py-0.5 rounded">Passwordless</span>
+          </div>
+          <p class="text-text-muted text-sm mb-2">Email a one-time login link. Great UX for infrequent users. No password to remember or steal.</p>
+          <div class="flex flex-wrap gap-4 text-xs">
+            <span class="text-primary">✓ No passwords</span>
+            <span class="text-primary">✓ Simple UX</span>
+            <span class="text-yellow-500">− Email delivery delays</span>
+            <span class="text-yellow-500">− Email account = keys</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Passkeys/WebAuthn -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🗝️</span>
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-1">
+            <h3 class="font-medium text-white">Passkeys / WebAuthn</h3>
+            <span class="text-xs text-text-muted bg-bg-main px-2 py-0.5 rounded">Passwordless</span>
+          </div>
+          <p class="text-text-muted text-sm mb-2">Cryptographic keys stored on device, verified by biometrics. The future of auth — phishing-resistant, no shared secrets.</p>
+          <div class="flex flex-wrap gap-4 text-xs">
+            <span class="text-primary">✓ Phishing-proof</span>
+            <span class="text-primary">✓ Great UX</span>
+            <span class="text-yellow-500">− Device-bound</span>
+            <span class="text-yellow-500">− Adoption still growing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-6 bg-bg-card border border-border-subtle rounded-xl p-5 fade-in">
+    <p class="text-text-secondary text-sm">
+      <span class="text-primary font-medium">Pro tip:</span> These aren't mutually exclusive. Many apps combine OIDC for user login with API keys for service accounts, 
+      or offer passkeys as an alternative to passwords within an OIDC flow.
+    </p>
+  </div>
+</section>
+
+<!-- Section 12: Trade-offs -->
 <section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
   

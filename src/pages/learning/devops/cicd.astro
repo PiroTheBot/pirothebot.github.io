@@ -1141,15 +1141,25 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 <section class="mb-12 md:mb-20">
   <h2 class="text-xl font-semibold mb-6 text-white fade-in">Real App Examples</h2>
   
+  <!-- Language Tab Switcher -->
+  <div class="flex flex-wrap gap-2 mb-6 fade-in" id="lang-switcher">
+    <button class="lang-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-lang="python">
+      <span class="text-lg">🐍</span> Python Flask
+    </button>
+    <button class="lang-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-lang="node">
+      <span class="text-lg">💚</span> Node.js Express
+    </button>
+  </div>
+  
   <!-- Python App -->
-  <div class="mb-8 fade-in">
-    <div class="flex items-center gap-3 mb-4">
-      <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
-        <span class="text-xl">🐍</span>
-      </div>
-      <h3 class="font-medium text-blue-400">Python Flask App</h3>
-    </div>
+  <div class="lang-content fade-in" id="lang-python-cicd">
     <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
+          <span class="text-xl">🐍</span>
+        </div>
+        <h3 class="font-medium text-blue-400">Python Flask App Pipeline</h3>
+      </div>
       <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
         <pre><code><span class="comment"># .github/workflows/python-ci.yml</span>
 <span class="keyword">name</span>: <span class="string">Python CI/CD</span>
@@ -1213,14 +1223,14 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
   </div>
   
   <!-- Node.js App -->
-  <div class="fade-in">
-    <div class="flex items-center gap-3 mb-4">
-      <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
-        <span class="text-xl">💚</span>
-      </div>
-      <h3 class="font-medium text-green-400">Node.js Express App</h3>
-    </div>
+  <div class="lang-content hidden fade-in" id="lang-node-cicd">
     <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+          <span class="text-xl">💚</span>
+        </div>
+        <h3 class="font-medium text-green-400">Node.js Express App Pipeline</h3>
+      </div>
       <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
         <pre><code><span class="comment"># .github/workflows/node-ci.yml</span>
 <span class="keyword">name</span>: <span class="string">Node.js CI/CD</span>
@@ -1498,6 +1508,22 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
       const tool = tab.getAttribute('data-tool');
       document.querySelectorAll('.cicd-content').forEach(c => c.classList.add('hidden'));
       document.querySelectorAll(`[id^="cicd-${tool}"]`).forEach(c => c.classList.remove('hidden'));
+    });
+  });
+
+  // Language tab switcher (Python/Node.js)
+  document.querySelectorAll('.lang-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.lang-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+
+      const lang = tab.getAttribute('data-lang');
+      document.querySelectorAll('.lang-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll(`[id^="lang-${lang}"]`).forEach(c => c.classList.remove('hidden'));
     });
   });
 

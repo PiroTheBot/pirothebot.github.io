@@ -1,0 +1,1226 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout 
+  title="Monitoring & Observability"
+  description="Build visibility into your systems — metrics, logs, traces, and alerting for production confidence"
+  category="DevOps"
+  categoryHref="/learning/devops"
+  difficulty="Intermediate"
+  readTime="16 min read"
+>
+
+<!-- Section 1: The Hook -->
+<section class="mb-12 md:mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+    <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as the</p>
+    <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Nervous System</p>
+    <p class="text-text-secondary text-sm md:text-base">of your infrastructure — sensing, reporting, and alerting</p>
+  </div>
+</section>
+
+<!-- Section 2: Hospital Analogy -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Hospital Analogy</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary text-sm md:text-base mb-6 md:mb-8">
+      Imagine your application is a patient in a hospital. Doctors don't just guess what's wrong — they use 
+      <span class="text-primary font-medium">monitoring equipment</span> to understand the patient's health 
+      in real-time and historically. The same applies to your systems.
+    </p>
+    
+    <!-- Hospital Monitoring SVG -->
+    <div class="relative overflow-x-auto" id="hospital-scene">
+      <svg viewBox="0 0 600 220" class="w-full h-auto min-w-[480px]">
+        <!-- Heart Monitor = Metrics -->
+        <g class="equipment" id="heart-monitor">
+          <rect x="20" y="30" width="160" height="110" rx="8" fill="#1a1a1a" stroke="#ef4444" stroke-width="2"/>
+          <text x="100" y="55" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="600">HEART MONITOR</text>
+          <!-- ECG Line -->
+          <polyline points="35,90 55,90 60,70 65,110 70,90 90,90 95,75 100,105 105,90 145,90" 
+                    fill="none" stroke="#ef4444" stroke-width="2" class="pulse-line"/>
+          <text x="100" y="125" text-anchor="middle" fill="#888" font-size="10">72 BPM • 120/80</text>
+          <text x="100" y="155" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="500">= METRICS</text>
+          <text x="100" y="172" text-anchor="middle" fill="#666" font-size="9">Numbers over time</text>
+        </g>
+        
+        <!-- Patient Chart = Logs -->
+        <g class="equipment" id="patient-chart">
+          <rect x="220" y="30" width="160" height="110" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="300" y="55" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">PATIENT CHART</text>
+          <!-- Log lines -->
+          <line x1="235" y1="72" x2="365" y2="72" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+          <line x1="235" y1="88" x2="365" y2="88" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+          <line x1="235" y1="104" x2="365" y2="104" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+          <line x1="235" y1="120" x2="365" y2="120" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+          <text x="240" y="82" fill="#666" font-size="8">09:00 - Patient admitted</text>
+          <text x="240" y="98" fill="#666" font-size="8">09:15 - Vitals checked</text>
+          <text x="240" y="114" fill="#fbbf24" font-size="8">09:30 - Fever detected</text>
+          <text x="300" y="155" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="500">= LOGS</text>
+          <text x="300" y="172" text-anchor="middle" fill="#666" font-size="9">Events with context</text>
+        </g>
+        
+        <!-- Diagnostic Tests = Traces -->
+        <g class="equipment" id="diagnostics">
+          <rect x="420" y="30" width="160" height="110" rx="8" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2"/>
+          <text x="500" y="55" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="600">DIAGNOSTIC PATH</text>
+          <!-- Trace visualization -->
+          <rect x="435" y="70" width="130" height="12" rx="2" fill="#a78bfa" opacity="0.3"/>
+          <rect x="435" y="70" width="90" height="12" rx="2" fill="#a78bfa" opacity="0.6"/>
+          <text x="480" y="79" fill="#fff" font-size="7">Request</text>
+          <rect x="450" y="88" width="100" height="10" rx="2" fill="#00FF88" opacity="0.3"/>
+          <rect x="450" y="88" width="60" height="10" rx="2" fill="#00FF88" opacity="0.6"/>
+          <text x="480" y="96" fill="#fff" font-size="6">→ Service A</text>
+          <rect x="465" y="102" width="80" height="10" rx="2" fill="#fbbf24" opacity="0.3"/>
+          <rect x="465" y="102" width="45" height="10" rx="2" fill="#fbbf24" opacity="0.6"/>
+          <text x="495" y="110" fill="#fff" font-size="6">→ Database</text>
+          <text x="500" y="155" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="500">= TRACES</text>
+          <text x="500" y="172" text-anchor="middle" fill="#666" font-size="9">Request journey</text>
+        </g>
+        
+        <!-- Patient (Your App) -->
+        <text x="300" y="205" text-anchor="middle" fill="#888" font-size="11">🏥 Your Application = The Patient</text>
+      </svg>
+    </div>
+    
+    <div class="mt-8 grid md:grid-cols-3 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-red-500/30">
+        <div class="text-3xl mb-2">💓</div>
+        <p class="text-sm font-medium text-red-400">Metrics</p>
+        <p class="text-xs text-text-muted mt-1">Vital signs — CPU, memory, requests/sec</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-blue-500/30">
+        <div class="text-3xl mb-2">📋</div>
+        <p class="text-sm font-medium text-blue-400">Logs</p>
+        <p class="text-xs text-text-muted mt-1">Medical history — what happened & when</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-purple-400/30">
+        <div class="text-3xl mb-2">🔬</div>
+        <p class="text-sm font-medium text-purple-400">Traces</p>
+        <p class="text-xs text-text-muted mt-1">Diagnostic path — how requests flow</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: Before/After -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Without Monitoring -->
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-500 text-lg">✗</span>
+        <span class="font-medium text-red-400">Flying Blind</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre class="text-text-muted"><code><span class="comment"># 3 AM on-call experience...</span>
+User: "Site is slow"
+You: "Let me SSH into servers..."
+You: *checks 15 servers manually*
+You: "Hmm, disk looks okay..."
+You: *restarts random services*
+You: "Try now?"
+User: "Still broken"
+You: 😭 *4 hours later*</code></pre>
+      </div>
+      <BulletList color="red" items={[
+        "No idea what's happening in production",
+        "Users report problems before you know",
+        "Debugging is guesswork and SSH",
+        "Can't answer 'why is it slow?'",
+        "No historical data for comparison"
+      ]} />
+    </div>
+    
+    <!-- With Monitoring -->
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-primary text-lg">✓</span>
+        <span class="font-medium text-primary">Full Observability</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre><code><span class="comment"># 3 AM with observability...</span>
+<span class="string">[Alert]</span> <span class="type">P99 latency</span> > 500ms
+<span class="string">[Dashboard]</span> Spike at 02:47
+<span class="string">[Trace]</span> Slow query in <span class="function">user-service</span>
+<span class="string">[Logs]</span> "Connection pool exhausted"
+<span class="keyword">Fix:</span> Scale connection pool
+<span class="string">[Resolved]</span> in 8 minutes ✓
+
+<span class="comment"># Back to sleep 😴</span></code></pre>
+      </div>
+      <BulletList color="primary" items={[
+        "Real-time visibility into all systems",
+        "Alerts before users notice problems",
+        "Trace exact cause of issues",
+        "Historical trends for capacity planning",
+        "Data-driven decisions, not guesswork"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Three Pillars -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Three Pillars of Observability</h2>
+  
+  <div class="grid md:grid-cols-3 gap-6 stagger-children">
+    <!-- Metrics -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 hover:border-red-500/40 transition-colors">
+      <div class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-red-400 mb-2">Metrics</h3>
+      <p class="text-text-secondary text-sm mb-4">
+        Numeric measurements over time. The vital signs of your system.
+      </p>
+      <div class="text-xs text-text-muted space-y-1">
+        <p>• CPU utilization: 45%</p>
+        <p>• Requests/second: 1,234</p>
+        <p>• Error rate: 0.01%</p>
+        <p>• P99 latency: 120ms</p>
+      </div>
+      <div class="mt-4 pt-4 border-t border-border-subtle">
+        <p class="text-xs text-text-muted"><span class="text-red-400 font-medium">Best for:</span> Dashboards, alerts, trends</p>
+      </div>
+    </div>
+    
+    <!-- Logs -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 hover:border-blue-500/40 transition-colors">
+      <div class="w-14 h-14 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-blue-400 mb-2">Logs</h3>
+      <p class="text-text-secondary text-sm mb-4">
+        Timestamped records of discrete events. The story of what happened.
+      </p>
+      <div class="text-xs text-text-muted space-y-1 font-mono">
+        <p class="truncate">2024-01-15 09:23:45 INFO User login</p>
+        <p class="truncate">2024-01-15 09:23:46 WARN Slow query</p>
+        <p class="truncate">2024-01-15 09:23:47 ERROR Timeout</p>
+      </div>
+      <div class="mt-4 pt-4 border-t border-border-subtle">
+        <p class="text-xs text-text-muted"><span class="text-blue-400 font-medium">Best for:</span> Debugging, audit trails, search</p>
+      </div>
+    </div>
+    
+    <!-- Traces -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 hover:border-purple-400/40 transition-colors">
+      <div class="w-14 h-14 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-purple-400 mb-2">Traces</h3>
+      <p class="text-text-secondary text-sm mb-4">
+        End-to-end request paths across services. The journey of a request.
+      </p>
+      <div class="text-xs space-y-1">
+        <div class="flex items-center gap-2">
+          <div class="w-16 h-2 bg-purple-400/60 rounded"></div>
+          <span class="text-text-muted">API Gateway 12ms</span>
+        </div>
+        <div class="flex items-center gap-2 pl-2">
+          <div class="w-12 h-2 bg-primary/60 rounded"></div>
+          <span class="text-text-muted">Auth 8ms</span>
+        </div>
+        <div class="flex items-center gap-2 pl-4">
+          <div class="w-20 h-2 bg-yellow-400/60 rounded"></div>
+          <span class="text-text-muted">DB Query 45ms</span>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-border-subtle">
+        <p class="text-xs text-text-muted"><span class="text-purple-400 font-medium">Best for:</span> Latency analysis, dependencies</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Prometheus + Grafana -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Prometheus + Grafana</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in mb-6">
+    <p class="text-text-secondary text-sm md:text-base mb-6">
+      <span class="text-primary font-medium">Prometheus</span> collects and stores metrics. 
+      <span class="text-primary font-medium">Grafana</span> visualizes them beautifully. 
+      Together, they're the industry standard for open-source metrics.
+    </p>
+    
+    <!-- Architecture SVG -->
+    <div class="relative overflow-x-auto mb-6">
+      <svg viewBox="0 0 600 200" class="w-full h-auto min-w-[480px]">
+        <!-- Applications -->
+        <g>
+          <rect x="10" y="60" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="1.5"/>
+          <text x="60" y="90" text-anchor="middle" fill="#888" font-size="11" font-weight="500">Applications</text>
+          <text x="60" y="108" text-anchor="middle" fill="#666" font-size="9">/metrics</text>
+          <text x="60" y="125" text-anchor="middle" fill="#00FF88" font-size="9">:8080, :9090</text>
+        </g>
+        
+        <!-- Exporters -->
+        <g>
+          <rect x="10" y="150" width="100" height="40" rx="6" fill="#1a1a1a" stroke="#525252" stroke-width="1"/>
+          <text x="60" y="175" text-anchor="middle" fill="#666" font-size="9">node_exporter</text>
+        </g>
+        
+        <!-- Prometheus -->
+        <g>
+          <rect x="170" y="45" width="140" height="110" rx="8" fill="#1a1a1a" stroke="#e6522c" stroke-width="2"/>
+          <text x="240" y="75" text-anchor="middle" fill="#e6522c" font-size="13" font-weight="600">PROMETHEUS</text>
+          <text x="240" y="95" text-anchor="middle" fill="#666" font-size="9">Time-series DB</text>
+          <text x="240" y="115" text-anchor="middle" fill="#666" font-size="9">Pull model</text>
+          <text x="240" y="135" text-anchor="middle" fill="#666" font-size="9">PromQL</text>
+        </g>
+        
+        <!-- Alertmanager -->
+        <g>
+          <rect x="350" y="120" width="100" height="50" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="1.5"/>
+          <text x="400" y="142" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="500">Alertmanager</text>
+          <text x="400" y="158" text-anchor="middle" fill="#666" font-size="8">→ Slack, PD</text>
+        </g>
+        
+        <!-- Grafana -->
+        <g>
+          <rect x="480" y="45" width="110" height="110" rx="8" fill="#1a1a1a" stroke="#f46800" stroke-width="2"/>
+          <text x="535" y="75" text-anchor="middle" fill="#f46800" font-size="13" font-weight="600">GRAFANA</text>
+          <text x="535" y="95" text-anchor="middle" fill="#666" font-size="9">Dashboards</text>
+          <text x="535" y="115" text-anchor="middle" fill="#666" font-size="9">Visualization</text>
+          <text x="535" y="135" text-anchor="middle" fill="#666" font-size="9">Alerting</text>
+        </g>
+        
+        <!-- Arrows -->
+        <path d="M115 100 L165 100" stroke="#525252" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+        <text x="140" y="93" text-anchor="middle" fill="#666" font-size="8">scrape</text>
+        
+        <path d="M115 170 L165 120" stroke="#525252" stroke-width="1" stroke-dasharray="3 2" fill="none"/>
+        
+        <path d="M315 100 L475 100" stroke="#e6522c" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+        <text x="395" y="93" text-anchor="middle" fill="#666" font-size="8">query</text>
+        
+        <path d="M315 130 L345 145" stroke="#fbbf24" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+        <text x="320" y="150" fill="#666" font-size="8">alerts</text>
+        
+        <!-- Arrow marker definition -->
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8" fill="none" stroke="currentColor" stroke-width="1"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-4 mb-6">
+      <div class="text-center p-3 rounded-lg bg-bg-main border border-border-subtle">
+        <p class="text-sm font-medium text-[#e6522c]">Pull-based</p>
+        <p class="text-xs text-text-muted mt-1">Prometheus scrapes your apps</p>
+      </div>
+      <div class="text-center p-3 rounded-lg bg-bg-main border border-border-subtle">
+        <p class="text-sm font-medium text-[#e6522c]">Time-series</p>
+        <p class="text-xs text-text-muted mt-1">Optimized for metrics data</p>
+      </div>
+      <div class="text-center p-3 rounded-lg bg-bg-main border border-border-subtle">
+        <p class="text-sm font-medium text-[#f46800]">Flexible</p>
+        <p class="text-xs text-text-muted mt-1">Any data source in Grafana</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- prometheus.yml -->
+  <div class="mb-6 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-[#e6522c]/20 rounded-full flex items-center justify-center text-[#e6522c] font-bold text-sm">1</span>
+      <h3 class="font-medium text-text-secondary">prometheus.yml Configuration</h3>
+    </div>
+    <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+      <pre><code><span class="comment"># prometheus.yml</span>
+<span class="type">global</span>:
+  <span class="type">scrape_interval</span>: <span class="string">15s</span>       <span class="comment"># How often to scrape</span>
+  <span class="type">evaluation_interval</span>: <span class="string">15s</span>  <span class="comment"># How often to evaluate rules</span>
+
+<span class="type">alerting</span>:
+  <span class="type">alertmanagers</span>:
+    - <span class="type">static_configs</span>:
+        - <span class="type">targets</span>: [<span class="string">'alertmanager:9093'</span>]
+
+<span class="type">rule_files</span>:
+  - <span class="string">"alerts/*.yml"</span>
+
+<span class="type">scrape_configs</span>:
+  <span class="comment"># Prometheus itself</span>
+  - <span class="type">job_name</span>: <span class="string">'prometheus'</span>
+    <span class="type">static_configs</span>:
+      - <span class="type">targets</span>: [<span class="string">'localhost:9090'</span>]
+
+  <span class="comment"># Your applications</span>
+  - <span class="type">job_name</span>: <span class="string">'web-app'</span>
+    <span class="type">static_configs</span>:
+      - <span class="type">targets</span>: [<span class="string">'app1:8080'</span>, <span class="string">'app2:8080'</span>, <span class="string">'app3:8080'</span>]
+
+  <span class="comment"># Node exporters (host metrics)</span>
+  - <span class="type">job_name</span>: <span class="string">'node'</span>
+    <span class="type">static_configs</span>:
+      - <span class="type">targets</span>: [<span class="string">'node1:9100'</span>, <span class="string">'node2:9100'</span>]
+
+  <span class="comment"># Kubernetes service discovery</span>
+  - <span class="type">job_name</span>: <span class="string">'kubernetes-pods'</span>
+    <span class="type">kubernetes_sd_configs</span>:
+      - <span class="type">role</span>: <span class="string">pod</span>
+    <span class="type">relabel_configs</span>:
+      - <span class="type">source_labels</span>: [<span class="type">__meta_kubernetes_pod_annotation_prometheus_io_scrape</span>]
+        <span class="type">action</span>: <span class="string">keep</span>
+        <span class="type">regex</span>: <span class="string">true</span></code></pre>
+    </div>
+  </div>
+  
+  <!-- PromQL Examples -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-[#e6522c]/20 rounded-full flex items-center justify-center text-[#e6522c] font-bold text-sm">2</span>
+      <h3 class="font-medium text-text-secondary">PromQL Query Examples</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="space-y-4">
+        <div>
+          <p class="text-text-muted text-xs mb-2">Request rate (per second)</p>
+          <div class="bg-bg-code rounded-lg p-3 text-xs sm:text-sm overflow-x-auto">
+            <code><span class="function">rate</span>(<span class="type">http_requests_total</span>[<span class="string">5m</span>])</code>
+          </div>
+        </div>
+        <div>
+          <p class="text-text-muted text-xs mb-2">Error rate percentage</p>
+          <div class="bg-bg-code rounded-lg p-3 text-xs sm:text-sm overflow-x-auto">
+            <code><span class="function">sum</span>(<span class="function">rate</span>(<span class="type">http_requests_total</span>{lb}<span class="type">status</span>=~<span class="string">"5.."</span>{rb}[<span class="string">5m</span>])) / <span class="function">sum</span>(<span class="function">rate</span>(<span class="type">http_requests_total</span>[<span class="string">5m</span>])) * <span class="string">100</span></code>
+          </div>
+        </div>
+        <div>
+          <p class="text-text-muted text-xs mb-2">P95 latency (histogram)</p>
+          <div class="bg-bg-code rounded-lg p-3 text-xs sm:text-sm overflow-x-auto">
+            <code><span class="function">histogram_quantile</span>(<span class="string">0.95</span>, <span class="function">rate</span>(<span class="type">http_request_duration_seconds_bucket</span>[<span class="string">5m</span>]))</code>
+          </div>
+        </div>
+        <div>
+          <p class="text-text-muted text-xs mb-2">CPU usage by instance</p>
+          <div class="bg-bg-code rounded-lg p-3 text-xs sm:text-sm overflow-x-auto">
+            <code><span class="string">100</span> - (<span class="function">avg</span> <span class="keyword">by</span>(<span class="type">instance</span>) (<span class="function">rate</span>(<span class="type">node_cpu_seconds_total</span>{lb}<span class="type">mode</span>=<span class="string">"idle"</span>{rb}[<span class="string">5m</span>])) * <span class="string">100</span>)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: ELK Stack -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">ELK Stack (Elastic Stack)</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in mb-6">
+    <p class="text-text-secondary text-sm md:text-base mb-6">
+      <span class="text-primary font-medium">Elasticsearch</span> stores and searches logs. 
+      <span class="text-primary font-medium">Logstash</span> processes and transforms them. 
+      <span class="text-primary font-medium">Kibana</span> visualizes everything. 
+      <span class="text-primary font-medium">Beats</span> ships data from your servers.
+    </p>
+    
+    <!-- ELK Architecture SVG -->
+    <div class="relative overflow-x-auto mb-6">
+      <svg viewBox="0 0 600 180" class="w-full h-auto min-w-[480px]">
+        <!-- Beats -->
+        <g>
+          <rect x="10" y="50" width="90" height="80" rx="8" fill="#1a1a1a" stroke="#00bfb3" stroke-width="2"/>
+          <text x="55" y="78" text-anchor="middle" fill="#00bfb3" font-size="11" font-weight="600">BEATS</text>
+          <text x="55" y="95" text-anchor="middle" fill="#666" font-size="8">Filebeat</text>
+          <text x="55" y="108" text-anchor="middle" fill="#666" font-size="8">Metricbeat</text>
+          <text x="55" y="121" text-anchor="middle" fill="#666" font-size="8">APM Agent</text>
+        </g>
+        
+        <!-- Logstash -->
+        <g>
+          <rect x="140" y="50" width="100" height="80" rx="8" fill="#1a1a1a" stroke="#f3b61f" stroke-width="2"/>
+          <text x="190" y="78" text-anchor="middle" fill="#f3b61f" font-size="11" font-weight="600">LOGSTASH</text>
+          <text x="190" y="95" text-anchor="middle" fill="#666" font-size="8">Parse</text>
+          <text x="190" y="108" text-anchor="middle" fill="#666" font-size="8">Transform</text>
+          <text x="190" y="121" text-anchor="middle" fill="#666" font-size="8">Enrich</text>
+        </g>
+        
+        <!-- Elasticsearch -->
+        <g>
+          <rect x="280" y="35" width="140" height="110" rx="8" fill="#1a1a1a" stroke="#fed10a" stroke-width="2"/>
+          <text x="350" y="65" text-anchor="middle" fill="#fed10a" font-size="12" font-weight="600">ELASTICSEARCH</text>
+          <text x="350" y="85" text-anchor="middle" fill="#666" font-size="9">Store</text>
+          <text x="350" y="100" text-anchor="middle" fill="#666" font-size="9">Index</text>
+          <text x="350" y="115" text-anchor="middle" fill="#666" font-size="9">Search</text>
+          <text x="350" y="130" text-anchor="middle" fill="#666" font-size="9">Analyze</text>
+        </g>
+        
+        <!-- Kibana -->
+        <g>
+          <rect x="470" y="50" width="110" height="80" rx="8" fill="#1a1a1a" stroke="#e8478b" stroke-width="2"/>
+          <text x="525" y="78" text-anchor="middle" fill="#e8478b" font-size="11" font-weight="600">KIBANA</text>
+          <text x="525" y="95" text-anchor="middle" fill="#666" font-size="8">Dashboards</text>
+          <text x="525" y="108" text-anchor="middle" fill="#666" font-size="8">Discover</text>
+          <text x="525" y="121" text-anchor="middle" fill="#666" font-size="8">Alerting</text>
+        </g>
+        
+        <!-- Arrows -->
+        <path d="M105 90 L135 90" stroke="#00bfb3" stroke-width="2" fill="none"/>
+        <polygon points="135,90 128,85 128,95" fill="#00bfb3"/>
+        
+        <path d="M245 90 L275 90" stroke="#f3b61f" stroke-width="2" fill="none"/>
+        <polygon points="275,90 268,85 268,95" fill="#f3b61f"/>
+        
+        <path d="M425 90 L465 90" stroke="#fed10a" stroke-width="2" fill="none"/>
+        <polygon points="465,90 458,85 458,95" fill="#fed10a"/>
+        
+        <!-- Labels -->
+        <text x="300" y="170" text-anchor="middle" fill="#666" font-size="10">Also: Elastic APM for distributed tracing</text>
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Logstash Pipeline -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-[#f3b61f]/20 rounded-full flex items-center justify-center text-[#f3b61f] font-bold text-sm">⚙</span>
+      <h3 class="font-medium text-text-secondary">Logstash Pipeline Configuration</h3>
+    </div>
+    <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+      <pre><code><span class="comment"># logstash.conf</span>
+<span class="keyword">input</span> {lb}
+  <span class="comment"># Receive from Filebeat</span>
+  <span class="type">beats</span> {lb}
+    <span class="type">port</span> => <span class="string">5044</span>
+  {rb}
+  
+  <span class="comment"># Or read directly from files</span>
+  <span class="type">file</span> {lb}
+    <span class="type">path</span> => <span class="string">"/var/log/app/*.log"</span>
+    <span class="type">start_position</span> => <span class="string">"beginning"</span>
+  {rb}
+{rb}
+
+<span class="keyword">filter</span> {lb}
+  <span class="comment"># Parse JSON logs</span>
+  <span class="type">json</span> {lb}
+    <span class="type">source</span> => <span class="string">"message"</span>
+  {rb}
+  
+  <span class="comment"># Parse timestamps</span>
+  <span class="type">date</span> {lb}
+    <span class="type">match</span> => [ <span class="string">"timestamp"</span>, <span class="string">"ISO8601"</span> ]
+  {rb}
+  
+  <span class="comment"># Extract fields from message</span>
+  <span class="type">grok</span> {lb}
+    <span class="type">match</span> => {lb} <span class="string">"message"</span> => <span class="string">"%{lb}COMBINEDAPACHELOG{rb}"</span> {rb}
+  {rb}
+  
+  <span class="comment"># Add geolocation from IP</span>
+  <span class="type">geoip</span> {lb}
+    <span class="type">source</span> => <span class="string">"clientip"</span>
+  {rb}
+  
+  <span class="comment"># Drop debug logs in production</span>
+  <span class="keyword">if</span> [<span class="type">level</span>] == <span class="string">"DEBUG"</span> {lb}
+    <span class="type">drop</span> {lb} {rb}
+  {rb}
+{rb}
+
+<span class="keyword">output</span> {lb}
+  <span class="type">elasticsearch</span> {lb}
+    <span class="type">hosts</span> => [<span class="string">"elasticsearch:9200"</span>]
+    <span class="type">index</span> => <span class="string">"logs-%{lb}+YYYY.MM.dd{rb}"</span>
+  {rb}
+{rb}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7: Datadog -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Datadog (Commercial Solution)</h2>
+  
+  <div class="bg-bg-card border border-[#632ca6]/30 rounded-xl p-6 fade-in">
+    <div class="flex items-start gap-4 mb-6">
+      <div class="w-14 h-14 bg-[#632ca6]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+        <span class="text-3xl">🐕</span>
+      </div>
+      <div>
+        <h3 class="font-medium text-white mb-1">When to Use a Commercial Platform</h3>
+        <p class="text-text-secondary text-sm">
+          Datadog, New Relic, and Splunk are expensive but eliminate operational overhead. 
+          You pay money instead of engineering time.
+        </p>
+      </div>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-6 mb-6">
+      <div>
+        <h4 class="text-sm font-medium text-primary mb-3">Key Features</h4>
+        <BulletList color="primary" items={[
+          "Unified metrics, logs, traces, and APM",
+          "500+ integrations out of the box",
+          "Auto-instrumentation for many languages",
+          "Advanced ML-powered anomaly detection",
+          "Real User Monitoring (RUM)",
+          "Synthetic monitoring and uptime checks"
+        ]} />
+      </div>
+      <div>
+        <h4 class="text-sm font-medium text-yellow-400 mb-3">When to Choose Commercial</h4>
+        <BulletList color="yellow" items={[
+          "No dedicated ops/SRE team",
+          "Need fast time-to-value",
+          "Compliance requires vendor support",
+          "Budget allows $15-50/host/month",
+          "Multi-cloud or complex architectures",
+          "Need 24/7 support SLAs"
+        ]} />
+      </div>
+    </div>
+    
+    <!-- Comparison Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-border-subtle">
+            <th class="text-left py-3 px-4 text-text-muted font-medium">Aspect</th>
+            <th class="text-left py-3 px-4 text-[#e6522c] font-medium">Prometheus/Grafana</th>
+            <th class="text-left py-3 px-4 text-[#fed10a] font-medium">ELK Stack</th>
+            <th class="text-left py-3 px-4 text-[#632ca6] font-medium">Datadog</th>
+          </tr>
+        </thead>
+        <tbody class="text-text-secondary">
+          <tr class="border-b border-border-subtle/50">
+            <td class="py-3 px-4">Cost</td>
+            <td class="py-3 px-4 text-primary">Free (OSS)</td>
+            <td class="py-3 px-4 text-primary">Free (OSS)</td>
+            <td class="py-3 px-4 text-yellow-400">$$$ per host</td>
+          </tr>
+          <tr class="border-b border-border-subtle/50">
+            <td class="py-3 px-4">Setup Time</td>
+            <td class="py-3 px-4">Medium</td>
+            <td class="py-3 px-4">High</td>
+            <td class="py-3 px-4 text-primary">Low</td>
+          </tr>
+          <tr class="border-b border-border-subtle/50">
+            <td class="py-3 px-4">Best For</td>
+            <td class="py-3 px-4">Metrics</td>
+            <td class="py-3 px-4">Logs/Search</td>
+            <td class="py-3 px-4">Everything</td>
+          </tr>
+          <tr class="border-b border-border-subtle/50">
+            <td class="py-3 px-4">Scaling</td>
+            <td class="py-3 px-4">Manual</td>
+            <td class="py-3 px-4">Complex</td>
+            <td class="py-3 px-4 text-primary">Automatic</td>
+          </tr>
+          <tr>
+            <td class="py-3 px-4">Maintenance</td>
+            <td class="py-3 px-4">You</td>
+            <td class="py-3 px-4">You</td>
+            <td class="py-3 px-4 text-primary">Vendor</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: App Instrumentation -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Application Instrumentation</h2>
+  
+  <!-- Language Tab Switcher -->
+  <div class="mb-6 fade-in">
+    <div class="flex flex-wrap gap-2" id="lang-switcher">
+      <button class="lang-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-lang="python">
+        <span class="text-lg">🐍</span> Python
+      </button>
+      <button class="lang-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-lang="nodejs">
+        <span class="text-lg">💚</span> Node.js
+      </button>
+    </div>
+  </div>
+  
+  <!-- Python Instrumentation -->
+  <div class="lang-content" id="lang-python">
+    <div class="space-y-6">
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+        <h4 class="font-medium text-text-secondary mb-4">Prometheus Metrics with Flask</h4>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># app.py</span>
+<span class="keyword">from</span> flask <span class="keyword">import</span> Flask
+<span class="keyword">from</span> prometheus_client <span class="keyword">import</span> Counter, Histogram, generate_latest
+<span class="keyword">import</span> time
+
+app = Flask(__name__)
+
+<span class="comment"># Define metrics</span>
+<span class="type">REQUEST_COUNT</span> = Counter(
+    <span class="string">'http_requests_total'</span>,
+    <span class="string">'Total HTTP requests'</span>,
+    [<span class="string">'method'</span>, <span class="string">'endpoint'</span>, <span class="string">'status'</span>]
+)
+
+<span class="type">REQUEST_LATENCY</span> = Histogram(
+    <span class="string">'http_request_duration_seconds'</span>,
+    <span class="string">'HTTP request latency'</span>,
+    [<span class="string">'method'</span>, <span class="string">'endpoint'</span>],
+    buckets=[<span class="string">.005</span>, <span class="string">.01</span>, <span class="string">.025</span>, <span class="string">.05</span>, <span class="string">.1</span>, <span class="string">.25</span>, <span class="string">.5</span>, <span class="string">1</span>, <span class="string">2.5</span>, <span class="string">5</span>]
+)
+
+<span class="keyword">@app</span>.<span class="function">before_request</span>
+<span class="keyword">def</span> <span class="function">before_request</span>():
+    request.start_time = time.time()
+
+<span class="keyword">@app</span>.<span class="function">after_request</span>
+<span class="keyword">def</span> <span class="function">after_request</span>(response):
+    latency = time.time() - request.start_time
+    <span class="type">REQUEST_COUNT</span>.labels(
+        method=request.method,
+        endpoint=request.path,
+        status=response.status_code
+    ).inc()
+    <span class="type">REQUEST_LATENCY</span>.labels(
+        method=request.method,
+        endpoint=request.path
+    ).observe(latency)
+    <span class="keyword">return</span> response
+
+<span class="keyword">@app</span>.<span class="function">route</span>(<span class="string">'/metrics'</span>)
+<span class="keyword">def</span> <span class="function">metrics</span>():
+    <span class="keyword">return</span> generate_latest()</code></pre>
+        </div>
+      </div>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+        <h4 class="font-medium text-text-secondary mb-4">Structured Logging with structlog</h4>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># logging_config.py</span>
+<span class="keyword">import</span> structlog
+<span class="keyword">import</span> logging.config
+
+<span class="comment"># Configure structured logging</span>
+structlog.configure(
+    processors=[
+        structlog.stdlib.filter_by_level,
+        structlog.stdlib.add_logger_name,
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        structlog.processors.TimeStamper(fmt=<span class="string">"iso"</span>),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.UnicodeDecoder(),
+        structlog.processors.JSONRenderer()  <span class="comment"># Output JSON!</span>
+    ],
+    wrapper_class=structlog.stdlib.BoundLogger,
+    context_class=<span class="type">dict</span>,
+    logger_factory=structlog.stdlib.LoggerFactory(),
+)
+
+<span class="comment"># Usage</span>
+logger = structlog.get_logger()
+
+logger.info(<span class="string">"user_login"</span>,
+    user_id=<span class="string">"12345"</span>,
+    ip_address=<span class="string">"192.168.1.1"</span>,
+    user_agent=<span class="string">"Mozilla/5.0..."</span>
+)
+
+<span class="comment"># Output (JSON, easy to parse in ELK):</span>
+<span class="comment"># {lb}"event": "user_login", "user_id": "12345", "ip_address": "192.168.1.1", ...</span>{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Node.js Instrumentation -->
+  <div class="lang-content hidden" id="lang-nodejs">
+    <div class="space-y-6">
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+        <h4 class="font-medium text-text-secondary mb-4">Prometheus Metrics with Express</h4>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// app.js</span>
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> client = <span class="function">require</span>(<span class="string">'prom-client'</span>);
+
+<span class="keyword">const</span> app = <span class="function">express</span>();
+
+<span class="comment">// Enable default metrics (CPU, memory, etc.)</span>
+client.<span class="function">collectDefaultMetrics</span>();
+
+<span class="comment">// Custom metrics</span>
+<span class="keyword">const</span> httpRequestsTotal = <span class="keyword">new</span> client.<span class="type">Counter</span>({lb}
+  <span class="type">name</span>: <span class="string">'http_requests_total'</span>,
+  <span class="type">help</span>: <span class="string">'Total HTTP requests'</span>,
+  <span class="type">labelNames</span>: [<span class="string">'method'</span>, <span class="string">'route'</span>, <span class="string">'status'</span>]
+{rb});
+
+<span class="keyword">const</span> httpRequestDuration = <span class="keyword">new</span> client.<span class="type">Histogram</span>({lb}
+  <span class="type">name</span>: <span class="string">'http_request_duration_seconds'</span>,
+  <span class="type">help</span>: <span class="string">'HTTP request latency in seconds'</span>,
+  <span class="type">labelNames</span>: [<span class="string">'method'</span>, <span class="string">'route'</span>],
+  <span class="type">buckets</span>: [<span class="string">0.005</span>, <span class="string">0.01</span>, <span class="string">0.025</span>, <span class="string">0.05</span>, <span class="string">0.1</span>, <span class="string">0.25</span>, <span class="string">0.5</span>, <span class="string">1</span>, <span class="string">2.5</span>, <span class="string">5</span>]
+{rb});
+
+<span class="comment">// Middleware to track requests</span>
+app.<span class="function">use</span>((req, res, next) => {lb}
+  <span class="keyword">const</span> end = httpRequestDuration.<span class="function">startTimer</span>({lb}
+    <span class="type">method</span>: req.method,
+    <span class="type">route</span>: req.route?.path || req.path
+  {rb});
+  
+  res.<span class="function">on</span>(<span class="string">'finish'</span>, () => {lb}
+    httpRequestsTotal.<span class="function">inc</span>({lb}
+      <span class="type">method</span>: req.method,
+      <span class="type">route</span>: req.route?.path || req.path,
+      <span class="type">status</span>: res.statusCode
+    {rb});
+    <span class="function">end</span>();
+  {rb});
+  
+  <span class="function">next</span>();
+{rb});
+
+<span class="comment">// Metrics endpoint</span>
+app.<span class="function">get</span>(<span class="string">'/metrics'</span>, <span class="keyword">async</span> (req, res) => {lb}
+  res.<span class="function">set</span>(<span class="string">'Content-Type'</span>, client.register.contentType);
+  res.<span class="function">send</span>(<span class="keyword">await</span> client.register.<span class="function">metrics</span>());
+{rb});</code></pre>
+        </div>
+      </div>
+      
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+        <h4 class="font-medium text-text-secondary mb-4">Structured Logging with Pino</h4>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// logger.js</span>
+<span class="keyword">const</span> pino = <span class="function">require</span>(<span class="string">'pino'</span>);
+
+<span class="keyword">const</span> logger = <span class="function">pino</span>({lb}
+  <span class="type">level</span>: process.env.LOG_LEVEL || <span class="string">'info'</span>,
+  <span class="type">formatters</span>: {lb}
+    <span class="function">level</span>(label) {lb}
+      <span class="keyword">return</span> {lb} <span class="type">level</span>: label {rb};
+    {rb}
+  {rb},
+  <span class="type">timestamp</span>: pino.stdTimeFunctions.isoTime,
+  <span class="comment">// Add service context to all logs</span>
+  <span class="type">base</span>: {lb}
+    <span class="type">service</span>: <span class="string">'api-gateway'</span>,
+    <span class="type">version</span>: process.env.APP_VERSION,
+    <span class="type">env</span>: process.env.NODE_ENV
+  {rb}
+{rb});
+
+<span class="comment">// Usage</span>
+logger.<span class="function">info</span>({lb}
+  <span class="type">event</span>: <span class="string">'user_login'</span>,
+  <span class="type">userId</span>: <span class="string">'12345'</span>,
+  <span class="type">ipAddress</span>: <span class="string">'192.168.1.1'</span>,
+  <span class="type">durationMs</span>: <span class="string">45</span>
+{rb}, <span class="string">'User logged in successfully'</span>);
+
+logger.<span class="function">error</span>({lb}
+  <span class="type">event</span>: <span class="string">'payment_failed'</span>,
+  <span class="type">userId</span>: <span class="string">'12345'</span>,
+  <span class="type">orderId</span>: <span class="string">'ORD-789'</span>,
+  <span class="type">err</span>: error  <span class="comment">// Pino serializes errors nicely</span>
+{rb}, <span class="string">'Payment processing failed'</span>);
+
+<span class="comment">// Output (JSON):</span>
+<span class="comment">// {lb}"level":"info","time":"2024-01-15T...","service":"api-gateway","event":"user_login",...{rb}</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 9: Alerting -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Alerting Best Practices</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6 mb-6">
+    <!-- Severity Levels -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <h3 class="font-medium text-white mb-4">Severity Levels</h3>
+      <div class="space-y-3">
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+          <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+          <div>
+            <p class="text-sm font-medium text-red-400">P1 - Critical</p>
+            <p class="text-xs text-text-muted">Service down, data loss risk. Wake someone up.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-orange-500/10 border border-orange-500/30">
+          <span class="w-3 h-3 rounded-full bg-orange-500"></span>
+          <div>
+            <p class="text-sm font-medium text-orange-400">P2 - High</p>
+            <p class="text-xs text-text-muted">Degraded service. Needs attention within an hour.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+          <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+          <div>
+            <p class="text-sm font-medium text-yellow-400">P3 - Medium</p>
+            <p class="text-xs text-text-muted">Not urgent. Handle during business hours.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
+          <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+          <div>
+            <p class="text-sm font-medium text-blue-400">P4 - Low</p>
+            <p class="text-xs text-text-muted">Informational. Review when time permits.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Alert Fatigue -->
+    <div class="bg-bg-card border border-yellow-500/30 rounded-xl p-6 fade-in">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-10 h-10 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">⚠️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-yellow-400">Avoiding Alert Fatigue</h3>
+          <p class="text-text-muted text-sm mt-1">
+            Too many alerts = ignored alerts. Be ruthless.
+          </p>
+        </div>
+      </div>
+      <BulletList color="yellow" items={[
+        "Every alert must be actionable",
+        "If you ignore it 3 times, delete it",
+        "Group related alerts together",
+        "Set reasonable thresholds (not too sensitive)",
+        "Use escalation policies, not spam",
+        "Review and prune alerts quarterly"
+      ]} />
+    </div>
+  </div>
+  
+  <!-- Alert Rules Example -->
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <h4 class="font-medium text-text-secondary mb-4">Prometheus Alert Rules Example</h4>
+    <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+      <pre><code><span class="comment"># alerts/app_alerts.yml</span>
+<span class="type">groups</span>:
+  - <span class="type">name</span>: <span class="string">app_alerts</span>
+    <span class="type">rules</span>:
+      <span class="comment"># High error rate</span>
+      - <span class="type">alert</span>: <span class="string">HighErrorRate</span>
+        <span class="type">expr</span>: |
+          <span class="function">sum</span>(<span class="function">rate</span>(<span class="type">http_requests_total</span>{lb}<span class="type">status</span>=~<span class="string">"5.."</span>{rb}[<span class="string">5m</span>])) /
+          <span class="function">sum</span>(<span class="function">rate</span>(<span class="type">http_requests_total</span>[<span class="string">5m</span>])) > <span class="string">0.05</span>
+        <span class="type">for</span>: <span class="string">5m</span>
+        <span class="type">labels</span>:
+          <span class="type">severity</span>: <span class="string">critical</span>
+        <span class="type">annotations</span>:
+          <span class="type">summary</span>: <span class="string">"High error rate detected"</span>
+          <span class="type">description</span>: <span class="string">"Error rate is {lb}{lb} $value | humanizePercentage {rb}{rb}"</span>
+
+      <span class="comment"># Slow response times</span>
+      - <span class="type">alert</span>: <span class="string">HighLatency</span>
+        <span class="type">expr</span>: |
+          <span class="function">histogram_quantile</span>(<span class="string">0.95</span>,
+            <span class="function">rate</span>(<span class="type">http_request_duration_seconds_bucket</span>[<span class="string">5m</span>])
+          ) > <span class="string">0.5</span>
+        <span class="type">for</span>: <span class="string">10m</span>
+        <span class="type">labels</span>:
+          <span class="type">severity</span>: <span class="string">warning</span>
+        <span class="type">annotations</span>:
+          <span class="type">summary</span>: <span class="string">"High P95 latency"</span>
+          <span class="type">description</span>: <span class="string">"P95 latency is {lb}{lb} $value | humanizeDuration {rb}{rb}"</span>
+
+      <span class="comment"># Instance down</span>
+      - <span class="type">alert</span>: <span class="string">InstanceDown</span>
+        <span class="type">expr</span>: <span class="function">up</span> == <span class="string">0</span>
+        <span class="type">for</span>: <span class="string">1m</span>
+        <span class="type">labels</span>:
+          <span class="type">severity</span>: <span class="string">critical</span>
+        <span class="type">annotations</span>:
+          <span class="type">summary</span>: <span class="string">"Instance {lb}{lb} $labels.instance {rb}{rb} down"</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: Decision Guide -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Decision Guide</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in overflow-x-auto">
+    <svg viewBox="0 0 600 340" class="w-full h-auto min-w-[480px]">
+      <!-- Start -->
+      <g>
+        <rect x="230" y="10" width="140" height="40" rx="20" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="300" y="35" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">What do you need?</text>
+      </g>
+      
+      <!-- Branches -->
+      <path d="M230 30 L120 30 L120 80" stroke="#525252" stroke-width="1.5" fill="none"/>
+      <path d="M300 50 L300 80" stroke="#525252" stroke-width="1.5" fill="none"/>
+      <path d="M370 30 L480 30 L480 80" stroke="#525252" stroke-width="1.5" fill="none"/>
+      
+      <!-- Branch Labels -->
+      <text x="160" y="70" text-anchor="middle" fill="#666" font-size="10">Metrics</text>
+      <text x="300" y="70" text-anchor="middle" fill="#666" font-size="10">Logs</text>
+      <text x="440" y="70" text-anchor="middle" fill="#666" font-size="10">Everything</text>
+      
+      <!-- Metrics Branch -->
+      <g>
+        <rect x="50" y="85" width="140" height="50" rx="8" fill="#1a1a1a" stroke="#e6522c" stroke-width="2"/>
+        <text x="120" y="108" text-anchor="middle" fill="#e6522c" font-size="11" font-weight="500">PROMETHEUS</text>
+        <text x="120" y="123" text-anchor="middle" fill="#666" font-size="9">+ GRAFANA</text>
+      </g>
+      
+      <!-- Budget question for logs -->
+      <g>
+        <rect x="225" y="85" width="150" height="45" rx="8" fill="#1a1a1a" stroke="#525252" stroke-width="1.5"/>
+        <text x="300" y="107" text-anchor="middle" fill="#888" font-size="10">Budget for ops team?</text>
+        <text x="300" y="122" text-anchor="middle" fill="#666" font-size="9">to manage ELK cluster</text>
+      </g>
+      
+      <!-- Log branches -->
+      <path d="M250 130 L200 160" stroke="#525252" stroke-width="1.5" fill="none"/>
+      <path d="M350 130 L400 160" stroke="#525252" stroke-width="1.5" fill="none"/>
+      
+      <text x="210" y="155" text-anchor="middle" fill="#00FF88" font-size="9">Yes</text>
+      <text x="385" y="155" text-anchor="middle" fill="#fbbf24" font-size="9">No</text>
+      
+      <!-- ELK Option -->
+      <g>
+        <rect x="110" y="165" width="120" height="50" rx="8" fill="#1a1a1a" stroke="#fed10a" stroke-width="2"/>
+        <text x="170" y="188" text-anchor="middle" fill="#fed10a" font-size="11" font-weight="500">ELK STACK</text>
+        <text x="170" y="203" text-anchor="middle" fill="#666" font-size="9">Self-hosted</text>
+      </g>
+      
+      <!-- Managed Logging Option -->
+      <g>
+        <rect x="340" y="165" width="140" height="50" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="410" y="188" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="500">LOKI / CLOUDWATCH</text>
+        <text x="410" y="203" text-anchor="middle" fill="#666" font-size="9">Managed/Simpler</text>
+      </g>
+      
+      <!-- Datadog Branch -->
+      <g>
+        <rect x="420" y="85" width="120" height="50" rx="8" fill="#1a1a1a" stroke="#632ca6" stroke-width="2"/>
+        <text x="480" y="108" text-anchor="middle" fill="#632ca6" font-size="11" font-weight="500">DATADOG</text>
+        <text x="480" y="123" text-anchor="middle" fill="#666" font-size="9">or New Relic/Splunk</text>
+      </g>
+      
+      <!-- Summary boxes -->
+      <g>
+        <rect x="20" y="250" width="170" height="80" rx="8" fill="#0a0a0a" stroke="#e6522c" stroke-width="1"/>
+        <text x="105" y="275" text-anchor="middle" fill="#e6522c" font-size="10" font-weight="500">Prometheus + Grafana</text>
+        <text x="105" y="293" text-anchor="middle" fill="#666" font-size="8">✓ Free, powerful, standard</text>
+        <text x="105" y="307" text-anchor="middle" fill="#666" font-size="8">✓ Great for Kubernetes</text>
+        <text x="105" y="321" text-anchor="middle" fill="#666" font-size="8">✗ Metrics only</text>
+      </g>
+      
+      <g>
+        <rect x="215" y="250" width="170" height="80" rx="8" fill="#0a0a0a" stroke="#fed10a" stroke-width="1"/>
+        <text x="300" y="275" text-anchor="middle" fill="#fed10a" font-size="10" font-weight="500">ELK Stack</text>
+        <text x="300" y="293" text-anchor="middle" fill="#666" font-size="8">✓ Powerful log search</text>
+        <text x="300" y="307" text-anchor="middle" fill="#666" font-size="8">✓ Free, full-featured</text>
+        <text x="300" y="321" text-anchor="middle" fill="#666" font-size="8">✗ Resource hungry</text>
+      </g>
+      
+      <g>
+        <rect x="410" y="250" width="170" height="80" rx="8" fill="#0a0a0a" stroke="#632ca6" stroke-width="1"/>
+        <text x="495" y="275" text-anchor="middle" fill="#632ca6" font-size="10" font-weight="500">Datadog/New Relic</text>
+        <text x="495" y="293" text-anchor="middle" fill="#666" font-size="8">✓ All-in-one solution</text>
+        <text x="495" y="307" text-anchor="middle" fill="#666" font-size="8">✓ Zero maintenance</text>
+        <text x="495" y="321" text-anchor="middle" fill="#666" font-size="8">✗ Expensive at scale</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- Section 11: Trade-offs -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
+  
+  <div class="space-y-6">
+    <!-- Prometheus/Grafana -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <h3 class="text-lg font-semibold text-[#e6522c] mb-4">Prometheus + Grafana</h3>
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex-1">
+          <h4 class="font-medium text-primary mb-3 text-sm">Pros</h4>
+          <BulletList bullet="+" color="primary" items={[
+            "Industry standard, massive community",
+            "Powerful query language (PromQL)",
+            "Pull model is firewall-friendly",
+            "Native Kubernetes integration",
+            "Free and open source"
+          ]} />
+        </div>
+        <div class="w-px bg-border-subtle hidden md:block"></div>
+        <div class="flex-1">
+          <h4 class="font-medium text-yellow-500 mb-3 text-sm">Cons</h4>
+          <BulletList bullet="−" color="yellow" items={[
+            "Metrics only (no logs/traces)",
+            "Local storage is limited",
+            "High cardinality can explode",
+            "Requires operational knowledge",
+            "Scaling requires Thanos/Cortex"
+          ]} />
+        </div>
+      </div>
+    </div>
+    
+    <!-- ELK -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <h3 class="text-lg font-semibold text-[#fed10a] mb-4">ELK Stack</h3>
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex-1">
+          <h4 class="font-medium text-primary mb-3 text-sm">Pros</h4>
+          <BulletList bullet="+" color="primary" items={[
+            "Full-text search is unmatched",
+            "Handles any log format",
+            "Kibana is very powerful",
+            "Elastic APM for traces",
+            "Huge ecosystem of plugins"
+          ]} />
+        </div>
+        <div class="w-px bg-border-subtle hidden md:block"></div>
+        <div class="flex-1">
+          <h4 class="font-medium text-yellow-500 mb-3 text-sm">Cons</h4>
+          <BulletList bullet="−" color="yellow" items={[
+            "Resource hungry (RAM, disk)",
+            "Complex to operate at scale",
+            "JVM tuning is an art",
+            "License changes (SSPL)",
+            "Index management overhead"
+          ]} />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Commercial -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <h3 class="text-lg font-semibold text-[#632ca6] mb-4">Commercial (Datadog, New Relic)</h3>
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex-1">
+          <h4 class="font-medium text-primary mb-3 text-sm">Pros</h4>
+          <BulletList bullet="+" color="primary" items={[
+            "Unified platform (metrics+logs+traces)",
+            "Zero infrastructure management",
+            "Enterprise support and SLAs",
+            "Advanced ML features",
+            "Easy to get started"
+          ]} />
+        </div>
+        <div class="w-px bg-border-subtle hidden md:block"></div>
+        <div class="flex-1">
+          <h4 class="font-medium text-yellow-500 mb-3 text-sm">Cons</h4>
+          <BulletList bullet="−" color="yellow" items={[
+            "Expensive ($15-50+/host/month)",
+            "Vendor lock-in risk",
+            "Data leaves your network",
+            "Costs can spike unexpectedly",
+            "Feature limitations on lower tiers"
+          ]} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 12: Key Takeaways -->
+<section class="mb-12">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Key Takeaways</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+      <div>
+        <h3 class="font-medium text-white">Observability = Metrics + Logs + Traces</h3>
+        <p class="text-text-muted text-sm mt-1">Each pillar answers different questions. Use all three for complete visibility into your systems.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+      <div>
+        <h3 class="font-medium text-white">Instrument from day one</h3>
+        <p class="text-text-muted text-sm mt-1">Adding observability later is painful. Build it into your apps and infrastructure from the start.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+      <div>
+        <h3 class="font-medium text-white">Alerts should be actionable</h3>
+        <p class="text-text-muted text-sm mt-1">If an alert doesn't require immediate action, it's noise. Ruthlessly prune alerts that get ignored.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+      <div>
+        <h3 class="font-medium text-white">Structured logs beat grep</h3>
+        <p class="text-text-muted text-sm mt-1">Output JSON logs with consistent fields. Future you (and your log search tool) will thank you.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+      <div>
+        <h3 class="font-medium text-white">Match tools to your team</h3>
+        <p class="text-text-muted text-sm mt-1">Open source saves money but costs time. Commercial solutions cost money but save time. Know your trade-offs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</LearningLayout>
+
+<script>
+  // Language tab switcher
+  document.querySelectorAll('.lang-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update tab styles
+      document.querySelectorAll('.lang-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      
+      // Show correct content
+      const lang = tab.getAttribute('data-lang');
+      document.querySelectorAll('.lang-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(`lang-${lang}`)?.classList.remove('hidden');
+    });
+  });
+
+  // Add pulse animation to ECG line
+  const style = document.createElement('style');
+  style.textContent = `
+    .pulse-line {
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      animation: pulse-draw 2s ease-in-out infinite;
+    }
+    @keyframes pulse-draw {
+      0% { stroke-dashoffset: 200; }
+      50% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -200; }
+    }
+  `;
+  document.head.appendChild(style);
+</script>

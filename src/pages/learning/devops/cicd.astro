@@ -1,0 +1,1513 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout 
+  title="CI/CD Pipelines"
+  description="Continuous Integration & Deployment — automate building, testing, and shipping your code with every commit"
+  category="DevOps"
+  categoryHref="/learning/devops"
+  difficulty="Intermediate"
+  readTime="18 min read"
+>
+
+<!-- Section 1: The Hook -->
+<section class="mb-12 md:mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+    <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as an</p>
+    <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Assembly Line</p>
+    <p class="text-text-secondary text-sm md:text-base">for your code — automated, consistent, always running</p>
+  </div>
+</section>
+
+<!-- Section 2: Factory Metaphor -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Factory Analogy</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary text-sm md:text-base mb-6 md:mb-8">
+      Imagine a car factory. Raw materials come in, pass through stations for assembly, quality checks, 
+      painting, and testing — then finished cars roll out. No human decides "should we test this one?" 
+      Every car goes through the <span class="text-primary font-medium">same automated process</span>. 
+      CI/CD does the same for your code.
+    </p>
+    
+    <!-- Animated Factory SVG -->
+    <div class="relative overflow-x-auto" id="factory-scene">
+      <svg viewBox="0 0 600 200" class="w-full h-auto min-w-[480px]">
+        <!-- Code Input -->
+        <g class="code-input">
+          <rect x="10" y="60" width="90" height="70" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="55" y="88" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">CODE</text>
+          <text x="55" y="106" text-anchor="middle" fill="#666" font-size="9">git push</text>
+          <text x="55" y="120" text-anchor="middle" fill="#666" font-size="9">main branch</text>
+        </g>
+        
+        <!-- CI Phase -->
+        <g class="ci-phase">
+          <rect x="130" y="40" width="180" height="110" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+          <text x="220" y="62" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">CONTINUOUS INTEGRATION</text>
+          
+          <!-- Build Station -->
+          <rect x="142" y="75" width="50" height="35" rx="4" fill="#0a0a0a" stroke="#a78bfa" stroke-width="1"/>
+          <text x="167" y="97" text-anchor="middle" fill="#a78bfa" font-size="9">Build</text>
+          
+          <!-- Test Station -->
+          <rect x="200" y="75" width="50" height="35" rx="4" fill="#0a0a0a" stroke="#22d3ee" stroke-width="1"/>
+          <text x="225" y="97" text-anchor="middle" fill="#22d3ee" font-size="9">Test</text>
+          
+          <!-- Lint Station -->
+          <rect x="258" y="75" width="44" height="35" rx="4" fill="#0a0a0a" stroke="#f472b6" stroke-width="1"/>
+          <text x="280" y="97" text-anchor="middle" fill="#f472b6" font-size="9">Lint</text>
+          
+          <!-- Mini arrows -->
+          <path d="M192 93 L200 93" stroke="#525252" stroke-width="1" fill="none"/>
+          <path d="M250 93 L258 93" stroke="#525252" stroke-width="1" fill="none"/>
+          
+          <text x="220" y="135" text-anchor="middle" fill="#666" font-size="9">Every commit triggers</text>
+        </g>
+        
+        <!-- CD Phase -->
+        <g class="cd-phase">
+          <rect x="340" y="40" width="170" height="110" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="425" y="62" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">CONTINUOUS DELIVERY</text>
+          
+          <!-- Package Station -->
+          <rect x="352" y="75" width="50" height="35" rx="4" fill="#0a0a0a" stroke="#60a5fa" stroke-width="1"/>
+          <text x="377" y="97" text-anchor="middle" fill="#60a5fa" font-size="9">Package</text>
+          
+          <!-- Deploy Station -->
+          <rect x="410" y="75" width="50" height="35" rx="4" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="435" y="97" text-anchor="middle" fill="#34d399" font-size="9">Deploy</text>
+          
+          <!-- Verify Station -->
+          <rect x="468" y="75" width="32" height="35" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+          <text x="484" y="97" text-anchor="middle" fill="#fbbf24" font-size="8">✓</text>
+          
+          <!-- Mini arrows -->
+          <path d="M402 93 L410 93" stroke="#525252" stroke-width="1" fill="none"/>
+          <path d="M460 93 L468 93" stroke="#525252" stroke-width="1" fill="none"/>
+          
+          <text x="425" y="135" text-anchor="middle" fill="#666" font-size="9">Auto-deploys when ready</text>
+        </g>
+        
+        <!-- Production Output -->
+        <g class="prod-output">
+          <rect x="540" y="60" width="52" height="70" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="566" y="88" text-anchor="middle" fill="#00FF88" font-size="10" font-weight="600">LIVE</text>
+          <text x="566" y="103" text-anchor="middle" fill="#666" font-size="8">🚀</text>
+          <text x="566" y="118" text-anchor="middle" fill="#666" font-size="8">Prod</text>
+        </g>
+        
+        <!-- Flow arrows -->
+        <g class="arrows">
+          <path d="M105 95 L125 95" class="flow-path" stroke="#3b82f6" stroke-width="2" fill="none"/>
+          <polygon points="125,95 118,90 118,100" fill="#3b82f6"/>
+          
+          <path d="M315 95 L335 95" class="flow-path" stroke="#fbbf24" stroke-width="2" fill="none"/>
+          <polygon points="335,95 328,90 328,100" fill="#fbbf24"/>
+          
+          <path d="M515 95 L535 95" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
+          <polygon points="535,95 528,90 528,100" fill="#00FF88"/>
+        </g>
+        
+        <!-- Animated data packets -->
+        <circle class="pulse-dot" cx="115" cy="95" r="4" fill="#3b82f6"/>
+        <circle class="pulse-dot" cx="325" cy="95" r="4" fill="#fbbf24" style="animation-delay: 0.4s"/>
+        <circle class="pulse-dot" cx="525" cy="95" r="4" fill="#00FF88" style="animation-delay: 0.8s"/>
+        
+        <!-- Labels -->
+        <text x="55" y="180" text-anchor="middle" fill="#525252" font-size="10">Developer</text>
+        <text x="220" y="180" text-anchor="middle" fill="#525252" font-size="10">Automation</text>
+        <text x="425" y="180" text-anchor="middle" fill="#525252" font-size="10">Release</text>
+        <text x="566" y="180" text-anchor="middle" fill="#525252" font-size="10">Users</text>
+      </svg>
+    </div>
+    
+    <div class="mt-8 grid md:grid-cols-3 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">👨‍💻</div>
+        <p class="text-sm font-medium text-blue-400">You Push Code</p>
+        <p class="text-xs text-text-muted mt-1">git commit && git push</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-primary/30">
+        <div class="text-3xl mb-2">🤖</div>
+        <p class="text-sm font-medium text-primary">Pipeline Runs</p>
+        <p class="text-xs text-text-muted mt-1">Build → Test → Deploy</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">🚀</div>
+        <p class="text-sm font-medium text-text-secondary">Users Get Updates</p>
+        <p class="text-xs text-text-muted mt-1">Automatically, safely</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: The Problem -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Without CI/CD -->
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-500 text-lg">✗</span>
+        <span class="font-medium text-red-400">Manual Deployment</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre class="text-text-muted"><code><span class="comment"># Friday 5pm deployment ritual...</span>
+1. "Did anyone run the tests?" 🤔
+2. SSH into production server
+3. git pull origin main
+4. "It worked on my machine!"
+5. Manually restart services
+6. Hope nothing breaks over the weekend
+7. It breaks. Phone rings at 2am.
+8. Rollback... how? 😰</code></pre>
+      </div>
+      <BulletList color="red" items={[
+        "Tests skipped \"just this once\"",
+        "Different results on different machines",
+        "Deployments are scary (done rarely)",
+        "Rollback process unclear or manual",
+        "No record of what was deployed when"
+      ]} />
+    </div>
+    
+    <!-- With CI/CD -->
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-primary text-lg">✓</span>
+        <span class="font-medium text-primary">Automated Pipeline</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre><code><span class="comment"># Every git push triggers:</span>
+<span class="function">on</span>: push
+<span class="keyword">jobs</span>:
+  <span class="type">build</span>: <span class="comment"># ✓ Compiles</span>
+  <span class="type">test</span>:  <span class="comment"># ✓ 847 tests pass</span>
+  <span class="type">lint</span>:  <span class="comment"># ✓ Code quality OK</span>
+  <span class="type">deploy</span>: <span class="comment"># ✓ Prod updated</span>
+
+<span class="comment"># Merge PR → Live in 3 minutes</span>
+<span class="comment"># Sleep soundly 😴</span></code></pre>
+      </div>
+      <BulletList color="primary" items={[
+        "Tests run on EVERY commit",
+        "Identical environment every time",
+        "Deploy 10x a day with confidence",
+        "One-click rollback to any version",
+        "Full audit trail of deployments"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Core Concepts -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Core Concepts</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <!-- Continuous Integration -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="ci">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔄</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Continuous Integration (CI)</h3>
+          <p class="text-text-muted text-sm">Automatically <span class="text-yellow-400">build and test</span> code every time someone pushes. Catch bugs early, merge confidently.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Continuous Delivery -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="cd-delivery">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📦</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Continuous Delivery (CD)</h3>
+          <p class="text-text-muted text-sm">Code is always <span class="text-primary">ready to deploy</span>. One button to ship. Humans decide when to release.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Continuous Deployment -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="cd-deployment">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🚀</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Continuous Deployment</h3>
+          <p class="text-text-muted text-sm"><span class="text-blue-400">Fully automated</span> — every passing commit goes straight to production. No manual gates.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Pipeline -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="pipeline">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔗</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Pipeline</h3>
+          <p class="text-text-muted text-sm">A series of <span class="text-purple-400">stages and jobs</span> that run in order. Each stage must pass before the next starts.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Artifacts -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="artifacts">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📁</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Artifacts</h3>
+          <p class="text-text-muted text-sm">Output from builds — Docker images, binaries, test reports. <span class="text-cyan-400">Passed between stages</span> or stored for deployment.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Runners/Agents -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="runners">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🖥️</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Runners / Agents</h3>
+          <p class="text-text-muted text-sm">Machines that <span class="text-pink-400">execute your pipelines</span>. Cloud-hosted or self-managed. Where your code actually runs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- CD Clarification -->
+  <div class="mt-6 bg-bg-card border border-blue-500/30 rounded-xl p-6 fade-in">
+    <div class="flex items-start gap-4">
+      <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="text-2xl">💡</span>
+      </div>
+      <div>
+        <h3 class="font-medium text-blue-400 mb-2">Delivery vs. Deployment — What's the Difference?</h3>
+        <p class="text-text-secondary text-sm">
+          <strong class="text-white">Continuous Delivery:</strong> Code is packaged and ready to deploy at any time, but a human clicks the button.<br/>
+          <strong class="text-white">Continuous Deployment:</strong> Every passing build automatically goes live. No human in the loop.<br/><br/>
+          Most teams start with <span class="text-primary">Delivery</span> (safer) and graduate to <span class="text-blue-400">Deployment</span> as confidence grows.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Pipeline Stages -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Pipeline Stages</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-8 fade-in overflow-x-auto">
+    <svg viewBox="0 0 600 220" class="w-full h-auto min-w-[480px]" id="pipeline-diagram">
+      <!-- Stage 1: Source -->
+      <g class="pipeline-stage" data-stage="source">
+        <rect x="10" y="40" width="85" height="80" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="52" y="65" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">SOURCE</text>
+        <text x="52" y="82" text-anchor="middle" fill="#666" font-size="9">git push</text>
+        <text x="52" y="96" text-anchor="middle" fill="#666" font-size="9">or PR</text>
+        <text x="52" y="110" text-anchor="middle" fill="#3b82f6" font-size="14">📥</text>
+      </g>
+      
+      <!-- Arrow 1 -->
+      <path d="M100 80 L120 80" stroke="#3b82f6" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="120,80 113,75 113,85" fill="#3b82f6"/>
+      
+      <!-- Stage 2: Build -->
+      <g class="pipeline-stage" data-stage="build">
+        <rect x="125" y="40" width="85" height="80" rx="8" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="167" y="65" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="600">BUILD</text>
+        <text x="167" y="82" text-anchor="middle" fill="#666" font-size="9">Compile</text>
+        <text x="167" y="96" text-anchor="middle" fill="#666" font-size="9">Dependencies</text>
+        <text x="167" y="110" text-anchor="middle" fill="#a78bfa" font-size="14">🔨</text>
+      </g>
+      
+      <!-- Arrow 2 -->
+      <path d="M215 80 L235 80" stroke="#a78bfa" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="235,80 228,75 228,85" fill="#a78bfa"/>
+      
+      <!-- Stage 3: Test -->
+      <g class="pipeline-stage" data-stage="test">
+        <rect x="240" y="40" width="85" height="80" rx="8" fill="#1a1a1a" stroke="#22d3ee" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="282" y="65" text-anchor="middle" fill="#22d3ee" font-size="11" font-weight="600">TEST</text>
+        <text x="282" y="82" text-anchor="middle" fill="#666" font-size="9">Unit / Int.</text>
+        <text x="282" y="96" text-anchor="middle" fill="#666" font-size="9">Coverage</text>
+        <text x="282" y="110" text-anchor="middle" fill="#22d3ee" font-size="14">🧪</text>
+      </g>
+      
+      <!-- Arrow 3 -->
+      <path d="M330 80 L350 80" stroke="#22d3ee" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="350,80 343,75 343,85" fill="#22d3ee"/>
+      
+      <!-- Stage 4: Package -->
+      <g class="pipeline-stage" data-stage="package">
+        <rect x="355" y="40" width="85" height="80" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="397" y="65" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">PACKAGE</text>
+        <text x="397" y="82" text-anchor="middle" fill="#666" font-size="9">Docker</text>
+        <text x="397" y="96" text-anchor="middle" fill="#666" font-size="9">Image</text>
+        <text x="397" y="110" text-anchor="middle" fill="#fbbf24" font-size="14">📦</text>
+      </g>
+      
+      <!-- Arrow 4 -->
+      <path d="M445 80 L465 80" stroke="#fbbf24" stroke-width="2" fill="none" class="flow-path"/>
+      <polygon points="465,80 458,75 458,85" fill="#fbbf24"/>
+      
+      <!-- Stage 5: Deploy -->
+      <g class="pipeline-stage" data-stage="deploy">
+        <rect x="470" y="40" width="85" height="80" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2" class="hover-glow cursor-pointer"/>
+        <text x="512" y="65" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">DEPLOY</text>
+        <text x="512" y="82" text-anchor="middle" fill="#666" font-size="9">Staging</text>
+        <text x="512" y="96" text-anchor="middle" fill="#666" font-size="9">→ Prod</text>
+        <text x="512" y="110" text-anchor="middle" fill="#00FF88" font-size="14">🚀</text>
+      </g>
+      
+      <!-- Success/Fail indicators -->
+      <g class="status-row">
+        <circle cx="52" cy="145" r="8" fill="#0a0a0a" stroke="#00FF88" stroke-width="2"/>
+        <text x="52" y="149" text-anchor="middle" fill="#00FF88" font-size="10">✓</text>
+        
+        <circle cx="167" cy="145" r="8" fill="#0a0a0a" stroke="#00FF88" stroke-width="2"/>
+        <text x="167" y="149" text-anchor="middle" fill="#00FF88" font-size="10">✓</text>
+        
+        <circle cx="282" cy="145" r="8" fill="#0a0a0a" stroke="#00FF88" stroke-width="2"/>
+        <text x="282" y="149" text-anchor="middle" fill="#00FF88" font-size="10">✓</text>
+        
+        <circle cx="397" cy="145" r="8" fill="#0a0a0a" stroke="#00FF88" stroke-width="2"/>
+        <text x="397" y="149" text-anchor="middle" fill="#00FF88" font-size="10">✓</text>
+        
+        <circle cx="512" cy="145" r="8" fill="#0a0a0a" stroke="#00FF88" stroke-width="2"/>
+        <text x="512" y="149" text-anchor="middle" fill="#00FF88" font-size="10">✓</text>
+      </g>
+      
+      <!-- Time labels -->
+      <text x="52" y="175" text-anchor="middle" fill="#525252" font-size="9">0s</text>
+      <text x="167" y="175" text-anchor="middle" fill="#525252" font-size="9">30s</text>
+      <text x="282" y="175" text-anchor="middle" fill="#525252" font-size="9">2m</text>
+      <text x="397" y="175" text-anchor="middle" fill="#525252" font-size="9">3m</text>
+      <text x="512" y="175" text-anchor="middle" fill="#525252" font-size="9">5m</text>
+      
+      <!-- Progress bar -->
+      <rect x="10" y="195" width="545" height="6" rx="3" fill="#1a1a1a"/>
+      <rect x="10" y="195" width="545" height="6" rx="3" fill="#00FF88" opacity="0.3"/>
+      <rect x="10" y="195" width="545" height="6" rx="3" fill="url(#progress-gradient)"/>
+      
+      <defs>
+        <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#3b82f6"/>
+          <stop offset="25%" stop-color="#a78bfa"/>
+          <stop offset="50%" stop-color="#22d3ee"/>
+          <stop offset="75%" stop-color="#fbbf24"/>
+          <stop offset="100%" stop-color="#00FF88"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    
+    <div class="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+      <div>
+        <span class="text-blue-400 font-medium text-sm">Source</span>
+        <p class="text-text-muted text-xs mt-1">Trigger pipeline</p>
+      </div>
+      <div>
+        <span class="text-purple-400 font-medium text-sm">Build</span>
+        <p class="text-text-muted text-xs mt-1">Compile code</p>
+      </div>
+      <div>
+        <span class="text-cyan-400 font-medium text-sm">Test</span>
+        <p class="text-text-muted text-xs mt-1">Run test suite</p>
+      </div>
+      <div>
+        <span class="text-yellow-400 font-medium text-sm">Package</span>
+        <p class="text-text-muted text-xs mt-1">Create artifact</p>
+      </div>
+      <div>
+        <span class="text-primary font-medium text-sm">Deploy</span>
+        <p class="text-text-muted text-xs mt-1">Ship to prod</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: Tool Examples with Tab Switcher -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">CI/CD Tools</h2>
+  
+  <!-- Tool Switcher -->
+  <div class="mb-6 fade-in">
+    <div class="flex flex-wrap gap-2" id="cicd-switcher">
+      <button class="cicd-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-tool="github">
+        <span class="text-lg">⚫</span> GitHub Actions
+      </button>
+      <button class="cicd-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-tool="gitlab">
+        <span class="text-lg">🦊</span> GitLab CI
+      </button>
+      <button class="cicd-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-tool="jenkins">
+        <span class="text-lg">🎩</span> Jenkins
+      </button>
+    </div>
+  </div>
+  
+  <!-- Tool Overview -->
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <!-- GitHub Actions Overview -->
+      <div class="cicd-content" id="cicd-github-overview">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">⚫</span>
+          </div>
+          <div>
+            <h3 class="font-medium text-white mb-1">GitHub Actions</h3>
+            <p class="text-text-muted text-sm">Built into GitHub. Workflows defined in YAML files under <code class="text-primary">.github/workflows/</code>. Free for public repos, generous free tier for private.</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-primary font-medium">Hosted Runners</span>
+            <p class="text-text-muted text-xs mt-1">Ubuntu, Windows, macOS</p>
+          </div>
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-primary font-medium">Marketplace</span>
+            <p class="text-text-muted text-xs mt-1">15,000+ pre-built actions</p>
+          </div>
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-primary font-medium">Matrix Builds</span>
+            <p class="text-text-muted text-xs mt-1">Test across versions</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- GitLab CI Overview -->
+      <div class="cicd-content hidden" id="cicd-gitlab-overview">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">🦊</span>
+          </div>
+          <div>
+            <h3 class="font-medium text-white mb-1">GitLab CI/CD</h3>
+            <p class="text-text-muted text-sm">Integrated into GitLab. Single <code class="text-primary">.gitlab-ci.yml</code> file in repo root. Powerful DevSecOps features built-in.</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-orange-400 font-medium">Auto DevOps</span>
+            <p class="text-text-muted text-xs mt-1">Zero-config pipelines</p>
+          </div>
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-orange-400 font-medium">Container Registry</span>
+            <p class="text-text-muted text-xs mt-1">Built-in Docker hosting</p>
+          </div>
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-orange-400 font-medium">Environments</span>
+            <p class="text-text-muted text-xs mt-1">Track deployments</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Jenkins Overview -->
+      <div class="cicd-content hidden" id="cicd-jenkins-overview">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-2xl">🎩</span>
+          </div>
+          <div>
+            <h3 class="font-medium text-white mb-1">Jenkins</h3>
+            <p class="text-text-muted text-sm">Self-hosted, open source. <code class="text-primary">Jenkinsfile</code> defines pipelines. Maximum flexibility, steeper learning curve.</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-red-400 font-medium">1800+ Plugins</span>
+            <p class="text-text-muted text-xs mt-1">Integrate anything</p>
+          </div>
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-red-400 font-medium">Self-Hosted</span>
+            <p class="text-text-muted text-xs mt-1">Full control</p>
+          </div>
+          <div class="bg-bg-main rounded-lg p-3">
+            <span class="text-red-400 font-medium">Groovy DSL</span>
+            <p class="text-text-muted text-xs mt-1">Powerful scripting</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Basic Pipeline Example -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+      <h3 class="font-medium text-text-secondary">Basic Pipeline Structure</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        A minimal pipeline that builds and tests your code on every push.
+      </p>
+      
+      <!-- GitHub Actions Basic -->
+      <div class="cicd-content" id="cicd-github-basic">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># .github/workflows/ci.yml</span>
+<span class="keyword">name</span>: <span class="string">CI Pipeline</span>
+
+<span class="keyword">on</span>:
+  <span class="type">push</span>:
+    <span class="type">branches</span>: [<span class="string">main</span>, <span class="string">develop</span>]
+  <span class="type">pull_request</span>:
+    <span class="type">branches</span>: [<span class="string">main</span>]
+
+<span class="keyword">jobs</span>:
+  <span class="type">build-and-test</span>:
+    <span class="keyword">runs-on</span>: <span class="string">ubuntu-latest</span>
+    
+    <span class="keyword">steps</span>:
+      - <span class="type">name</span>: <span class="string">Checkout code</span>
+        <span class="keyword">uses</span>: <span class="function">actions/checkout@v4</span>
+      
+      - <span class="type">name</span>: <span class="string">Set up Node.js</span>
+        <span class="keyword">uses</span>: <span class="function">actions/setup-node@v4</span>
+        <span class="keyword">with</span>:
+          <span class="type">node-version</span>: <span class="string">'20'</span>
+          <span class="type">cache</span>: <span class="string">'npm'</span>
+      
+      - <span class="type">name</span>: <span class="string">Install dependencies</span>
+        <span class="keyword">run</span>: <span class="string">npm ci</span>
+      
+      - <span class="type">name</span>: <span class="string">Run tests</span>
+        <span class="keyword">run</span>: <span class="string">npm test</span>
+      
+      - <span class="type">name</span>: <span class="string">Build</span>
+        <span class="keyword">run</span>: <span class="string">npm run build</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- GitLab CI Basic -->
+      <div class="cicd-content hidden" id="cicd-gitlab-basic">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># .gitlab-ci.yml</span>
+<span class="keyword">stages</span>:
+  - <span class="string">build</span>
+  - <span class="string">test</span>
+
+<span class="keyword">variables</span>:
+  <span class="type">NODE_VERSION</span>: <span class="string">"20"</span>
+
+<span class="keyword">default</span>:
+  <span class="type">image</span>: <span class="string">node:${"{"}NODE_VERSION{"}"}</span>
+  <span class="type">cache</span>:
+    <span class="type">paths</span>:
+      - <span class="string">node_modules/</span>
+
+<span class="type">build</span>:
+  <span class="keyword">stage</span>: <span class="string">build</span>
+  <span class="keyword">script</span>:
+    - <span class="string">npm ci</span>
+    - <span class="string">npm run build</span>
+  <span class="keyword">artifacts</span>:
+    <span class="type">paths</span>:
+      - <span class="string">dist/</span>
+    <span class="type">expire_in</span>: <span class="string">1 hour</span>
+
+<span class="type">test</span>:
+  <span class="keyword">stage</span>: <span class="string">test</span>
+  <span class="keyword">script</span>:
+    - <span class="string">npm ci</span>
+    - <span class="string">npm test</span>
+  <span class="keyword">coverage</span>: <span class="string">'/Coverage: \d+\.\d+%/'</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Jenkins Basic -->
+      <div class="cicd-content hidden" id="cicd-jenkins-basic">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Jenkinsfile</span>
+<span class="keyword">pipeline</span> {lb}
+    <span class="type">agent</span> {lb}
+        <span class="function">docker</span> {lb}
+            <span class="type">image</span> <span class="string">'node:20'</span>
+        {rb}
+    {rb}
+    
+    <span class="type">stages</span> {lb}
+        <span class="keyword">stage</span>(<span class="string">'Install'</span>) {lb}
+            <span class="type">steps</span> {lb}
+                <span class="function">sh</span> <span class="string">'npm ci'</span>
+            {rb}
+        {rb}
+        
+        <span class="keyword">stage</span>(<span class="string">'Test'</span>) {lb}
+            <span class="type">steps</span> {lb}
+                <span class="function">sh</span> <span class="string">'npm test'</span>
+            {rb}
+        {rb}
+        
+        <span class="keyword">stage</span>(<span class="string">'Build'</span>) {lb}
+            <span class="type">steps</span> {lb}
+                <span class="function">sh</span> <span class="string">'npm run build'</span>
+            {rb}
+        {rb}
+    {rb}
+    
+    <span class="type">post</span> {lb}
+        <span class="keyword">always</span> {lb}
+            <span class="function">junit</span> <span class="string">'**/test-results.xml'</span>
+        {rb}
+    {rb}
+{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Docker Build & Push Example -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+      <h3 class="font-medium text-text-secondary">Build & Push Docker Image</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Build a Docker image and push to a container registry.
+      </p>
+      
+      <!-- GitHub Actions Docker -->
+      <div class="cicd-content" id="cicd-github-docker">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># .github/workflows/docker.yml</span>
+<span class="keyword">name</span>: <span class="string">Build and Push Docker</span>
+
+<span class="keyword">on</span>:
+  <span class="type">push</span>:
+    <span class="type">branches</span>: [<span class="string">main</span>]
+    <span class="type">tags</span>: [<span class="string">'v*'</span>]
+
+<span class="keyword">jobs</span>:
+  <span class="type">docker</span>:
+    <span class="keyword">runs-on</span>: <span class="string">ubuntu-latest</span>
+    
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: <span class="function">actions/checkout@v4</span>
+      
+      - <span class="type">name</span>: <span class="string">Set up Docker Buildx</span>
+        <span class="keyword">uses</span>: <span class="function">docker/setup-buildx-action@v3</span>
+      
+      - <span class="type">name</span>: <span class="string">Login to Docker Hub</span>
+        <span class="keyword">uses</span>: <span class="function">docker/login-action@v3</span>
+        <span class="keyword">with</span>:
+          <span class="type">username</span>: <span class="string">${lb}${lb} secrets.DOCKERHUB_USERNAME ${rb}${rb}</span>
+          <span class="type">password</span>: <span class="string">${lb}${lb} secrets.DOCKERHUB_TOKEN ${rb}${rb}</span>
+      
+      - <span class="type">name</span>: <span class="string">Build and push</span>
+        <span class="keyword">uses</span>: <span class="function">docker/build-push-action@v5</span>
+        <span class="keyword">with</span>:
+          <span class="type">context</span>: <span class="string">.</span>
+          <span class="type">push</span>: <span class="string">true</span>
+          <span class="type">tags</span>: <span class="string">myuser/myapp:$${lb}${lb} github.sha ${rb}${rb}</span>
+          <span class="type">cache-from</span>: <span class="string">type=gha</span>
+          <span class="type">cache-to</span>: <span class="string">type=gha,mode=max</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- GitLab CI Docker -->
+      <div class="cicd-content hidden" id="cicd-gitlab-docker">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># .gitlab-ci.yml</span>
+<span class="keyword">stages</span>:
+  - <span class="string">build</span>
+  - <span class="string">push</span>
+
+<span class="keyword">variables</span>:
+  <span class="type">IMAGE_TAG</span>: <span class="string">$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA</span>
+
+<span class="type">build-docker</span>:
+  <span class="keyword">stage</span>: <span class="string">build</span>
+  <span class="type">image</span>: <span class="string">docker:24</span>
+  <span class="type">services</span>:
+    - <span class="string">docker:24-dind</span>
+  <span class="keyword">script</span>:
+    - <span class="string">docker build -t $IMAGE_TAG .</span>
+    - <span class="string">docker save $IMAGE_TAG > image.tar</span>
+  <span class="keyword">artifacts</span>:
+    <span class="type">paths</span>:
+      - <span class="string">image.tar</span>
+    <span class="type">expire_in</span>: <span class="string">1 hour</span>
+
+<span class="type">push-docker</span>:
+  <span class="keyword">stage</span>: <span class="string">push</span>
+  <span class="type">image</span>: <span class="string">docker:24</span>
+  <span class="type">services</span>:
+    - <span class="string">docker:24-dind</span>
+  <span class="keyword">before_script</span>:
+    - <span class="string">docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY</span>
+  <span class="keyword">script</span>:
+    - <span class="string">docker load < image.tar</span>
+    - <span class="string">docker push $IMAGE_TAG</span>
+  <span class="keyword">only</span>:
+    - <span class="string">main</span>
+    - <span class="string">tags</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Jenkins Docker -->
+      <div class="cicd-content hidden" id="cicd-jenkins-docker">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Jenkinsfile</span>
+<span class="keyword">pipeline</span> {lb}
+    <span class="type">agent any</span>
+    
+    <span class="type">environment</span> {lb}
+        <span class="type">REGISTRY</span> = <span class="string">'docker.io'</span>
+        <span class="type">IMAGE</span> = <span class="string">'myuser/myapp'</span>
+        <span class="type">DOCKER_CREDS</span> = <span class="function">credentials</span>(<span class="string">'docker-hub-creds'</span>)
+    {rb}
+    
+    <span class="type">stages</span> {lb}
+        <span class="keyword">stage</span>(<span class="string">'Build Image'</span>) {lb}
+            <span class="type">steps</span> {lb}
+                <span class="function">script</span> {lb}
+                    <span class="type">dockerImage</span> = <span class="function">docker.build</span>(<span class="string">"${"{"}IMAGE{"}"}:${"{"}env.BUILD_NUMBER{"}"}"</span>)
+                {rb}
+            {rb}
+        {rb}
+        
+        <span class="keyword">stage</span>(<span class="string">'Push Image'</span>) {lb}
+            <span class="type">steps</span> {lb}
+                <span class="function">script</span> {lb}
+                    <span class="function">docker.withRegistry</span>(<span class="string">"https://${"{"}REGISTRY{"}"}"</span>, <span class="string">'docker-hub-creds'</span>) {lb}
+                        <span class="type">dockerImage</span>.<span class="function">push</span>()
+                        <span class="type">dockerImage</span>.<span class="function">push</span>(<span class="string">'latest'</span>)
+                    {rb}
+                {rb}
+            {rb}
+        {rb}
+    {rb}
+{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Deploy Example -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+      <h3 class="font-medium text-text-secondary">Deploy to Kubernetes</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Deploy your application to a Kubernetes cluster after successful build.
+      </p>
+      
+      <!-- GitHub Actions Deploy -->
+      <div class="cicd-content" id="cicd-github-deploy">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># .github/workflows/deploy.yml</span>
+<span class="keyword">name</span>: <span class="string">Deploy to Production</span>
+
+<span class="keyword">on</span>:
+  <span class="type">workflow_run</span>:
+    <span class="type">workflows</span>: [<span class="string">"Build and Push Docker"</span>]
+    <span class="type">types</span>: [<span class="string">completed</span>]
+    <span class="type">branches</span>: [<span class="string">main</span>]
+
+<span class="keyword">jobs</span>:
+  <span class="type">deploy</span>:
+    <span class="keyword">if</span>: <span class="string">${lb}${lb} github.event.workflow_run.conclusion == 'success' ${rb}${rb}</span>
+    <span class="keyword">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="keyword">environment</span>: <span class="string">production</span>
+    
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: <span class="function">actions/checkout@v4</span>
+      
+      - <span class="type">name</span>: <span class="string">Configure kubectl</span>
+        <span class="keyword">uses</span>: <span class="function">azure/k8s-set-context@v3</span>
+        <span class="keyword">with</span>:
+          <span class="type">kubeconfig</span>: <span class="string">${lb}${lb} secrets.KUBE_CONFIG ${rb}${rb}</span>
+      
+      - <span class="type">name</span>: <span class="string">Update image tag</span>
+        <span class="keyword">run</span>: |
+          <span class="function">sed</span> -i "s|IMAGE_TAG|$${lb}${lb} github.sha ${rb}${rb}|g" k8s/deployment.yaml
+      
+      - <span class="type">name</span>: <span class="string">Deploy to cluster</span>
+        <span class="keyword">run</span>: |
+          kubectl apply -f k8s/
+          kubectl rollout status deployment/myapp</code></pre>
+        </div>
+      </div>
+      
+      <!-- GitLab CI Deploy -->
+      <div class="cicd-content hidden" id="cicd-gitlab-deploy">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># .gitlab-ci.yml (continued)</span>
+<span class="keyword">stages</span>:
+  - <span class="string">build</span>
+  - <span class="string">test</span>
+  - <span class="string">deploy</span>
+
+<span class="type">deploy-staging</span>:
+  <span class="keyword">stage</span>: <span class="string">deploy</span>
+  <span class="type">image</span>: <span class="string">bitnami/kubectl:latest</span>
+  <span class="keyword">environment</span>:
+    <span class="type">name</span>: <span class="string">staging</span>
+    <span class="type">url</span>: <span class="string">https://staging.example.com</span>
+  <span class="keyword">script</span>:
+    - <span class="string">kubectl config set-cluster k8s --server="$KUBE_URL"</span>
+    - <span class="string">kubectl config set-credentials gitlab --token="$KUBE_TOKEN"</span>
+    - <span class="string">kubectl set image deployment/myapp myapp=$IMAGE_TAG</span>
+    - <span class="string">kubectl rollout status deployment/myapp</span>
+  <span class="keyword">only</span>:
+    - <span class="string">main</span>
+
+<span class="type">deploy-production</span>:
+  <span class="keyword">stage</span>: <span class="string">deploy</span>
+  <span class="type">image</span>: <span class="string">bitnami/kubectl:latest</span>
+  <span class="keyword">environment</span>:
+    <span class="type">name</span>: <span class="string">production</span>
+    <span class="type">url</span>: <span class="string">https://example.com</span>
+  <span class="keyword">script</span>:
+    - <span class="string">kubectl set image deployment/myapp myapp=$IMAGE_TAG</span>
+  <span class="keyword">when</span>: <span class="string">manual</span>  <span class="comment"># Requires button click</span>
+  <span class="keyword">only</span>:
+    - <span class="string">tags</span></code></pre>
+        </div>
+      </div>
+      
+      <!-- Jenkins Deploy -->
+      <div class="cicd-content hidden" id="cicd-jenkins-deploy">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// Jenkinsfile</span>
+<span class="keyword">pipeline</span> {lb}
+    <span class="type">agent any</span>
+    
+    <span class="type">stages</span> {lb}
+        <span class="comment">// ... build stages ...</span>
+        
+        <span class="keyword">stage</span>(<span class="string">'Deploy to Staging'</span>) {lb}
+            <span class="type">steps</span> {lb}
+                <span class="function">withKubeConfig</span>([<span class="type">credentialsId</span>: <span class="string">'kubeconfig'</span>]) {lb}
+                    <span class="function">sh</span> <span class="string">'''
+                        kubectl set image deployment/myapp \
+                            myapp=${"{"}IMAGE{"}"}:${"{"}BUILD_NUMBER{"}"}
+                        kubectl rollout status deployment/myapp
+                    '''</span>
+                {rb}
+            {rb}
+        {rb}
+        
+        <span class="keyword">stage</span>(<span class="string">'Deploy to Production'</span>) {lb}
+            <span class="keyword">when</span> {lb}
+                <span class="type">branch</span> <span class="string">'main'</span>
+            {rb}
+            <span class="type">input</span> {lb}
+                <span class="type">message</span> <span class="string">'Deploy to production?'</span>
+                <span class="type">ok</span> <span class="string">'Deploy'</span>
+            {rb}
+            <span class="type">steps</span> {lb}
+                <span class="function">withKubeConfig</span>([<span class="type">credentialsId</span>: <span class="string">'kubeconfig-prod'</span>]) {lb}
+                    <span class="function">sh</span> <span class="string">'kubectl apply -f k8s/production/'</span>
+                {rb}
+            {rb}
+        {rb}
+    {rb}
+{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7: GitOps & ArgoCD -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">GitOps & ArgoCD</h2>
+  
+  <!-- GitOps Philosophy -->
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-purple-500/30 rounded-xl p-6 md:p-8">
+      <div class="flex items-start gap-4 mb-6">
+        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔄</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-purple-400 mb-2">What is GitOps?</h3>
+          <p class="text-text-secondary text-sm">
+            GitOps is a way of managing infrastructure and deployments where <span class="text-primary font-medium">Git is the single source of truth</span>. 
+            Instead of running <code class="text-purple-400">kubectl apply</code> manually, you update a Git repo and an automated 
+            system syncs the cluster to match.
+          </p>
+        </div>
+      </div>
+      
+      <!-- GitOps Flow Diagram -->
+      <div class="overflow-x-auto mb-6">
+        <svg viewBox="0 0 600 160" class="w-full h-auto min-w-[480px]">
+          <!-- Developer -->
+          <g>
+            <rect x="10" y="45" width="80" height="70" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+            <text x="50" y="72" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">DEV</text>
+            <text x="50" y="88" text-anchor="middle" fill="#666" font-size="9">git push</text>
+            <text x="50" y="102" text-anchor="middle" fill="#666" font-size="9">manifests</text>
+          </g>
+          
+          <!-- Arrow to Git -->
+          <path d="M95 80 L125 80" stroke="#3b82f6" stroke-width="2" fill="none" class="flow-path"/>
+          <polygon points="125,80 118,75 118,85" fill="#3b82f6"/>
+          
+          <!-- Git Repo -->
+          <g>
+            <rect x="130" y="35" width="110" height="90" rx="8" fill="#1a1a1a" stroke="#a78bfa" stroke-width="2"/>
+            <text x="185" y="60" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="600">GIT REPO</text>
+            <text x="185" y="78" text-anchor="middle" fill="#666" font-size="9">k8s/deployment.yaml</text>
+            <text x="185" y="92" text-anchor="middle" fill="#666" font-size="9">k8s/service.yaml</text>
+            <text x="185" y="106" text-anchor="middle" fill="#a78bfa" font-size="9">Source of Truth</text>
+          </g>
+          
+          <!-- Arrow to ArgoCD -->
+          <path d="M245 80 L280 80" stroke="#a78bfa" stroke-width="2" fill="none" class="flow-path"/>
+          <polygon points="280,80 273,75 273,85" fill="#a78bfa"/>
+          
+          <!-- ArgoCD -->
+          <g>
+            <rect x="285" y="35" width="110" height="90" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+            <text x="340" y="60" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">ARGOCD</text>
+            <text x="340" y="78" text-anchor="middle" fill="#666" font-size="9">Watches repo</text>
+            <text x="340" y="92" text-anchor="middle" fill="#666" font-size="9">Detects changes</text>
+            <text x="340" y="106" text-anchor="middle" fill="#00FF88" font-size="9">Auto-syncs</text>
+          </g>
+          
+          <!-- Arrow to Cluster -->
+          <path d="M400 80 L435 80" stroke="#00FF88" stroke-width="2" fill="none" class="flow-path"/>
+          <polygon points="435,80 428,75 428,85" fill="#00FF88"/>
+          
+          <!-- Kubernetes Cluster -->
+          <g>
+            <rect x="440" y="35" width="150" height="90" rx="8" fill="#1a1a1a" stroke="#22d3ee" stroke-width="2"/>
+            <text x="515" y="60" text-anchor="middle" fill="#22d3ee" font-size="11" font-weight="600">K8S CLUSTER</text>
+            <rect x="452" y="72" width="40" height="20" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+            <text x="472" y="86" text-anchor="middle" fill="#fbbf24" font-size="8">Pod</text>
+            <rect x="500" y="72" width="40" height="20" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+            <text x="520" y="86" text-anchor="middle" fill="#fbbf24" font-size="8">Pod</text>
+            <rect x="548" y="72" width="36" height="20" rx="4" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+            <text x="566" y="86" text-anchor="middle" fill="#fbbf24" font-size="8">Pod</text>
+            <text x="515" y="112" text-anchor="middle" fill="#666" font-size="9">Live environment</text>
+          </g>
+          
+          <!-- Feedback loop -->
+          <path d="M515 130 L515 150 L185 150 L185 130" stroke="#525252" stroke-width="1" stroke-dasharray="4 4" fill="none"/>
+          <text x="350" y="145" text-anchor="middle" fill="#525252" font-size="8">Drift detection — auto-heal</text>
+        </svg>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-bg-main rounded-lg p-4">
+          <h4 class="text-sm font-medium text-purple-400 mb-2">Push-based (Traditional CD)</h4>
+          <p class="text-text-muted text-xs">Pipeline runs <code>kubectl apply</code>. CI system needs cluster credentials.</p>
+        </div>
+        <div class="bg-bg-main rounded-lg p-4 border border-primary/30">
+          <h4 class="text-sm font-medium text-primary mb-2">Pull-based (GitOps)</h4>
+          <p class="text-text-muted text-xs">Agent in cluster pulls changes from Git. No external credentials needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ArgoCD -->
+  <div class="mb-8 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="flex items-start gap-4 mb-6">
+        <div class="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🐙</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">ArgoCD</h3>
+          <p class="text-text-muted text-sm">
+            A Kubernetes-native GitOps controller. Installs in your cluster, watches Git repos, 
+            and automatically syncs your deployments. Includes a beautiful UI.
+          </p>
+        </div>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-6">
+        <pre><code><span class="comment"># Install ArgoCD in your cluster</span>
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+<span class="comment"># Get the initial admin password</span>
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{lb}.data.password{rb}" | base64 -d
+
+<span class="comment"># Access the UI</span>
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+<span class="comment"># Open https://localhost:8080</span></code></pre>
+      </div>
+      
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># application.yaml — Tell ArgoCD about your app</span>
+<span class="keyword">apiVersion</span>: <span class="string">argoproj.io/v1alpha1</span>
+<span class="keyword">kind</span>: <span class="string">Application</span>
+<span class="keyword">metadata</span>:
+  <span class="type">name</span>: <span class="string">myapp</span>
+  <span class="type">namespace</span>: <span class="string">argocd</span>
+<span class="keyword">spec</span>:
+  <span class="type">project</span>: <span class="string">default</span>
+  
+  <span class="type">source</span>:
+    <span class="type">repoURL</span>: <span class="string">https://github.com/myorg/myapp-manifests</span>
+    <span class="type">targetRevision</span>: <span class="string">HEAD</span>
+    <span class="type">path</span>: <span class="string">k8s/production</span>
+  
+  <span class="type">destination</span>:
+    <span class="type">server</span>: <span class="string">https://kubernetes.default.svc</span>
+    <span class="type">namespace</span>: <span class="string">production</span>
+  
+  <span class="type">syncPolicy</span>:
+    <span class="type">automated</span>:
+      <span class="type">prune</span>: <span class="string">true</span>       <span class="comment"># Delete resources not in Git</span>
+      <span class="type">selfHeal</span>: <span class="string">true</span>    <span class="comment"># Revert manual changes</span>
+    <span class="type">syncOptions</span>:
+      - <span class="string">CreateNamespace=true</span></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- GitOps Benefits -->
+  <div class="fade-in">
+    <div class="grid md:grid-cols-2 gap-4 stagger-children">
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-xl">📜</span>
+          </div>
+          <div>
+            <h3 class="font-medium text-white mb-1">Complete Audit Trail</h3>
+            <p class="text-text-muted text-sm">Every deployment is a git commit. Who, what, when — all in history.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-xl">⏪</span>
+          </div>
+          <div>
+            <h3 class="font-medium text-white mb-1">Easy Rollbacks</h3>
+            <p class="text-text-muted text-sm"><code class="text-primary">git revert</code> and ArgoCD auto-syncs. Deployment undone.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-xl">🔒</span>
+          </div>
+          <div>
+            <h3 class="font-medium text-white mb-1">Improved Security</h3>
+            <p class="text-text-muted text-sm">CI pipelines don't need cluster credentials. Pull model is safer.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40">
+        <div class="flex items-start gap-4">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-xl">🩹</span>
+          </div>
+          <div>
+            <h3 class="font-medium text-white mb-1">Self-Healing</h3>
+            <p class="text-text-muted text-sm">Someone manually changed something? ArgoCD reverts it automatically.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Real App Examples -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Real App Examples</h2>
+  
+  <!-- Python App -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
+        <span class="text-xl">🐍</span>
+      </div>
+      <h3 class="font-medium text-blue-400">Python Flask App</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># .github/workflows/python-ci.yml</span>
+<span class="keyword">name</span>: <span class="string">Python CI/CD</span>
+
+<span class="keyword">on</span>:
+  <span class="type">push</span>:
+    <span class="type">branches</span>: [<span class="string">main</span>]
+  <span class="type">pull_request</span>:
+
+<span class="keyword">jobs</span>:
+  <span class="type">test</span>:
+    <span class="keyword">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="keyword">strategy</span>:
+      <span class="type">matrix</span>:
+        <span class="type">python-version</span>: [<span class="string">'3.10'</span>, <span class="string">'3.11'</span>, <span class="string">'3.12'</span>]
+    
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: <span class="function">actions/checkout@v4</span>
+      
+      - <span class="type">name</span>: <span class="string">Set up Python $${lb}${lb} matrix.python-version ${rb}${rb}</span>
+        <span class="keyword">uses</span>: <span class="function">actions/setup-python@v5</span>
+        <span class="keyword">with</span>:
+          <span class="type">python-version</span>: <span class="string">${lb}${lb} matrix.python-version ${rb}${rb}</span>
+          <span class="type">cache</span>: <span class="string">'pip'</span>
+      
+      - <span class="type">name</span>: <span class="string">Install dependencies</span>
+        <span class="keyword">run</span>: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+      
+      - <span class="type">name</span>: <span class="string">Lint with ruff</span>
+        <span class="keyword">run</span>: <span class="string">ruff check .</span>
+      
+      - <span class="type">name</span>: <span class="string">Type check with mypy</span>
+        <span class="keyword">run</span>: <span class="string">mypy src/</span>
+      
+      - <span class="type">name</span>: <span class="string">Test with pytest</span>
+        <span class="keyword">run</span>: |
+          pytest --cov=src --cov-report=xml
+      
+      - <span class="type">name</span>: <span class="string">Upload coverage</span>
+        <span class="keyword">uses</span>: <span class="function">codecov/codecov-action@v4</span>
+  
+  <span class="type">deploy</span>:
+    <span class="keyword">needs</span>: <span class="string">test</span>
+    <span class="keyword">if</span>: <span class="string">github.ref == 'refs/heads/main'</span>
+    <span class="keyword">runs-on</span>: <span class="string">ubuntu-latest</span>
+    
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: <span class="function">actions/checkout@v4</span>
+      
+      - <span class="type">name</span>: <span class="string">Deploy to Heroku</span>
+        <span class="keyword">uses</span>: <span class="function">akhileshns/heroku-deploy@v3.13.15</span>
+        <span class="keyword">with</span>:
+          <span class="type">heroku_api_key</span>: <span class="string">${lb}${lb} secrets.HEROKU_API_KEY ${rb}${rb}</span>
+          <span class="type">heroku_app_name</span>: <span class="string">"myflaskapp"</span>
+          <span class="type">heroku_email</span>: <span class="string">"dev@example.com"</span></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Node.js App -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+        <span class="text-xl">💚</span>
+      </div>
+      <h3 class="font-medium text-green-400">Node.js Express App</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># .github/workflows/node-ci.yml</span>
+<span class="keyword">name</span>: <span class="string">Node.js CI/CD</span>
+
+<span class="keyword">on</span>:
+  <span class="type">push</span>:
+    <span class="type">branches</span>: [<span class="string">main</span>]
+  <span class="type">pull_request</span>:
+
+<span class="keyword">env</span>:
+  <span class="type">REGISTRY</span>: <span class="string">ghcr.io</span>
+  <span class="type">IMAGE_NAME</span>: <span class="string">${lb}${lb} github.repository ${rb}${rb}</span>
+
+<span class="keyword">jobs</span>:
+  <span class="type">test</span>:
+    <span class="keyword">runs-on</span>: <span class="string">ubuntu-latest</span>
+    
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: <span class="function">actions/checkout@v4</span>
+      
+      - <span class="type">name</span>: <span class="string">Setup Node.js</span>
+        <span class="keyword">uses</span>: <span class="function">actions/setup-node@v4</span>
+        <span class="keyword">with</span>:
+          <span class="type">node-version</span>: <span class="string">'20'</span>
+          <span class="type">cache</span>: <span class="string">'npm'</span>
+      
+      - <span class="keyword">run</span>: <span class="string">npm ci</span>
+      - <span class="keyword">run</span>: <span class="string">npm run lint</span>
+      - <span class="keyword">run</span>: <span class="string">npm run test:coverage</span>
+      - <span class="keyword">run</span>: <span class="string">npm run build</span>
+      
+      - <span class="type">name</span>: <span class="string">Upload build artifact</span>
+        <span class="keyword">uses</span>: <span class="function">actions/upload-artifact@v4</span>
+        <span class="keyword">with</span>:
+          <span class="type">name</span>: <span class="string">dist</span>
+          <span class="type">path</span>: <span class="string">dist/</span>
+  
+  <span class="type">build-and-push</span>:
+    <span class="keyword">needs</span>: <span class="string">test</span>
+    <span class="keyword">if</span>: <span class="string">github.event_name == 'push'</span>
+    <span class="keyword">runs-on</span>: <span class="string">ubuntu-latest</span>
+    <span class="keyword">permissions</span>:
+      <span class="type">contents</span>: <span class="string">read</span>
+      <span class="type">packages</span>: <span class="string">write</span>
+    
+    <span class="keyword">steps</span>:
+      - <span class="keyword">uses</span>: <span class="function">actions/checkout@v4</span>
+      
+      - <span class="type">name</span>: <span class="string">Log in to GHCR</span>
+        <span class="keyword">uses</span>: <span class="function">docker/login-action@v3</span>
+        <span class="keyword">with</span>:
+          <span class="type">registry</span>: <span class="string">${lb}${lb} env.REGISTRY ${rb}${rb}</span>
+          <span class="type">username</span>: <span class="string">${lb}${lb} github.actor ${rb}${rb}</span>
+          <span class="type">password</span>: <span class="string">${lb}${lb} secrets.GITHUB_TOKEN ${rb}${rb}</span>
+      
+      - <span class="type">name</span>: <span class="string">Build and push</span>
+        <span class="keyword">uses</span>: <span class="function">docker/build-push-action@v5</span>
+        <span class="keyword">with</span>:
+          <span class="type">context</span>: <span class="string">.</span>
+          <span class="type">push</span>: <span class="string">true</span>
+          <span class="type">tags</span>: <span class="string">${lb}${lb} env.REGISTRY ${rb}${rb}/${lb}${lb} env.IMAGE_NAME ${rb}${rb}:$${lb}${lb} github.sha ${rb}${rb}</span></code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 9: Best Practices -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Best Practices</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <!-- Testing -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🧪</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-2">Testing</h3>
+          <BulletList color="primary" items={[
+            "Run tests on every push, not just PRs",
+            "Fail fast — put quick tests first",
+            "Use matrix builds for multiple versions",
+            "Track code coverage trends"
+          ]} />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Secrets -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🔐</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-2">Secrets Management</h3>
+          <BulletList color="primary" items={[
+            "Never commit secrets to code",
+            "Use platform secret stores (GitHub Secrets)",
+            "Rotate credentials regularly",
+            "Minimize secret scope (environment-specific)"
+          ]} />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Caching -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">⚡</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-2">Caching</h3>
+          <BulletList color="primary" items={[
+            "Cache dependencies (npm, pip, maven)",
+            "Use Docker layer caching",
+            "Cache build artifacts between jobs",
+            "Faster pipelines = happier developers"
+          ]} />
+        </div>
+      </div>
+    </div>
+    
+    <!-- Deployment -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-xl">🚀</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-2">Deployment Strategy</h3>
+          <BulletList color="primary" items={[
+            "Deploy to staging first, then prod",
+            "Use environment protection rules",
+            "Implement health checks",
+            "Have a rollback plan (tested!)"
+          ]} />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: When to Use -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use CI/CD</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
+        <span class="text-lg">✓</span> Use when:
+      </h3>
+      <BulletList color="primary" items={[
+        "You have more than one developer",
+        "You deploy more than once a month",
+        "Bugs in production are costly",
+        "You want confidence in your code",
+        "Manual deployments take >5 minutes",
+        "You value your weekends"
+      ]} />
+    </div>
+    
+    <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-yellow-500 mb-4 flex items-center gap-2">
+        <span class="text-lg">⚠️</span> Maybe overkill if:
+      </h3>
+      <BulletList color="yellow" items={[
+        "Solo project, just experimenting",
+        "No tests to run (but... write tests!)",
+        "Static site with no build step",
+        "Prototype with no users yet",
+        "Learning project (but... great practice!)"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 11: Trade-offs -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="flex-1">
+        <h3 class="font-medium text-primary mb-3">Pros</h3>
+        <BulletList bullet="+" color="primary" items={[
+          "Faster feedback on code quality",
+          "Consistent, reproducible builds",
+          "Deploy confidently, more often",
+          "Documentation through pipelines",
+          "Reduced \"works on my machine\" issues",
+          "Team can ship without DevOps bottleneck"
+        ]} />
+      </div>
+      <div class="w-px bg-border-subtle hidden md:block"></div>
+      <div class="flex-1">
+        <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+        <BulletList bullet="−" color="yellow" items={[
+          "Initial setup takes time",
+          "Another thing to maintain",
+          "Can become complex (yaml engineering)",
+          "Debugging pipeline issues is annoying",
+          "Cost for private repos / hosted runners",
+          "False sense of security if tests are bad"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 12: Key Takeaways -->
+<section class="mb-12">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Key Takeaways</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+      <div>
+        <h3 class="font-medium text-white">Automate the boring stuff</h3>
+        <p class="text-text-muted text-sm mt-1">Let robots build, test, and deploy. Humans should be thinking, not clicking.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+      <div>
+        <h3 class="font-medium text-white">CI catches bugs early, CD ships them fast</h3>
+        <p class="text-text-muted text-sm mt-1">Continuous Integration = always tested. Continuous Delivery = always deployable.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+      <div>
+        <h3 class="font-medium text-white">Start simple, iterate</h3>
+        <p class="text-text-muted text-sm mt-1">A basic pipeline that runs tests is better than no pipeline. Add complexity as needed.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+      <div>
+        <h3 class="font-medium text-white">GitOps = Git as single source of truth</h3>
+        <p class="text-text-muted text-sm mt-1">With tools like ArgoCD, your cluster state matches your repo. Rollback = git revert.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+      <div>
+        <h3 class="font-medium text-white">Your pipeline is code — treat it that way</h3>
+        <p class="text-text-muted text-sm mt-1">Version control, code review, refactor. YAML files deserve the same care as your app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</LearningLayout>
+
+<script>
+  // CI/CD Tool tab switcher
+  document.querySelectorAll('.cicd-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update tab styles
+      document.querySelectorAll('.cicd-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      
+      // Show correct content for all cicd sections
+      const tool = tab.getAttribute('data-tool');
+      document.querySelectorAll('.cicd-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll(`[id^="cicd-${tool}"]`).forEach(c => c.classList.remove('hidden'));
+    });
+  });
+
+  // Concept and benefit card hover effects
+  document.querySelectorAll('.benefit-card, .concept-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.classList.add('border-primary/40', 'bg-bg-hover');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('border-primary/40', 'bg-bg-hover');
+    });
+  });
+</script>

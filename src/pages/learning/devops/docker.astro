@@ -1,0 +1,1093 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout 
+  title="Docker & Containers"
+  description="Package applications with their dependencies — run anywhere, the same way, every time"
+  category="DevOps"
+  categoryHref="/learning/devops"
+  difficulty="Intermediate"
+  readTime="15 min read"
+>
+
+<!-- Section 1: The Hook -->
+<section class="mb-12 md:mb-20 fade-in">
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+    <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
+    <p class="text-3xl md:text-4xl font-bold text-primary mb-4">Shipping Container</p>
+    <p class="text-text-secondary text-sm md:text-base">for your software — pack once, run anywhere</p>
+  </div>
+</section>
+
+<!-- Section 2: Shipping Container Metaphor -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Shipping Container Analogy</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 fade-in">
+    <p class="text-text-secondary text-sm md:text-base mb-6 md:mb-8">
+      Before shipping containers, loading cargo was chaos — different shapes, sizes, handling requirements. 
+      Then came standardized containers: <span class="text-primary font-medium">pack anything inside</span>, 
+      and it works on any ship, truck, or crane. Docker does the same for software — package your app 
+      with everything it needs, and it runs identically on any machine.
+    </p>
+    
+    <!-- Animated Container SVG -->
+    <div class="relative overflow-x-auto" id="container-scene">
+      <svg viewBox="0 0 600 220" class="w-full h-auto min-w-[480px]">
+        <!-- Developer Machine -->
+        <g class="dev-machine" id="dev-machine">
+          <rect x="10" y="50" width="130" height="100" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+          <text x="75" y="75" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">YOUR LAPTOP</text>
+          
+          <!-- App components inside -->
+          <rect x="22" y="88" width="45" height="22" rx="3" fill="#0a0a0a" stroke="#a78bfa" stroke-width="1"/>
+          <text x="44" y="103" text-anchor="middle" fill="#a78bfa" font-size="8">Python 3.11</text>
+          
+          <rect x="72" y="88" width="55" height="22" rx="3" fill="#0a0a0a" stroke="#34d399" stroke-width="1"/>
+          <text x="99" y="103" text-anchor="middle" fill="#34d399" font-size="8">Dependencies</text>
+          
+          <rect x="22" y="116" width="105" height="22" rx="3" fill="#0a0a0a" stroke="#fbbf24" stroke-width="1"/>
+          <text x="74" y="131" text-anchor="middle" fill="#fbbf24" font-size="8">Your App Code</text>
+        </g>
+        
+        <!-- Docker Container -->
+        <g class="docker-container" id="docker-container">
+          <rect x="215" y="35" width="170" height="130" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="300" y="60" text-anchor="middle" fill="#00FF88" font-size="13" font-weight="600">DOCKER CONTAINER</text>
+          
+          <!-- Container contents (packaged) -->
+          <rect x="228" y="72" width="144" height="80" rx="4" fill="#0a0a0a" stroke="#00FF88" stroke-width="1" stroke-dasharray="4 2"/>
+          
+          <rect x="238" y="82" width="55" height="18" rx="2" fill="#141414" stroke="#a78bfa" stroke-width="1"/>
+          <text x="265" y="95" text-anchor="middle" fill="#a78bfa" font-size="7">Python 3.11</text>
+          
+          <rect x="298" y="82" width="65" height="18" rx="2" fill="#141414" stroke="#34d399" stroke-width="1"/>
+          <text x="330" y="95" text-anchor="middle" fill="#34d399" font-size="7">Dependencies</text>
+          
+          <rect x="238" y="105" width="125" height="18" rx="2" fill="#141414" stroke="#fbbf24" stroke-width="1"/>
+          <text x="300" y="118" text-anchor="middle" fill="#fbbf24" font-size="7">Your App Code</text>
+          
+          <rect x="238" y="128" width="125" height="18" rx="2" fill="#141414" stroke="#60a5fa" stroke-width="1"/>
+          <text x="300" y="141" text-anchor="middle" fill="#60a5fa" font-size="7">Linux OS Layer</text>
+        </g>
+        
+        <!-- Production Servers -->
+        <g class="servers" id="servers">
+          <rect x="455" y="25" width="135" height="55" rx="6" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+          <text x="522" y="45" text-anchor="middle" fill="#888" font-size="10" font-weight="500">AWS EC2</text>
+          <text x="522" y="62" text-anchor="middle" fill="#00FF88" font-size="8">✓ Same container</text>
+          
+          <rect x="455" y="90" width="135" height="55" rx="6" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+          <text x="522" y="110" text-anchor="middle" fill="#888" font-size="10" font-weight="500">Your Colleague's Mac</text>
+          <text x="522" y="127" text-anchor="middle" fill="#00FF88" font-size="8">✓ Same container</text>
+          
+          <rect x="455" y="155" width="135" height="55" rx="6" fill="#1a1a1a" stroke="#525252" stroke-width="2"/>
+          <text x="522" y="175" text-anchor="middle" fill="#888" font-size="10" font-weight="500">Kubernetes Cluster</text>
+          <text x="522" y="192" text-anchor="middle" fill="#00FF88" font-size="8">✓ Same container</text>
+        </g>
+        
+        <!-- Flow arrows -->
+        <g class="arrows">
+          <path d="M145 100 L210 100" class="flow-path" stroke="#3b82f6" stroke-width="2" fill="none"/>
+          <polygon points="210,100 203,95 203,105" fill="#3b82f6"/>
+          
+          <path d="M390 100 L450 52" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
+          <polygon points="450,52 441,52 445,60" fill="#00FF88"/>
+          
+          <path d="M390 100 L450 117" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none" style="animation-delay: 0.3s"/>
+          <polygon points="450,117 441,115 443,123" fill="#00FF88"/>
+          
+          <path d="M390 100 L450 182" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none" style="animation-delay: 0.6s"/>
+          <polygon points="450,182 441,178 445,186" fill="#00FF88"/>
+        </g>
+        
+        <!-- Labels -->
+        <text x="177" y="85" text-anchor="middle" fill="#525252" font-size="9">build</text>
+        <text x="420" y="85" text-anchor="middle" fill="#525252" font-size="9">ship</text>
+        
+        <!-- Animated data packets -->
+        <circle class="pulse-dot" cx="177" cy="100" r="4" fill="#3b82f6"/>
+        <circle class="pulse-dot" cx="420" cy="100" r="4" fill="#00FF88" style="animation-delay: 0.5s"/>
+      </svg>
+    </div>
+    
+    <div class="mt-8 grid md:grid-cols-3 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">💻</div>
+        <p class="text-sm font-medium text-blue-400">Your Machine</p>
+        <p class="text-xs text-text-muted mt-1">App + runtime + dependencies</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-primary/30">
+        <div class="text-3xl mb-2">📦</div>
+        <p class="text-sm font-medium text-primary">Container</p>
+        <p class="text-xs text-text-muted mt-1">Everything packaged together</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-border-subtle">
+        <div class="text-3xl mb-2">🌍</div>
+        <p class="text-sm font-medium text-text-secondary">Anywhere</p>
+        <p class="text-xs text-text-muted mt-1">Runs identical everywhere</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3: The Problem -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">The Problem It Solves</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Without Docker -->
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-500 text-lg">✗</span>
+        <span class="font-medium text-red-400">Without Docker</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre class="text-text-muted"><code><span class="comment"># Classic developer nightmare</span>
+"Works on my machine!" 🤷
+
+Developer A: Python 3.9, pip 21.0
+Developer B: Python 3.11, pip 23.0
+Production: Python 3.8, pip 19.0 😱
+
+<span class="comment"># Manual setup on every server</span>
+$ ssh prod-server
+$ apt-get install python3 python3-pip
+$ pip install -r requirements.txt
+<span class="comment"># Pray the versions match</span>
+<span class="comment"># Repeat for 50 servers...</span></code></pre>
+      </div>
+      <BulletList color="red" items={[
+        '"Works on my machine" syndrome',
+        "Dependency version conflicts",
+        "Hours of manual server setup",
+        "Different behavior across environments",
+        "Impossible to reproduce bugs"
+      ]} />
+    </div>
+    
+    <!-- With Docker -->
+    <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-primary text-lg">✓</span>
+        <span class="font-medium text-primary">With Docker</span>
+      </div>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1 mb-4">
+        <pre><code><span class="comment"># Build once, run everywhere</span>
+$ docker build -t myapp:1.0 .
+$ docker push myapp:1.0
+
+<span class="comment"># On ANY machine (dev, staging, prod)</span>
+$ docker run myapp:1.0
+<span class="comment"># ✓ Same Python version</span>
+<span class="comment"># ✓ Same dependencies</span>
+<span class="comment"># ✓ Same behavior</span>
+<span class="comment"># Done. ☕</span></code></pre>
+      </div>
+      <BulletList color="primary" items={[
+        "Identical environment everywhere",
+        "Dependencies locked in the image",
+        "Single command deployment",
+        "Bugs reproduce exactly",
+        "Onboard new devs in minutes"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Core Concepts -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Core Concepts</h2>
+  
+  <div class="grid md:grid-cols-2 gap-4 stagger-children">
+    <!-- Images -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="images">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📀</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Images</h3>
+          <p class="text-text-muted text-sm">Read-only templates containing your app + dependencies + OS. Like a snapshot or a class definition. You build them with a Dockerfile.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Containers -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="containers">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📦</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Containers</h3>
+          <p class="text-text-muted text-sm">Running instances of images. Like objects created from a class. Isolated, lightweight, start in milliseconds. Disposable and replaceable.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Volumes -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="volumes">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">💾</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Volumes</h3>
+          <p class="text-text-muted text-sm">Persistent storage that survives container restarts. Containers are ephemeral — volumes keep your data safe across container lifecycles.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Networks -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="networks">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🔗</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Networks</h3>
+          <p class="text-text-muted text-sm">Isolated virtual networks for container communication. Containers in the same network can find each other by name. Isolated by default.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dockerfile -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="dockerfile">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">📝</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Dockerfile</h3>
+          <p class="text-text-muted text-sm">The recipe for building an image. Step-by-step instructions: base image, install dependencies, copy code, configure startup command.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Registry -->
+    <div class="concept-card bg-bg-card border border-border-subtle rounded-xl p-5 cursor-pointer transition-all hover:border-primary/40" data-concept="registry">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-2xl">🏪</span>
+        </div>
+        <div>
+          <h3 class="font-medium text-white mb-1">Registry</h3>
+          <p class="text-text-muted text-sm">Storage for images — like npm for containers. Docker Hub is public; you can use private registries (ECR, GCR, ACR) for your own images.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Dockerfile Deep Dive -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Dockerfile Deep Dive</h2>
+  
+  <!-- Step 1 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+      <h3 class="font-medium text-text-secondary">Choose a Base Image</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Start with an existing image — usually an OS or runtime. Don't reinvent the wheel.
+      </p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Official Python runtime</span>
+<span class="keyword">FROM</span> python:3.11-slim
+
+<span class="comment"># Or Node.js</span>
+<span class="keyword">FROM</span> node:20-alpine
+
+<span class="comment"># Or just Linux</span>
+<span class="keyword">FROM</span> ubuntu:22.04
+
+<span class="comment"># Pro tip: use -slim or -alpine variants for smaller images</span></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 2 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+      <h3 class="font-medium text-text-secondary">Set Up the Working Directory</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Create a home for your application inside the container.
+      </p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># All subsequent commands run from here</span>
+<span class="keyword">WORKDIR</span> /app
+
+<span class="comment"># Creates the directory if it doesn't exist</span>
+<span class="comment"># Sets it as the current directory</span></code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 3 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+      <h3 class="font-medium text-text-secondary">Install Dependencies First</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Copy dependency files first, then install. Docker caches layers — if dependencies don't change, this layer is reused.
+      </p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Python example</span>
+<span class="keyword">COPY</span> requirements.txt .
+<span class="keyword">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="comment"># Node.js example</span>
+<span class="keyword">COPY</span> package*.json ./
+<span class="keyword">RUN</span> npm ci --only=production</code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 4 -->
+  <div class="mb-8 fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">4</span>
+      <h3 class="font-medium text-text-secondary">Copy Application Code</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Copy your source code after dependencies — code changes often, dependencies don't.
+      </p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Copy everything from current directory to /app</span>
+<span class="keyword">COPY</span> . .
+
+<span class="comment"># Or be specific</span>
+<span class="keyword">COPY</span> src/ ./src/
+<span class="keyword">COPY</span> config/ ./config/</code></pre>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Step 5 -->
+  <div class="fade-in">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">5</span>
+      <h3 class="font-medium text-text-secondary">Define the Startup Command</h3>
+    </div>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <p class="text-text-secondary text-sm mb-4">
+        Tell Docker how to run your app. CMD is the default; ENTRYPOINT sets a fixed executable.
+      </p>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Expose the port your app listens on</span>
+<span class="keyword">EXPOSE</span> 8000
+
+<span class="comment"># Run the application</span>
+<span class="keyword">CMD</span> [<span class="string">"python"</span>, <span class="string">"app.py"</span>]
+
+<span class="comment"># Or for Node.js</span>
+<span class="keyword">CMD</span> [<span class="string">"node"</span>, <span class="string">"server.js"</span>]
+
+<span class="comment"># Or use npm</span>
+<span class="keyword">CMD</span> [<span class="string">"npm"</span>, <span class="string">"start"</span>]</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: Code Examples with Python/Node tabs -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Complete Examples</h2>
+  
+  <!-- Language Switcher -->
+  <div class="mb-6 fade-in">
+    <div class="flex flex-wrap gap-2" id="lang-switcher">
+      <button class="lang-tab active px-4 py-2 text-sm rounded-lg bg-primary/20 text-primary border border-primary/30 flex items-center gap-2" data-lang="python">
+        <span class="text-lg">🐍</span> Python (Flask)
+      </button>
+      <button class="lang-tab px-4 py-2 text-sm rounded-lg bg-bg-main text-text-muted border border-border-subtle hover:border-border-light transition-colors flex items-center gap-2" data-lang="node">
+        <span class="text-lg">💚</span> Node.js (Express)
+      </button>
+    </div>
+  </div>
+  
+  <!-- Application Code -->
+  <div class="mb-8 fade-in">
+    <h3 class="font-medium text-text-secondary mb-4">Application Code</h3>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- Python App -->
+      <div class="lang-content" id="lang-python-app">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># app.py</span>
+<span class="keyword">from</span> flask <span class="keyword">import</span> Flask
+<span class="keyword">import</span> os
+
+app = Flask(__name__)
+
+@app.<span class="function">route</span>(<span class="string">'/'</span>)
+<span class="keyword">def</span> <span class="function">hello</span>():
+    <span class="keyword">return</span> <span class="string">'Hello from Docker! 🐳'</span>
+
+@app.<span class="function">route</span>(<span class="string">'/health'</span>)
+<span class="keyword">def</span> <span class="function">health</span>():
+    <span class="keyword">return</span> {lb}<span class="string">'status'</span>: <span class="string">'healthy'</span>{rb}
+
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    port = <span class="type">int</span>(os.environ.<span class="function">get</span>(<span class="string">'PORT'</span>, <span class="string">5000</span>))
+    app.<span class="function">run</span>(host=<span class="string">'0.0.0.0'</span>, port=port)</code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mt-4">
+          <pre><code><span class="comment"># requirements.txt</span>
+flask==3.0.0
+gunicorn==21.2.0</code></pre>
+        </div>
+      </div>
+      
+      <!-- Node.js App -->
+      <div class="lang-content hidden" id="lang-node-app">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// server.js</span>
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> app = <span class="function">express</span>();
+
+app.<span class="function">get</span>(<span class="string">'/'</span>, (req, res) => {lb}
+    res.<span class="function">send</span>(<span class="string">'Hello from Docker! 🐳'</span>);
+{rb});
+
+app.<span class="function">get</span>(<span class="string">'/health'</span>, (req, res) => {lb}
+    res.<span class="function">json</span>({lb} status: <span class="string">'healthy'</span> {rb});
+{rb});
+
+<span class="keyword">const</span> PORT = process.env.PORT || <span class="string">3000</span>;
+app.<span class="function">listen</span>(PORT, () => {lb}
+    console.<span class="function">log</span>(<span class="string">`Server running on port $</span>{lb}PORT{rb}<span class="string">`</span>);
+{rb});</code></pre>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mt-4">
+          <pre><code><span class="comment">// package.json</span>
+{lb}
+  <span class="string">"name"</span>: <span class="string">"docker-node-app"</span>,
+  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,
+  <span class="string">"main"</span>: <span class="string">"server.js"</span>,
+  <span class="string">"scripts"</span>: {lb}
+    <span class="string">"start"</span>: <span class="string">"node server.js"</span>
+  {rb},
+  <span class="string">"dependencies"</span>: {lb}
+    <span class="string">"express"</span>: <span class="string">"^4.18.2"</span>
+  {rb}
+{rb}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Dockerfile -->
+  <div class="mb-8 fade-in">
+    <h3 class="font-medium text-text-secondary mb-4">Dockerfile</h3>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- Python Dockerfile -->
+      <div class="lang-content" id="lang-python-dockerfile">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># Dockerfile</span>
+<span class="keyword">FROM</span> python:3.11-slim
+
+<span class="comment"># Set working directory</span>
+<span class="keyword">WORKDIR</span> /app
+
+<span class="comment"># Install dependencies first (cached if unchanged)</span>
+<span class="keyword">COPY</span> requirements.txt .
+<span class="keyword">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="comment"># Copy application code</span>
+<span class="keyword">COPY</span> app.py .
+
+<span class="comment"># Environment variables</span>
+<span class="keyword">ENV</span> PORT=5000
+
+<span class="comment"># Document the port</span>
+<span class="keyword">EXPOSE</span> 5000
+
+<span class="comment"># Run with gunicorn (production server)</span>
+<span class="keyword">CMD</span> [<span class="string">"gunicorn"</span>, <span class="string">"--bind"</span>, <span class="string">"0.0.0.0:5000"</span>, <span class="string">"app:app"</span>]</code></pre>
+        </div>
+      </div>
+      
+      <!-- Node.js Dockerfile -->
+      <div class="lang-content hidden" id="lang-node-dockerfile">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># Dockerfile</span>
+<span class="keyword">FROM</span> node:20-alpine
+
+<span class="comment"># Set working directory</span>
+<span class="keyword">WORKDIR</span> /app
+
+<span class="comment"># Install dependencies first (cached if unchanged)</span>
+<span class="keyword">COPY</span> package*.json ./
+<span class="keyword">RUN</span> npm ci --only=production
+
+<span class="comment"># Copy application code</span>
+<span class="keyword">COPY</span> server.js .
+
+<span class="comment"># Environment variables</span>
+<span class="keyword">ENV</span> PORT=3000
+
+<span class="comment"># Document the port</span>
+<span class="keyword">EXPOSE</span> 3000
+
+<span class="comment"># Run the server</span>
+<span class="keyword">CMD</span> [<span class="string">"node"</span>, <span class="string">"server.js"</span>]</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Build & Run Commands -->
+  <div class="fade-in">
+    <h3 class="font-medium text-text-secondary mb-4">Build & Run</h3>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- Python Commands -->
+      <div class="lang-content" id="lang-python-commands">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># Build the image</span>
+$ docker build -t my-python-app:1.0 .
+
+<span class="comment"># Run the container</span>
+$ docker run -d -p 5000:5000 --name myapp my-python-app:1.0
+
+<span class="comment"># Test it</span>
+$ curl http://localhost:5000
+Hello from Docker! 🐳
+
+<span class="comment"># View logs</span>
+$ docker logs myapp
+
+<span class="comment"># Stop and remove</span>
+$ docker stop myapp && docker rm myapp</code></pre>
+        </div>
+      </div>
+      
+      <!-- Node.js Commands -->
+      <div class="lang-content hidden" id="lang-node-commands">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># Build the image</span>
+$ docker build -t my-node-app:1.0 .
+
+<span class="comment"># Run the container</span>
+$ docker run -d -p 3000:3000 --name myapp my-node-app:1.0
+
+<span class="comment"># Test it</span>
+$ curl http://localhost:3000
+Hello from Docker! 🐳
+
+<span class="comment"># View logs</span>
+$ docker logs myapp
+
+<span class="comment"># Stop and remove</span>
+$ docker stop myapp && docker rm myapp</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 7: Docker Compose -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Docker Compose — Multi-Container Apps</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8 mb-8 fade-in">
+    <p class="text-text-secondary text-sm md:text-base mb-6">
+      Real applications aren't just one container. You need a database, a cache, maybe a message queue. 
+      <span class="text-primary font-medium">Docker Compose</span> lets you define and run multi-container applications 
+      with a single YAML file. One command brings up your entire stack.
+    </p>
+    
+    <!-- Architecture SVG -->
+    <div class="overflow-x-auto mb-6">
+      <svg viewBox="0 0 600 200" class="w-full h-auto min-w-[480px]">
+        <!-- docker-compose.yml -->
+        <g>
+          <rect x="20" y="50" width="140" height="100" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+          <text x="90" y="75" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">docker-compose.yml</text>
+          <text x="90" y="95" text-anchor="middle" fill="#666" font-size="9">services:</text>
+          <text x="90" y="108" text-anchor="middle" fill="#60a5fa" font-size="8">  web: ...</text>
+          <text x="90" y="120" text-anchor="middle" fill="#fbbf24" font-size="8">  db: ...</text>
+          <text x="90" y="132" text-anchor="middle" fill="#ef4444" font-size="8">  redis: ...</text>
+        </g>
+        
+        <!-- Arrow -->
+        <path d="M165 100 L210 100" class="flow-path" stroke="#00FF88" stroke-width="2" fill="none"/>
+        <polygon points="210,100 203,95 203,105" fill="#00FF88"/>
+        <text x="187" y="90" text-anchor="middle" fill="#525252" font-size="9">up</text>
+        
+        <!-- Network box -->
+        <g>
+          <rect x="220" y="20" width="360" height="160" rx="10" fill="none" stroke="#525252" stroke-width="2" stroke-dasharray="6 3"/>
+          <text x="400" y="42" text-anchor="middle" fill="#525252" font-size="10">Docker Network (app-network)</text>
+          
+          <!-- Web Service -->
+          <rect x="240" y="55" width="95" height="60" rx="6" fill="#1a1a1a" stroke="#60a5fa" stroke-width="2"/>
+          <text x="287" y="77" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="500">🌐 web</text>
+          <text x="287" y="93" text-anchor="middle" fill="#666" font-size="8">Flask/Express</text>
+          <text x="287" y="106" text-anchor="middle" fill="#666" font-size="8">:5000</text>
+          
+          <!-- DB Service -->
+          <rect x="352" y="55" width="95" height="60" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+          <text x="399" y="77" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="500">🗄️ db</text>
+          <text x="399" y="93" text-anchor="middle" fill="#666" font-size="8">PostgreSQL</text>
+          <text x="399" y="106" text-anchor="middle" fill="#666" font-size="8">:5432</text>
+          
+          <!-- Redis Service -->
+          <rect x="464" y="55" width="95" height="60" rx="6" fill="#1a1a1a" stroke="#ef4444" stroke-width="2"/>
+          <text x="511" y="77" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="500">⚡ redis</text>
+          <text x="511" y="93" text-anchor="middle" fill="#666" font-size="8">Redis Cache</text>
+          <text x="511" y="106" text-anchor="middle" fill="#666" font-size="8">:6379</text>
+          
+          <!-- Connection arrows -->
+          <path d="M335 85 L352 85" stroke="#525252" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
+          <path d="M335 85 L378 85 L378 55 L464 85" stroke="#525252" stroke-width="1" fill="none" stroke-dasharray="3 2"/>
+          
+          <!-- Volume indicator -->
+          <rect x="362" y="130" width="75" height="35" rx="4" fill="#1a1a1a" stroke="#a78bfa" stroke-width="1"/>
+          <text x="399" y="145" text-anchor="middle" fill="#a78bfa" font-size="8">💾 db-data</text>
+          <text x="399" y="157" text-anchor="middle" fill="#666" font-size="7">volume</text>
+          <path d="M399 115 L399 130" stroke="#a78bfa" stroke-width="1" fill="none"/>
+        </g>
+      </svg>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-4 stagger-children">
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-blue-500/30">
+        <div class="text-2xl mb-2">🌐</div>
+        <p class="text-sm font-medium text-blue-400">Web Service</p>
+        <p class="text-xs text-text-muted mt-1">Your application</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-yellow-500/30">
+        <div class="text-2xl mb-2">🗄️</div>
+        <p class="text-sm font-medium text-yellow-400">Database</p>
+        <p class="text-xs text-text-muted mt-1">Persistent storage</p>
+      </div>
+      <div class="text-center p-4 rounded-lg bg-bg-main border border-red-500/30">
+        <div class="text-2xl mb-2">⚡</div>
+        <p class="text-sm font-medium text-red-400">Cache</p>
+        <p class="text-xs text-text-muted mt-1">Fast data access</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- docker-compose.yml Examples -->
+  <div class="mb-8 fade-in">
+    <h3 class="font-medium text-text-secondary mb-4">docker-compose.yml</h3>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      
+      <!-- Python Compose -->
+      <div class="lang-content" id="lang-python-compose">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># docker-compose.yml</span>
+<span class="keyword">version</span>: <span class="string">'3.8'</span>
+
+<span class="keyword">services</span>:
+  <span class="type">web</span>:
+    <span class="keyword">build</span>: .
+    <span class="keyword">ports</span>:
+      - <span class="string">"5000:5000"</span>
+    <span class="keyword">environment</span>:
+      - DATABASE_URL=postgresql://user:pass@db:5432/mydb
+      - REDIS_URL=redis://redis:6379
+    <span class="keyword">depends_on</span>:
+      - db
+      - redis
+    <span class="keyword">restart</span>: unless-stopped
+
+  <span class="type">db</span>:
+    <span class="keyword">image</span>: postgres:15-alpine
+    <span class="keyword">environment</span>:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=mydb
+    <span class="keyword">volumes</span>:
+      - db-data:/var/lib/postgresql/data
+    <span class="keyword">restart</span>: unless-stopped
+
+  <span class="type">redis</span>:
+    <span class="keyword">image</span>: redis:7-alpine
+    <span class="keyword">restart</span>: unless-stopped
+
+<span class="keyword">volumes</span>:
+  <span class="type">db-data</span>:</code></pre>
+        </div>
+      </div>
+      
+      <!-- Node.js Compose -->
+      <div class="lang-content hidden" id="lang-node-compose">
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment"># docker-compose.yml</span>
+<span class="keyword">version</span>: <span class="string">'3.8'</span>
+
+<span class="keyword">services</span>:
+  <span class="type">web</span>:
+    <span class="keyword">build</span>: .
+    <span class="keyword">ports</span>:
+      - <span class="string">"3000:3000"</span>
+    <span class="keyword">environment</span>:
+      - DATABASE_URL=mongodb://db:27017/mydb
+      - REDIS_URL=redis://redis:6379
+    <span class="keyword">depends_on</span>:
+      - db
+      - redis
+    <span class="keyword">restart</span>: unless-stopped
+
+  <span class="type">db</span>:
+    <span class="keyword">image</span>: mongo:7
+    <span class="keyword">volumes</span>:
+      - db-data:/data/db
+    <span class="keyword">restart</span>: unless-stopped
+
+  <span class="type">redis</span>:
+    <span class="keyword">image</span>: redis:7-alpine
+    <span class="keyword">restart</span>: unless-stopped
+
+<span class="keyword">volumes</span>:
+  <span class="type">db-data</span>:</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Compose Commands -->
+  <div class="fade-in">
+    <h3 class="font-medium text-text-secondary mb-4">Compose Commands</h3>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Start all services (detached)</span>
+$ docker compose up -d
+
+<span class="comment"># View running containers</span>
+$ docker compose ps
+
+<span class="comment"># View logs (all services)</span>
+$ docker compose logs -f
+
+<span class="comment"># View logs (specific service)</span>
+$ docker compose logs -f web
+
+<span class="comment"># Stop all services</span>
+$ docker compose down
+
+<span class="comment"># Stop and remove volumes (⚠️ destroys data)</span>
+$ docker compose down -v
+
+<span class="comment"># Rebuild and restart</span>
+$ docker compose up -d --build</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Docker vs Compose Decision Guide -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Docker vs Docker Compose</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-4 md:p-8 fade-in overflow-x-auto">
+    <svg viewBox="0 0 600 280" class="w-full h-auto min-w-[480px]">
+      <!-- Decision tree -->
+      <!-- Start -->
+      <g>
+        <rect x="230" y="10" width="140" height="40" rx="20" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="300" y="35" text-anchor="middle" fill="#00FF88" font-size="11" font-weight="600">Need containers?</text>
+      </g>
+      
+      <!-- Arrow down -->
+      <path d="M300 50 L300 70" stroke="#525252" stroke-width="2" fill="none"/>
+      <polygon points="300,70 295,63 305,63" fill="#525252"/>
+      
+      <!-- Single or Multi question -->
+      <g>
+        <rect x="200" y="75" width="200" height="40" rx="8" fill="#1a1a1a" stroke="#60a5fa" stroke-width="2"/>
+        <text x="300" y="100" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="500">How many services?</text>
+      </g>
+      
+      <!-- Left branch: Single -->
+      <path d="M200 95 L120 95 L120 145" stroke="#525252" stroke-width="2" fill="none"/>
+      <polygon points="120,145 115,138 125,138" fill="#525252"/>
+      <text x="150" y="85" text-anchor="middle" fill="#525252" font-size="9">Single</text>
+      
+      <!-- Right branch: Multiple -->
+      <path d="M400 95 L480 95 L480 145" stroke="#525252" stroke-width="2" fill="none"/>
+      <polygon points="480,145 475,138 485,138" fill="#525252"/>
+      <text x="450" y="85" text-anchor="middle" fill="#525252" font-size="9">Multiple</text>
+      
+      <!-- Docker (left) -->
+      <g>
+        <rect x="40" y="150" width="160" height="60" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="120" y="175" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">Docker</text>
+        <text x="120" y="193" text-anchor="middle" fill="#666" font-size="9">docker run</text>
+      </g>
+      
+      <!-- Docker Compose (right) -->
+      <g>
+        <rect x="400" y="150" width="160" height="60" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="480" y="175" text-anchor="middle" fill="#00FF88" font-size="12" font-weight="600">Docker Compose</text>
+        <text x="480" y="193" text-anchor="middle" fill="#666" font-size="9">docker compose up</text>
+      </g>
+      
+      <!-- Use cases -->
+      <g>
+        <text x="120" y="230" text-anchor="middle" fill="#888" font-size="9">• One-off tasks</text>
+        <text x="120" y="244" text-anchor="middle" fill="#888" font-size="9">• Quick testing</text>
+        <text x="120" y="258" text-anchor="middle" fill="#888" font-size="9">• Simple apps</text>
+        <text x="120" y="272" text-anchor="middle" fill="#888" font-size="9">• CI/CD builds</text>
+      </g>
+      
+      <g>
+        <text x="480" y="230" text-anchor="middle" fill="#888" font-size="9">• Multi-service apps</text>
+        <text x="480" y="244" text-anchor="middle" fill="#888" font-size="9">• Local development</text>
+        <text x="480" y="258" text-anchor="middle" fill="#888" font-size="9">• Shared config</text>
+        <text x="480" y="272" text-anchor="middle" fill="#888" font-size="9">• Reproducible envs</text>
+      </g>
+    </svg>
+  </div>
+  
+  <div class="grid md:grid-cols-2 gap-6 mt-8">
+    <div class="bg-bg-card border-l-4 border-blue-500 rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-blue-400 mb-4 flex items-center gap-2">
+        <span class="text-lg">🐳</span> Use docker run when:
+      </h3>
+      <BulletList color="primary" items={[
+        "Running a single container",
+        "Quick tests and experiments",
+        "CI/CD pipeline steps",
+        "One-off administrative tasks",
+        "Learning Docker basics"
+      ]} />
+    </div>
+    
+    <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
+        <span class="text-lg">🐙</span> Use docker compose when:
+      </h3>
+      <BulletList color="primary" items={[
+        "App needs multiple services",
+        "Sharing setup with team",
+        "Local development environments",
+        "Managing networks and volumes",
+        "Reproducible stacks"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 9: Common Commands Reference -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Common Commands</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Docker Commands -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <h3 class="font-medium text-blue-400 mb-4">🐳 Docker Commands</h3>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Images</span>
+docker build -t name:tag .
+docker pull image:tag
+docker images
+docker rmi image:tag
+
+<span class="comment"># Containers</span>
+docker run -d -p 8080:80 image
+docker ps                <span class="comment"># running</span>
+docker ps -a             <span class="comment"># all</span>
+docker stop container
+docker rm container
+docker logs container
+docker exec -it container sh
+
+<span class="comment"># Cleanup</span>
+docker system prune      <span class="comment"># remove unused</span>
+docker system prune -a   <span class="comment"># remove ALL</span></code></pre>
+      </div>
+    </div>
+    
+    <!-- Compose Commands -->
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4">🐙 Compose Commands</h3>
+      <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+        <pre><code><span class="comment"># Lifecycle</span>
+docker compose up -d
+docker compose down
+docker compose restart
+docker compose stop
+
+<span class="comment"># Monitoring</span>
+docker compose ps
+docker compose logs -f
+docker compose logs -f service
+
+<span class="comment"># Building</span>
+docker compose build
+docker compose up -d --build
+
+<span class="comment"># Shell access</span>
+docker compose exec service sh
+docker compose run service cmd</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: When to Use -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">When to Use Docker</h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-bg-card border-l-4 border-primary rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-primary mb-4 flex items-center gap-2">
+        <span class="text-lg">✓</span> Use when:
+      </h3>
+      <BulletList color="primary" items={[
+        "Dev/prod parity matters",
+        "Onboarding new developers quickly",
+        "Isolating dependencies between projects",
+        "Deploying to cloud/Kubernetes",
+        "Microservices architecture",
+        "CI/CD pipelines"
+      ]} />
+    </div>
+    
+    <div class="bg-bg-card border-l-4 border-yellow-500 rounded-r-xl p-6 fade-in">
+      <h3 class="font-medium text-yellow-500 mb-4 flex items-center gap-2">
+        <span class="text-lg">⚠️</span> Consider skipping if:
+      </h3>
+      <BulletList color="yellow" items={[
+        "Tiny scripts with no dependencies",
+        "Native desktop apps (use native packaging)",
+        "Hardware-level access needed",
+        "Team has no container experience",
+        "Overhead > benefit for simple projects",
+        "Windows GUI applications"
+      ]} />
+    </div>
+  </div>
+</section>
+
+<!-- Section 11: Trade-offs -->
+<section class="mb-12 md:mb-20">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Trade-offs</h2>
+  
+  <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+    <div class="flex flex-col md:flex-row gap-6">
+      <div class="flex-1">
+        <h3 class="font-medium text-primary mb-3">Pros</h3>
+        <BulletList bullet="+" color="primary" items={[
+          "Consistent environments everywhere",
+          "Lightweight vs VMs (shared kernel)",
+          "Fast startup (milliseconds)",
+          "Version control for environments",
+          "Massive ecosystem (Docker Hub)",
+          "Works with CI/CD and Kubernetes"
+        ]} />
+      </div>
+      <div class="w-px bg-border-subtle hidden md:block"></div>
+      <div class="flex-1">
+        <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+        <BulletList bullet="−" color="yellow" items={[
+          "Learning curve for beginners",
+          "Adds complexity for simple apps",
+          "Security requires attention",
+          "Debugging can be tricky",
+          "Storage/image bloat over time",
+          "Linux-based (not native on Mac/Win)"
+        ]} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 12: Key Takeaways -->
+<section class="mb-12">
+  <h2 class="text-xl font-semibold mb-6 text-white fade-in">Key Takeaways</h2>
+  
+  <div class="space-y-4 stagger-children">
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+      <div>
+        <h3 class="font-medium text-white">Images are blueprints, containers are instances</h3>
+        <p class="text-text-muted text-sm mt-1">Build an image once, run it as many containers as you want. Images are immutable; containers are ephemeral.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+      <div>
+        <h3 class="font-medium text-white">Dockerfile = recipe for your environment</h3>
+        <p class="text-text-muted text-sm mt-1">Start from a base, install dependencies, copy code, define the startup command. Layer order matters for caching.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+      <div>
+        <h3 class="font-medium text-white">Use volumes for persistent data</h3>
+        <p class="text-text-muted text-sm mt-1">Containers are disposable. Databases, uploads, and anything important goes in volumes or bind mounts.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+      <div>
+        <h3 class="font-medium text-white">Docker Compose for multi-container apps</h3>
+        <p class="text-text-muted text-sm mt-1">One <code class="text-primary">docker-compose.yml</code> to define all services, networks, and volumes. One command to run everything.</p>
+      </div>
+    </div>
+    
+    <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+      <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+      <div>
+        <h3 class="font-medium text-white">Build once, ship anywhere</h3>
+        <p class="text-text-muted text-sm mt-1">The same image runs on your laptop, your colleague's Mac, AWS, GCP, or any Kubernetes cluster. No surprises.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</LearningLayout>
+
+<script>
+  // Language tab switcher
+  document.querySelectorAll('.lang-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update tab styles
+      document.querySelectorAll('.lang-tab').forEach(t => {
+        t.classList.remove('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+        t.classList.add('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      });
+      tab.classList.add('active', 'bg-primary/20', 'text-primary', 'border-primary/30');
+      tab.classList.remove('bg-bg-main', 'text-text-muted', 'border-border-subtle');
+      
+      // Show correct content for all language sections
+      const lang = tab.getAttribute('data-lang');
+      document.querySelectorAll('.lang-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll(`[id^="lang-${lang}"]`).forEach(c => c.classList.remove('hidden'));
+    });
+  });
+
+  // Concept card hover effects
+  document.querySelectorAll('.concept-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.classList.add('border-primary/40', 'bg-bg-hover');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('border-primary/40', 'bg-bg-hover');
+    });
+  });
+</script>

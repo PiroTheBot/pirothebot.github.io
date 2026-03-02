@@ -349,20 +349,27 @@ const rb = '}';
         <text x="436" y="278" fill="#525252" font-size="11">y</text>
         <text x="308" y="48" fill="#525252" font-size="11">z</text>
 
-        <!-- Example state vector -->
-        <line x1="300" y1="220" x2="390" y2="130" stroke="#f472b6" stroke-width="2"/>
-        <circle cx="390" cy="130" r="5" fill="#f472b6"/>
-        <text x="400" y="125" fill="#f472b6" font-size="11">|ψ⟩</text>
+        <!-- Example state vector |ψ⟩ at θ≈50° from z-axis, φ≈40° from x-axis -->
+        <!-- State vector: from center (300,220) to point on sphere -->
+        <line x1="300" y1="220" x2="400" y2="130" stroke="#f472b6" stroke-width="2"/>
+        <circle cx="400" cy="130" r="5" fill="#f472b6"/>
+        <text x="412" y="125" fill="#f472b6" font-size="11" font-weight="600">|ψ⟩</text>
 
-        <!-- Dashed projection -->
-        <line x1="390" y1="130" x2="390" y2="208" stroke="#f472b6" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
-        <line x1="300" y1="220" x2="390" y2="208" stroke="#f472b6" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+        <!-- Projection onto equatorial plane (dashed vertical from state to equator) -->
+        <line x1="400" y1="130" x2="400" y2="210" stroke="#f472b6" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <!-- Projection line from center to equatorial projection point -->
+        <line x1="300" y1="220" x2="400" y2="210" stroke="#f472b6" stroke-width="1" stroke-dasharray="3 3" opacity="0.4"/>
+        <circle cx="400" cy="210" r="3" fill="#f472b6" opacity="0.4"/>
 
-        <!-- Angle labels -->
-        <path d="M 300 200 Q 310 195 315 205" fill="none" stroke="#A3A3A3" stroke-width="1"/>
-        <text x="318" y="195" fill="#A3A3A3" font-size="10">θ</text>
-        <path d="M 320 220 Q 330 215 335 222" fill="none" stroke="#A3A3A3" stroke-width="1"/>
-        <text x="340" y="218" fill="#A3A3A3" font-size="10">φ</text>
+        <!-- θ (theta) arc: from z-axis down to state vector — polar angle -->
+        <!-- Arc from the z-axis direction (straight up from center) curving toward |ψ⟩ -->
+        <path d="M 300 185 Q 310 180, 325 175 Q 338 172, 345 178" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="340" y="170" fill="#fbbf24" font-size="11" font-weight="500">θ</text>
+
+        <!-- φ (phi) arc: in the equatorial plane from x-axis to projection -->
+        <!-- The x-axis goes toward upper-right on the SVG. Arc from x-axis direction to the projection point -->
+        <path d="M 340 208 Q 345 200, 355 198 Q 370 195, 385 202" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="365" y="192" fill="#22d3ee" font-size="11" font-weight="500">φ</text>
 
         <!-- Caption -->
         <text x="300" y="412" text-anchor="middle" fill="#525252" font-size="11">|ψ⟩ = cos(θ/2)|0⟩ + e^(iφ) sin(θ/2)|1⟩</text>
@@ -370,10 +377,12 @@ const rb = '}';
     </div>
 
     <p class="text-text-secondary text-sm mt-4">
-      The angles <span class="font-mono text-text-secondary">θ</span> (theta) and
-      <span class="font-mono text-text-secondary">φ</span> (phi) fully describe any single-qubit state.
-      The Bloch sphere makes it clear that a qubit carries much more information than a classical bit —
-      it's a point on a continuous sphere, not just a 0 or 1.
+      Two angles fully describe any single-qubit state:
+      <span class="font-mono text-yellow-400">θ</span> (theta, shown in <span class="text-yellow-400">yellow</span>) measures
+      the angle from the north pole (z-axis) down to the state vector — it controls how much |0⟩ vs |1⟩ you have.
+      <span class="font-mono text-cyan-400">φ</span> (phi, shown in <span class="text-cyan-400">cyan</span>) measures
+      the rotation around the equator — it controls the <em>phase</em> between |0⟩ and |1⟩.
+      Together, they show that a qubit carries far more information than a classical bit — it's a point on a continuous sphere, not just 0 or 1.
     </p>
   </div>
 </section>
@@ -910,67 +919,115 @@ const rb = '}';
 <!-- Section 16: Deutsch-Jozsa Algorithm -->
 <section class="mb-12 md:mb-20 fade-in">
   <h2 class="text-xl font-semibold mb-2 text-white">Deutsch-Jozsa Algorithm</h2>
-  <p class="text-text-muted text-sm mb-6">Part 4: Quantum Algorithms</p>
+  <p class="text-text-muted text-sm mb-6">Part 4: Quantum Algorithms — where quantum computers actually beat classical ones</p>
 
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8">
-    <p class="text-text-secondary text-sm mb-4">
-      <strong class="text-white">The problem:</strong> You have a black-box function f(x) that takes n-bit
-      inputs and outputs 0 or 1. You're promised it's either <em>constant</em> (same output for all inputs)
-      or <em>balanced</em> (outputs 0 for exactly half, 1 for the other half). Which is it?
-    </p>
+    <!-- Plain English Setup -->
+    <div class="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
+      <p class="text-primary font-semibold text-sm mb-2">🎯 The Everyday Analogy</p>
+      <p class="text-text-secondary text-sm">
+        Imagine you have a mysterious machine with a button. You can feed it any number from 1 to a billion, and it outputs either
+        <strong class="text-white">"yes"</strong> or <strong class="text-white">"no"</strong>. You're told this machine does one of two things:
+      </p>
+      <div class="grid md:grid-cols-2 gap-3 mt-3">
+        <div class="bg-bg-code rounded-lg p-3">
+          <p class="text-yellow-400 font-medium text-sm">Option A: "Boring"</p>
+          <p class="text-text-muted text-xs mt-1">It always says the same thing — "yes" for everything, or "no" for everything. Like a broken vending machine that always gives you Coke regardless of what you press.</p>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3">
+          <p class="text-blue-400 font-medium text-sm">Option B: "Fair"</p>
+          <p class="text-text-muted text-xs mt-1">It says "yes" for exactly half the numbers and "no" for the other half. Like a fair coin flip that's predetermined for each number.</p>
+        </div>
+      </div>
+      <p class="text-text-secondary text-sm mt-3">
+        <strong class="text-white">Your job:</strong> figure out which type of machine you have. Each time you test a number, it costs you $1 million. How many tests do you need?
+      </p>
+    </div>
 
     <div class="grid md:grid-cols-2 gap-4 mb-6">
       <div class="bg-bg-code rounded-lg p-4">
-        <p class="text-red-400 font-semibold text-sm mb-2">Classical</p>
-        <p class="text-text-muted text-xs">Need 2ⁿ⁻¹ + 1 queries in worst case. For n=100, that's ~10³⁰ evaluations.</p>
+        <p class="text-red-400 font-semibold text-sm mb-2">Classical Approach</p>
+        <p class="text-text-muted text-xs mb-2">In the worst case, you might test half the numbers plus one before you know for sure. If there are a billion possible inputs, that's 500 million + 1 tests.</p>
+        <p class="text-text-muted text-xs"><strong class="text-red-400">Why?</strong> Because a "boring" machine and a "fair" machine could give the same answer for the first 500 million numbers — you can't tell them apart until you've checked enough.</p>
       </div>
       <div class="bg-bg-code rounded-lg p-4">
-        <p class="text-primary font-semibold text-sm mb-2">Quantum</p>
-        <p class="text-text-muted text-xs">Needs exactly <strong class="text-white">1 query</strong>. One. Regardless of n.</p>
+        <p class="text-primary font-semibold text-sm mb-2">Quantum Approach</p>
+        <p class="text-text-muted text-xs mb-2">The quantum computer tests the machine <strong class="text-white">exactly once</strong>. One query. One dollar. Done.</p>
+        <p class="text-text-muted text-xs"><strong class="text-primary">How?</strong> It feeds the machine a <em>superposition</em> of all billion numbers simultaneously, then uses interference to extract the global property (boring vs fair) from a single answer.</p>
       </div>
     </div>
 
+    <h3 class="text-base font-semibold text-white mb-3">How does one query tell you everything?</h3>
+    <p class="text-text-secondary text-sm mb-4">
+      Think of it like this: instead of checking numbers one at a time, the quantum computer creates a wave
+      that represents <em>all numbers at once</em>. When this wave passes through the mystery machine, the machine
+      imprints a pattern on the wave. If the machine is "boring" (constant), the wave comes out undisturbed.
+      If it's "fair" (balanced), the wave gets a distinctive ripple pattern. One look at the output wave tells you which.
+    </p>
+    <p class="text-text-secondary text-sm mb-6">
+      This works because of <strong class="text-white">interference</strong>: the quantum amplitudes for all billion inputs
+      either all add up (constant function → strong signal) or perfectly cancel out (balanced function → zero signal on the original state).
+      It's like how a perfectly calm pond tells you no one threw a stone, but a specific ripple pattern tells you exactly where one landed.
+    </p>
+
     <!-- Circuit SVG -->
+    <h3 class="text-base font-semibold text-white mb-3">The Quantum Circuit</h3>
+    <p class="text-text-muted text-xs mb-4">Don't worry if this looks abstract — it's a visual shorthand for the steps described above. Each line is a qubit, boxes are operations.</p>
     <div class="overflow-x-auto">
-      <svg viewBox="0 0 600 180" class="w-full h-auto min-w-[480px]">
+      <svg viewBox="0 0 600 200" class="w-full h-auto min-w-[480px]">
+        <!-- Step labels at top -->
+        <text x="122" y="20" text-anchor="middle" fill="#525252" font-size="9">Step 1: Superposition</text>
+        <text x="250" y="20" text-anchor="middle" fill="#525252" font-size="9">Step 2: Ask once</text>
+        <text x="382" y="20" text-anchor="middle" fill="#525252" font-size="9">Step 3: Interference</text>
+        <text x="480" y="20" text-anchor="middle" fill="#525252" font-size="9">Step 4: Read</text>
+
         <!-- Input qubits -->
-        <text x="30" y="55" fill="#00FF88" font-size="12">|0⟩ⁿ</text>
-        <line x1="65" y1="50" x2="530" y2="50" stroke="#404040" stroke-width="1.5"/>
+        <text x="20" y="65" fill="#00FF88" font-size="11">|0⟩ⁿ</text>
+        <line x1="55" y1="60" x2="530" y2="60" stroke="#404040" stroke-width="1.5"/>
 
-        <text x="30" y="125" fill="#00FF88" font-size="12">|1⟩</text>
-        <line x1="65" y1="120" x2="530" y2="120" stroke="#404040" stroke-width="1.5"/>
+        <text x="20" y="140" fill="#00FF88" font-size="11">|1⟩</text>
+        <line x1="55" y1="135" x2="530" y2="135" stroke="#404040" stroke-width="1.5"/>
 
-        <!-- H gates -->
-        <rect x="100" y="30" width="45" height="40" rx="4" fill="#1a1a1a" stroke="#a78bfa" stroke-width="1.5"/>
-        <text x="122" y="55" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="600">H⊗ⁿ</text>
+        <!-- H gates (superposition) -->
+        <rect x="90" y="42" width="50" height="36" rx="4" fill="#1a1a1a" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="115" y="65" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">H⊗ⁿ</text>
 
-        <rect x="100" y="100" width="45" height="40" rx="4" fill="#1a1a1a" stroke="#a78bfa" stroke-width="1.5"/>
-        <text x="122" y="125" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="600">H</text>
+        <rect x="90" y="117" width="50" height="36" rx="4" fill="#1a1a1a" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="115" y="140" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">H</text>
 
-        <!-- Oracle -->
-        <rect x="210" y="25" width="80" height="120" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
-        <text x="250" y="75" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="600">Uf</text>
-        <text x="250" y="92" text-anchor="middle" fill="#525252" font-size="9">Oracle</text>
+        <!-- Oracle (the mystery machine) -->
+        <rect x="200" y="35" width="90" height="120" rx="6" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="245" y="80" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="600">Mystery</text>
+        <text x="245" y="96" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="600">Machine</text>
+        <text x="245" y="115" text-anchor="middle" fill="#525252" font-size="8">(oracle)</text>
 
-        <!-- H gates again -->
-        <rect x="360" y="30" width="45" height="40" rx="4" fill="#1a1a1a" stroke="#a78bfa" stroke-width="1.5"/>
-        <text x="382" y="55" text-anchor="middle" fill="#a78bfa" font-size="14" font-weight="600">H⊗ⁿ</text>
+        <!-- H gates again (interference) -->
+        <rect x="350" y="42" width="50" height="36" rx="4" fill="#1a1a1a" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="375" y="65" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="600">H⊗ⁿ</text>
 
         <!-- Measurement -->
-        <rect x="460" y="30" width="40" height="40" rx="4" fill="#1a1a1a" stroke="#fbbf24" stroke-width="1.5"/>
-        <path d="M 470 60 Q 480 42 490 60" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
-        <line x1="480" y1="50" x2="485" y2="40" stroke="#fbbf24" stroke-width="1.5"/>
+        <rect x="450" y="42" width="40" height="36" rx="4" fill="#1a1a1a" stroke="#22d3ee" stroke-width="1.5"/>
+        <path d="M 460 68 Q 470 50 480 68" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+        <line x1="470" y1="58" x2="475" y2="48" stroke="#22d3ee" stroke-width="1.5"/>
 
-        <!-- Labels -->
-        <text x="300" y="170" text-anchor="middle" fill="#525252" font-size="10">All zeros → constant | Any non-zero → balanced</text>
+        <!-- Result labels -->
+        <text x="540" y="56" fill="#00FF88" font-size="10">All 0s → boring</text>
+        <text x="540" y="70" fill="#fbbf24" font-size="10">Not all 0s → fair</text>
+
+        <!-- Arrows showing flow -->
+        <circle class="pulse-dot" cx="160" cy="60" r="3" fill="#a78bfa"/>
+        <circle class="pulse-dot" cx="310" cy="60" r="3" fill="#fbbf24" style="animation-delay: 0.3s"/>
+        <circle class="pulse-dot" cx="430" cy="60" r="3" fill="#a78bfa" style="animation-delay: 0.6s"/>
       </svg>
     </div>
 
-    <p class="text-text-secondary text-sm mt-4">
-      The algorithm works by creating superposition over all inputs, querying the oracle once,
-      then using interference to reveal whether the function is constant or balanced. The answer
-      appears deterministically — no probabilistic repetition needed.
-    </p>
+    <div class="mt-4 bg-bg-code rounded-lg p-4">
+      <p class="text-text-muted text-xs">
+        <strong class="text-white">Reading the circuit:</strong> Lines are qubits traveling left to right through time.
+        Purple "H" boxes create superposition (and later, interference). The yellow box is our mystery machine.
+        The meter symbol means "measure" — look at the qubit and get a definite answer. If all qubits read 0, the machine was boring. Any other result means fair.
+      </p>
+    </div>
   </div>
 </section>
 
@@ -979,69 +1036,114 @@ const rb = '}';
   <h2 class="text-xl font-semibold mb-6 text-white">Grover's Search Algorithm</h2>
 
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8">
+    <!-- Plain English Setup -->
+    <div class="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
+      <p class="text-primary font-semibold text-sm mb-2">🎯 The Everyday Analogy</p>
+      <p class="text-text-secondary text-sm">
+        You're in a massive library with <strong class="text-white">1 million books</strong>, and one of them has a golden bookmark hidden inside.
+        The books aren't sorted — no index, no catalog. You can only open one book at a time and check.
+      </p>
+      <p class="text-text-secondary text-sm mt-2">
+        <strong class="text-red-400">Classical:</strong> On average, you'd need to open 500,000 books. Could take your entire life.
+      </p>
+      <p class="text-text-secondary text-sm mt-1">
+        <strong class="text-primary">Quantum:</strong> You'd only need to check about <strong class="text-white">1,000 books</strong>. That's the square root of a million.
+      </p>
+    </div>
+
+    <h3 class="text-base font-semibold text-white mb-3">How does it narrow things down so fast?</h3>
     <p class="text-text-secondary text-sm mb-4">
-      <strong class="text-white">The problem:</strong> Search an unsorted database of N items for a specific one.
+      Imagine all million books are on a giant table, and each has a tiny voice whispering "pick me!" at the same volume.
+      Grover's algorithm does something clever in two repeating steps:
     </p>
 
     <div class="grid md:grid-cols-2 gap-4 mb-6">
       <div class="bg-bg-code rounded-lg p-4">
-        <p class="text-red-400 font-semibold text-sm mb-2">Classical: O(N)</p>
-        <p class="text-text-muted text-xs">Check items one by one. On average N/2 checks.</p>
+        <p class="text-yellow-400 font-semibold text-sm mb-2">Step 1: "Mark it"</p>
+        <p class="text-text-muted text-xs">The quantum computer asks: "Is <em>this</em> the one with the golden bookmark?" The correct book's whisper gets flipped — it now whispers <em>negatively</em> (its amplitude becomes negative). Everything else stays the same.</p>
       </div>
       <div class="bg-bg-code rounded-lg p-4">
-        <p class="text-primary font-semibold text-sm mb-2">Quantum: O(√N)</p>
-        <p class="text-text-muted text-xs">~√N iterations. For 1 million items: 1000 vs 500,000 checks.</p>
+        <p class="text-blue-400 font-semibold text-sm mb-2">Step 2: "Amplify it"</p>
+        <p class="text-text-muted text-xs">A mathematical trick called <strong>"inversion about the mean"</strong> takes the average of all whispers, then mirrors everything around that average. Since the marked book was negative, it bounces to become <em>louder</em> than all the others. The wrong books get quieter.</p>
       </div>
     </div>
-
-    <h3 class="text-base font-semibold text-white mb-4">Amplitude Amplification</h3>
     <p class="text-text-secondary text-sm mb-6">
-      Grover's algorithm works by repeatedly applying two operations: (1) mark the correct answer
-      by flipping its amplitude sign, (2) amplify marked amplitudes using "inversion about the mean."
-      After ~√N iterations, the correct answer's amplitude is close to 1.
+      Repeat these two steps about √N times (for 1 million books, that's ~1,000 repetitions), and the correct book is screaming while everything else is silent.
+      When you finally measure, you almost certainly find the golden bookmark.
     </p>
+
+    <h3 class="text-base font-semibold text-white mb-4">Watching the Amplitudes Grow</h3>
+    <p class="text-text-muted text-xs mb-4">Each bar represents the probability of measuring that item. The target item (green) gets amplified with each iteration while others shrink.</p>
 
     <!-- Amplitude amplification SVG -->
     <div class="overflow-x-auto">
-      <svg viewBox="0 0 600 220" class="w-full h-auto min-w-[480px]">
-        <text x="300" y="20" text-anchor="middle" fill="#A3A3A3" font-size="12" font-weight="500">Amplitude Amplification (4 items, target = item 3)</text>
+      <svg viewBox="0 0 600 240" class="w-full h-auto min-w-[480px]">
+        <text x="300" y="20" text-anchor="middle" fill="#A3A3A3" font-size="12" font-weight="500">Amplitude Amplification — Simplified with 4 items, looking for item 3</text>
 
-        <!-- Initial state -->
-        <text x="80" y="45" text-anchor="middle" fill="#525252" font-size="10">Start: equal</text>
-        <rect x="40" y="110" width="20" height="50" rx="2" fill="#00FF88" opacity="0.4"/>
-        <rect x="65" y="110" width="20" height="50" rx="2" fill="#00FF88" opacity="0.4"/>
-        <rect x="90" y="110" width="20" height="50" rx="2" fill="#00FF88" opacity="0.4"/>
-        <rect x="115" y="110" width="20" height="50" rx="2" fill="#00FF88" opacity="0.4"/>
-        <line x1="35" y1="160" x2="140" y2="160" stroke="#404040" stroke-width="1"/>
+        <!-- Stage 1: Initial state -->
+        <text x="80" y="48" text-anchor="middle" fill="#A3A3A3" font-size="10" font-weight="500">Start</text>
+        <text x="80" y="60" text-anchor="middle" fill="#525252" font-size="8">All items equal</text>
 
-        <!-- After 1 iteration -->
-        <text x="240" y="45" text-anchor="middle" fill="#525252" font-size="10">After 1 iteration</text>
-        <rect x="200" y="130" width="20" height="30" rx="2" fill="#00FF88" opacity="0.3"/>
-        <rect x="225" y="130" width="20" height="30" rx="2" fill="#00FF88" opacity="0.3"/>
-        <rect x="250" y="55" width="20" height="105" rx="2" fill="#00FF88" opacity="0.8"/>
-        <rect x="275" y="130" width="20" height="30" rx="2" fill="#00FF88" opacity="0.3"/>
-        <line x1="195" y1="160" x2="300" y2="160" stroke="#404040" stroke-width="1"/>
+        <rect x="35" y="110" width="22" height="50" rx="3" fill="#404040"/>
+        <rect x="60" y="110" width="22" height="50" rx="3" fill="#404040"/>
+        <rect x="85" y="110" width="22" height="50" rx="3" fill="#00FF88" opacity="0.4"/>
+        <rect x="110" y="110" width="22" height="50" rx="3" fill="#404040"/>
+        <line x1="30" y1="160" x2="137" y2="160" stroke="#404040" stroke-width="1"/>
+        <text x="46" y="175" text-anchor="middle" fill="#525252" font-size="7">1</text>
+        <text x="71" y="175" text-anchor="middle" fill="#525252" font-size="7">2</text>
+        <text x="96" y="175" text-anchor="middle" fill="#00FF88" font-size="7">3✓</text>
+        <text x="121" y="175" text-anchor="middle" fill="#525252" font-size="7">4</text>
+        <text x="80" y="190" text-anchor="middle" fill="#525252" font-size="8">25% each</text>
 
-        <!-- Arrow -->
-        <text x="160" y="105" fill="#A3A3A3" font-size="16">→</text>
-        <text x="320" y="105" fill="#A3A3A3" font-size="16">→</text>
+        <!-- Arrow 1 -->
+        <text x="155" y="115" fill="#A3A3A3" font-size="18">→</text>
 
-        <!-- Final -->
-        <text x="420" y="45" text-anchor="middle" fill="#525252" font-size="10">Optimal iterations</text>
-        <rect x="375" y="148" width="20" height="12" rx="2" fill="#00FF88" opacity="0.1"/>
-        <rect x="400" y="148" width="20" height="12" rx="2" fill="#00FF88" opacity="0.1"/>
-        <rect x="425" y="55" width="20" height="105" rx="2" fill="#00FF88"/>
-        <rect x="450" y="148" width="20" height="12" rx="2" fill="#00FF88" opacity="0.1"/>
-        <line x1="370" y1="160" x2="475" y2="160" stroke="#404040" stroke-width="1"/>
+        <!-- Stage 2: After 1 iteration -->
+        <text x="240" y="48" text-anchor="middle" fill="#A3A3A3" font-size="10" font-weight="500">After 1 round</text>
+        <text x="240" y="60" text-anchor="middle" fill="#525252" font-size="8">Target boosted!</text>
 
-        <!-- Labels -->
-        <text x="90" y="180" text-anchor="middle" fill="#525252" font-size="9">1/4 each</text>
-        <text x="260" y="180" text-anchor="middle" fill="#00FF88" font-size="9">target grows</text>
-        <text x="435" y="180" text-anchor="middle" fill="#00FF88" font-size="9">~100% target</text>
+        <rect x="195" y="133" width="22" height="27" rx="3" fill="#404040" opacity="0.6"/>
+        <rect x="220" y="133" width="22" height="27" rx="3" fill="#404040" opacity="0.6"/>
+        <rect x="245" y="70" width="22" height="90" rx="3" fill="#00FF88" opacity="0.7"/>
+        <rect x="270" y="133" width="22" height="27" rx="3" fill="#404040" opacity="0.6"/>
+        <line x1="190" y1="160" x2="297" y2="160" stroke="#404040" stroke-width="1"/>
+        <text x="206" y="175" text-anchor="middle" fill="#525252" font-size="7">1</text>
+        <text x="231" y="175" text-anchor="middle" fill="#525252" font-size="7">2</text>
+        <text x="256" y="175" text-anchor="middle" fill="#00FF88" font-size="7">3✓</text>
+        <text x="281" y="175" text-anchor="middle" fill="#525252" font-size="7">4</text>
+        <text x="240" y="190" text-anchor="middle" fill="#00FF88" font-size="8">~78% on target</text>
 
-        <!-- Note -->
-        <text x="300" y="210" text-anchor="middle" fill="#525252" font-size="10">This is quadratic speedup, not exponential — but still significant for large N</text>
+        <!-- Arrow 2 -->
+        <text x="315" y="115" fill="#A3A3A3" font-size="18">→</text>
+
+        <!-- Stage 3: Optimal -->
+        <text x="420" y="48" text-anchor="middle" fill="#A3A3A3" font-size="10" font-weight="500">Optimal point</text>
+        <text x="420" y="60" text-anchor="middle" fill="#525252" font-size="8">Almost certain!</text>
+
+        <rect x="375" y="150" width="22" height="10" rx="3" fill="#404040" opacity="0.2"/>
+        <rect x="400" y="150" width="22" height="10" rx="3" fill="#404040" opacity="0.2"/>
+        <rect x="425" y="62" width="22" height="98" rx="3" fill="#00FF88"/>
+        <rect x="450" y="150" width="22" height="10" rx="3" fill="#404040" opacity="0.2"/>
+        <line x1="370" y1="160" x2="477" y2="160" stroke="#404040" stroke-width="1"/>
+        <text x="386" y="175" text-anchor="middle" fill="#525252" font-size="7">1</text>
+        <text x="411" y="175" text-anchor="middle" fill="#525252" font-size="7">2</text>
+        <text x="436" y="175" text-anchor="middle" fill="#00FF88" font-size="7">3✓</text>
+        <text x="461" y="175" text-anchor="middle" fill="#525252" font-size="7">4</text>
+        <text x="420" y="190" text-anchor="middle" fill="#00FF88" font-size="8">~99.5% on target</text>
+
+        <!-- Bottom note -->
+        <text x="300" y="220" text-anchor="middle" fill="#525252" font-size="10">For N items, this takes ~√N rounds. That's 1,000 rounds for 1 million items instead of 500,000 checks.</text>
+        <text x="300" y="235" text-anchor="middle" fill="#525252" font-size="9">This is a quadratic speedup — not as dramatic as exponential, but still game-changing for large databases.</text>
       </svg>
+    </div>
+
+    <div class="mt-6 bg-bg-code rounded-lg p-4">
+      <p class="text-text-muted text-xs">
+        <strong class="text-white">What's "inversion about the mean"?</strong> Think of a seesaw with all items balanced on it.
+        The marked item is pushed down (made negative). When you "invert about the mean," it's like flipping the seesaw around its balance point —
+        the item that was pushed down bounces up high, while the ones that were slightly above average get pushed down a bit.
+        Each round, the contrast gets sharper.
+      </p>
     </div>
   </div>
 </section>
@@ -1051,43 +1153,98 @@ const rb = '}';
   <h2 class="text-xl font-semibold mb-6 text-white">Shor's Algorithm: The Cryptography Threat</h2>
 
   <div class="bg-bg-card border border-border-subtle rounded-xl p-6 md:p-8">
+    <!-- Plain English Setup -->
+    <div class="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6">
+      <p class="text-primary font-semibold text-sm mb-2">🎯 The Everyday Analogy</p>
+      <p class="text-text-secondary text-sm">
+        Imagine someone gives you the number <strong class="text-white">15</strong> and asks: "What two numbers
+        multiply together to make this?" Easy: 3 × 5. Now try with a number that has <strong class="text-white">600 digits</strong>.
+        That's what keeps your online banking safe — it's a math problem that's easy to create but nightmarishly hard to reverse.
+      </p>
+      <p class="text-text-secondary text-sm mt-2">
+        <strong class="text-white">RSA encryption</strong> (used in HTTPS, banking, email) relies on exactly this:
+        multiply two huge prime numbers together — the result is public, but finding the original primes would take
+        all the world's computers longer than the universe has existed.
+      </p>
+      <p class="text-text-secondary text-sm mt-2">
+        <strong class="text-primary">Shor's algorithm</strong> could do it in hours. That's why people pay attention.
+      </p>
+    </div>
+
+    <h3 class="text-base font-semibold text-white mb-3">How does it work? (No PhD required)</h3>
     <p class="text-text-secondary text-sm mb-4">
-      <strong class="text-white">The problem:</strong> Given a large integer N (e.g. 2048 bits), find its
-      prime factors.
-    </p>
-    <p class="text-text-secondary text-sm mb-4">
-      RSA encryption's security relies on this being practically impossible for classical computers.
-      The best classical algorithm (General Number Field Sieve) runs in sub-exponential time.
-      Shor's algorithm does it in <strong class="text-primary">polynomial time</strong>.
+      The key insight is surprisingly elegant: <strong class="text-white">factoring can be turned into a pattern-finding problem</strong>,
+      and quantum computers are exceptionally good at finding patterns.
     </p>
 
-    <h3 class="text-base font-semibold text-white mb-3">How It Works (High Level)</h3>
-    <BulletList color="primary" items={[
-      "Reduce factoring to finding the period of a modular function: f(x) = aˣ mod N",
-      "Use Quantum Fourier Transform (QFT) to find the period efficiently",
-      "The period reveals the factors through classical number theory (GCD)",
-      "QFT exploits interference — wrong periods cancel, correct one amplifies",
-    ]} />
-
-    <h3 class="text-base font-semibold text-white mt-6 mb-3">Why It Matters</h3>
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="bg-bg-code rounded-lg p-4">
-        <p class="text-red-400 font-semibold text-sm mb-2">Classical (RSA-2048)</p>
-        <p class="text-text-muted text-xs">~10³⁰ years with best known algorithms. Safe.</p>
+    <div class="space-y-4 mb-6">
+      <div class="flex items-start gap-3">
+        <span class="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-xs flex-shrink-0">1</span>
+        <div>
+          <p class="text-white font-medium text-sm">Turn it into a repeating pattern</p>
+          <p class="text-text-muted text-xs mt-1">
+            Pick a random number (say 7), and compute: 7¹ mod 15, 7² mod 15, 7³ mod 15...
+            You get: 7, 4, 13, 1, 7, 4, 13, 1... See the pattern? It repeats every 4 steps. That "4" is the <em>period</em>.
+            There's a mathematical theorem that says: once you know this period, you can find the factors using simple arithmetic (GCD).
+          </p>
+        </div>
       </div>
-      <div class="bg-bg-code rounded-lg p-4">
-        <p class="text-primary font-semibold text-sm mb-2">Shor's (with large enough QC)</p>
-        <p class="text-text-muted text-xs">~hours. Would break RSA, DSA, ECC. But needs ~4000+ logical qubits — far beyond current capability.</p>
+      <div class="flex items-start gap-3">
+        <span class="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-xs flex-shrink-0">2</span>
+        <div>
+          <p class="text-white font-medium text-sm">Finding the period is the hard part</p>
+          <p class="text-text-muted text-xs mt-1">
+            For small numbers like 15, you can spot the pattern quickly. For a 600-digit number,
+            the period could be hundreds of digits long, and checking each value one by one would take forever.
+            Classical computers are stuck here.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-xs flex-shrink-0">3</span>
+        <div>
+          <p class="text-white font-medium text-sm">Quantum Fourier Transform finds patterns instantly</p>
+          <p class="text-text-muted text-xs mt-1">
+            Think of the <strong>Quantum Fourier Transform</strong> (QFT) like a prism for numbers.
+            A prism takes a beam of white light and reveals all the hidden frequencies (colors) inside it.
+            QFT does the same with number sequences — it takes the repeating pattern and reveals its frequency (period).
+            The quantum computer computes all values simultaneously via superposition, then QFT extracts the period in one shot.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-xs flex-shrink-0">4</span>
+        <div>
+          <p class="text-white font-medium text-sm">Period → Factors (easy math)</p>
+          <p class="text-text-muted text-xs mt-1">
+            Once you have the period <em>r</em>, compute GCD(aʳ/² + 1, N) and GCD(aʳ/² − 1, N).
+            These give you the factors. For our example: period 4, so GCD(7² + 1, 15) = GCD(50, 15) = 5 and GCD(7² − 1, 15) = GCD(48, 15) = 3.
+            Done: 15 = 3 × 5.
+          </p>
+        </div>
       </div>
     </div>
 
-    <div class="mt-6 bg-primary/5 border border-primary/20 rounded-lg p-4">
+    <h3 class="text-base font-semibold text-white mb-3">The Speed Difference</h3>
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-bg-code rounded-lg p-4">
+        <p class="text-red-400 font-semibold text-sm mb-2">Classical (RSA-2048)</p>
+        <p class="text-text-muted text-xs">The best classical approach takes roughly <strong class="text-white">10³⁰ years</strong> — that's a million trillion trillion years. The universe is only 13.8 billion years old. Your secrets are safe.</p>
+      </div>
+      <div class="bg-bg-code rounded-lg p-4">
+        <p class="text-primary font-semibold text-sm mb-2">Shor's (future quantum computer)</p>
+        <p class="text-text-muted text-xs">Could be done in <strong class="text-white">hours</strong>. But it needs ~4,000+ perfect logical qubits, which translates to millions of physical qubits with error correction. We're not there yet — not by a long shot.</p>
+      </div>
+    </div>
+
+    <div class="bg-primary/5 border border-primary/20 rounded-lg p-4">
       <p class="text-text-secondary text-sm">
         <span class="text-primary font-medium">Reality check:</span> Shor's algorithm has been demonstrated
         on small numbers (IBM factored 15 = 3 × 5 in 2001). Factoring cryptographically relevant numbers
-        requires millions of physical qubits due to error correction overhead. We're decades away.
-        But the threat is taken seriously — "harvest now, decrypt later" attacks mean we need
-        post-quantum cryptography <em>now</em>.
+        requires millions of physical qubits due to error correction overhead. We're likely decades away.
+        But the threat is taken seriously — intelligence agencies worry about <strong class="text-white">"harvest now, decrypt later"</strong>
+        attacks, where adversaries record encrypted traffic today and decrypt it once quantum computers are ready.
+        That's why we need post-quantum cryptography <em>now</em>.
       </p>
     </div>
   </div>

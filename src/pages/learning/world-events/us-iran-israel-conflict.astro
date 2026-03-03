@@ -415,7 +415,7 @@ const rb = '}';
   <!-- Operation Epic Fury — Feb 28 – Mar 1, 2026 -->
   <section class="mb-12 md:mb-20">
     <h2 class="text-2xl font-bold mb-2 fade-in">Operation Epic Fury — 28 February 2026 Onward</h2>
-    <p class="text-text-muted text-xs mb-6 fade-in">Last updated 2 March 2026</p>
+    <p class="text-text-muted text-xs mb-6 fade-in">Last updated 3 March 2026</p>
 
     <!-- Regional map SVG -->
     <div class="overflow-x-auto mb-8 fade-in">
@@ -591,10 +591,16 @@ const rb = '}';
 
     <div class="bg-bg-card border border-blue-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
       <div class="flex items-center gap-2 mb-4">
-        <span class="text-blue-400 text-lg">🇮🇱</span>
-        <span class="font-medium text-blue-400 text-lg">Israel Continues Strikes</span>
+        <span class="text-blue-400 text-lg">🇺🇸🇮🇱</span>
+        <span class="font-medium text-blue-400 text-lg">US-Israel Strikes Intensify</span>
       </div>
-      <p class="text-text-secondary text-sm">Israel executed another wave of strikes against Iranian targets as part of its ongoing campaign. Details remain limited as operations are classified.</p>
+      <BulletList color="primary" items={[
+        "Israel executed another wave of strikes against Iranian targets, aiming at the centre of Tehran",
+        "US Air Force launched B-2 stealth bombers to strike Iranian ballistic missile facilities",
+        "CENTCOM declared it was instructed to 'dismantle the Iranian regime\\'s security apparatus'",
+        "Ali Larijani announced the Interim Leadership Council to govern Iran after Khamenei's death",
+        "Trump told NBC News that 'a large amount of leadership' in Iran had been killed"
+      ]} />
     </div>
 
     <div class="bg-bg-card border border-red-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
@@ -603,35 +609,48 @@ const rb = '}';
         <span class="font-medium text-red-400 text-lg">Iran Retaliates Again</span>
       </div>
       <BulletList color="red" items={[
-        "Morning of 1 March: Iran launched another wave of missiles and drones",
-        "Targets: Israel, UAE, Qatar, Kuwait, Bahrain, Jordan, Saudi Arabia",
-        "Additional missiles fired at US 5th Fleet HQ in Bahrain",
-        "Iranian state media confirmed Khamenei's death; 40 days of mourning declared"
+        "Iran launched missiles and drones at Israel, UAE, Qatar, Kuwait, Bahrain, Jordan, and Saudi Arabia",
+        "Two oil tankers targeted off the coast of Oman; 150 freight ships stalled behind the Strait of Hormuz",
+        "Iranian state media confirmed Khamenei's death; 40 days of mourning declared",
+        "Trump announced the US had accepted an Iranian proposal for talks — but Larijani immediately ruled out negotiations"
+      ]} />
+    </div>
+
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 mb-6 fade-in">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-white text-lg">🇬🇧🇪🇺</span>
+        <span class="font-medium text-white text-lg">Europe Mobilises</span>
+      </div>
+      <BulletList color="yellow" items={[
+        "E3 (UK, France, Germany) resolved to back 'proportionate military defensive measures' against Iranian drones and missiles",
+        "UK PM Starmer authorised US to use British bases for 'defensive' strikes on Iran",
+        "Ukrainian drone experts deployed to help Gulf partners shoot down Iranian drones",
+        "Saudi Crown Prince MBS vowed military force against further Iranian attacks, calling them 'cowardly'"
       ]} />
     </div>
 
     <!-- Casualty Summary -->
     <div class="grid md:grid-cols-3 gap-4 mb-6 fade-in">
       <div class="bg-bg-card border border-red-500/30 rounded-xl p-5 text-center">
-        <p class="text-3xl font-bold text-red-400 mb-1">201+</p>
+        <p class="text-3xl font-bold text-red-400 mb-1">787+</p>
         <p class="text-text-muted text-sm">Iranian deaths (Red Crescent)</p>
-        <p class="text-text-muted text-xs">incl. 110+ civilians · 747 injured</p>
+        <p class="text-text-muted text-xs">742 civilians killed (HRANA) · 1,000–1,500 military (US/Israel claim)</p>
       </div>
       <div class="bg-bg-card border border-border-subtle rounded-xl p-5 text-center">
-        <p class="text-3xl font-bold text-white mb-1">1</p>
-        <p class="text-text-muted text-sm">Israeli civilian killed</p>
-        <p class="text-text-muted text-xs">121 injured</p>
+        <p class="text-3xl font-bold text-white mb-1">12</p>
+        <p class="text-text-muted text-sm">Israeli deaths</p>
+        <p class="text-text-muted text-xs">11 missing · 777 injured</p>
       </div>
       <div class="bg-bg-card border border-yellow-500/30 rounded-xl p-5 text-center">
-        <p class="text-3xl font-bold text-yellow-400 mb-1">12+</p>
-        <p class="text-text-muted text-sm">Gulf state civilian casualties</p>
-        <p class="text-text-muted text-xs">UAE: 2 killed · Kuwait: 12 injured · Syria: 5 killed</p>
+        <p class="text-3xl font-bold text-yellow-400 mb-1">75+</p>
+        <p class="text-text-muted text-sm">Other casualties killed</p>
+        <p class="text-text-muted text-xs">Lebanon: 52 · US military: 6 · UAE: 3 · Bahrain: 2 · Kuwait: 3 · Oman: 1</p>
       </div>
     </div>
 
     <!-- CENTCOM -->
     <div class="bg-bg-card border border-blue-500/20 rounded-xl p-5 fade-in">
-      <p class="text-text-secondary text-sm"><strong class="text-blue-400">US Central Command (CENTCOM)</strong> stated it suffered no casualties. It reported light facility damage that did not disrupt operations, and claimed to have neutralized several hundred Iranian drones and missiles.</p>
+      <p class="text-text-secondary text-sm"><strong class="text-blue-400">US Central Command (CENTCOM)</strong> reported 6 US military personnel killed and 18 injured. Three F-15E Strike Eagles were lost to friendly fire in Kuwait. Iran's navy lost 11 warships and multiple aircraft destroyed on the ground.</p>
     </div>
 
     <!-- Airspace & Flights -->
@@ -654,42 +673,103 @@ const rb = '}';
     <!-- Day 3: Mar 2 -->
     <h3 class="text-xl font-bold mb-4 mt-8 text-blue-400 fade-in">Day 3 — 2 March 2026</h3>
 
+    <div class="bg-bg-card border border-blue-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-blue-400 text-lg">🇺🇸🇮🇱</span>
+        <span class="font-medium text-blue-400 text-lg">US-Israel Strikes — Nuclear Sites & Lebanon</span>
+      </div>
+      <BulletList color="primary" items={[
+        "Strikes centred on Tehran and Sanandaj — command centres and missile sites hit",
+        "Iran confirmed the Natanz nuclear facility was struck by US-Israeli airstrikes",
+        "Khatam-al-Anbia and Gandhi hospitals in Tehran hit — verified by BBC Verify",
+        "USAF destroyed multiple Iranian F-14 Tomcats and drone launchers at airbases across Iran",
+        "IDF struck 70+ targets in Dahieh (Beirut) and southern Lebanon — Hezbollah intelligence chief Hussein Makled killed",
+        "IDF killed Abu Hamza Rami, Palestinian Islamic Jihad commander in Lebanon, in Beirut strike",
+        "IDF hit dozens of Tehran command sites including 10 Ministry of Intelligence HQs and a Quds Force facility",
+        "Israel struck Islamic Republic of Iran Broadcasting (IRIB) headquarters in Evin, Tehran",
+        "Israeli ground operation launched into southern Lebanon"
+      ]} />
+    </div>
+
     <div class="bg-bg-card border border-red-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-red-400 text-lg">🇮🇷</span>
-        <span class="font-medium text-red-400 text-lg">Iran Expands Gulf Strikes</span>
+        <span class="font-medium text-red-400 text-lg">Iran & Hezbollah Retaliate</span>
       </div>
       <BulletList color="red" items={[
-        "Iran continues striking US assets across the Gulf — raids reported in Iraq and Kuwait",
-        "At least 1 person killed in Bahrain from Iranian strikes",
-        "Ali Larijani (Iran's NSC secretary) denied US media claims of resumed nuclear talks",
-        "Tehran explicitly refuses any dialogue with Washington"
+        "Hezbollah launched rockets at Haifa and Upper Galilee — claimed responsibility, calling it retaliation for Khamenei's killing",
+        "IDF declared Hezbollah's attack 'an official declaration of war'",
+        "Three US F-15 fighters crashed in Kuwait — Iran claimed shootdown, CENTCOM attributed to friendly fire by Kuwait",
+        "US embassy in Kuwait closed indefinitely after smoke reported rising from compound",
+        "Drone strike hit RAF Akrotiri base in Cyprus — 5 drones intercepted, 1 hit the airfield",
+        "Iran claimed to have shot down an American MQ-9 Reaper drone",
+        "Two drones targeted US Victory Base near Baghdad International Airport",
+        "Qatar shot down two Iranian Su-24 bombers — first nation to shoot down an Iranian aircraft in the conflict"
       ]} />
     </div>
 
     <div class="bg-bg-card border border-blue-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
       <div class="flex items-center gap-2 mb-4">
         <span class="text-blue-400 text-lg">🇺🇸</span>
-        <span class="font-medium text-blue-400 text-lg">Trump: No End Until Objectives Met</span>
+        <span class="font-medium text-blue-400 text-lg">Trump: War Could Last 4–5 Weeks</span>
       </div>
-      <p class="text-text-secondary text-sm">President Trump declared that US attacks on Iran will continue until <em>"all of his objectives are met"</em> — an open-ended commitment with no defined off-ramp.</p>
+      <p class="text-text-secondary text-sm">Trump told the Daily Mail that US operations were to be completed within a four-week timetable, later extending the estimate to five weeks. He declared attacks will continue until <em>"all objectives are met"</em> — an open-ended commitment.</p>
+    </div>
+
+    <!-- Day 4: Mar 3 -->
+    <h3 class="text-xl font-bold mb-4 mt-8 text-blue-400 fade-in">Day 4 — 3 March 2026</h3>
+
+    <div class="bg-bg-card border border-blue-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-blue-400 text-lg">🇺🇸🇮🇱</span>
+        <span class="font-medium text-blue-400 text-lg">Strikes Hit Iran's Leadership Compound & Navy</span>
+      </div>
+      <BulletList color="primary" items={[
+        "IDF destroyed the Supreme National Security Council (SNSC) headquarters — 'the regime\\'s most central and significant headquarters'",
+        "Command-and-control infrastructure and the president's office in Tehran struck",
+        "US severely damaged Iran's naval capabilities — warships destroyed and key bases hit in the Gulf of Oman",
+        "Iran\\'s key naval base on the Strait of Hormuz set ablaze",
+        "Israel\\'s Defence Minister authorised a ground invasion of Lebanon to seize strategic positions",
+        "Golestan Palace, a UNESCO World Heritage Site in Tehran, damaged by airstrike debris",
+        "Trump claimed the US had a 'virtually unlimited supply' of heavy weaponry and was confident in a 'BIG' US victory"
+      ]} />
+    </div>
+
+    <div class="bg-bg-card border border-red-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-red-400 text-lg">🇮🇷</span>
+        <span class="font-medium text-red-400 text-lg">Iran Strikes Across the Region</span>
+      </div>
+      <BulletList color="red" items={[
+        "Explosions rocked Doha, Qatar at 1:40 AM local time — continued for hours",
+        "Qatar thwarted an Iranian attack on Hamad International Airport",
+        "UAE detected and intercepted Iranian ballistic missiles at 3:30 AM local time",
+        "Iranian drone struck UAE's Fujairah Oil Industry Zone, starting a fire",
+        "Two Iranian drones hit the US embassy in Riyadh — fire and damage, no casualties (building was empty)",
+        "Explosions in Larnaca, Cyprus near the airport and British base in Dhekelia",
+        "Islamic Resistance in Iraq attacked a hotel housing US troops in Erbil",
+        "Hezbollah launched drones and missiles at three Israeli military bases",
+        "Shrapnel from intercepted Iranian missile injured one person in Tel Aviv",
+        "Sirens activated across Bahrain; government urged residents to stay indoors",
+        "Amazon Web Services facilities in UAE and Bahrain suffered significant damage from strikes"
+      ]} />
     </div>
 
     <div class="bg-bg-card border border-yellow-500/30 rounded-xl p-5 md:p-8 mb-6 fade-in">
       <div class="flex items-center gap-2 mb-4">
-        <span class="text-yellow-400 text-lg">🇱🇧</span>
-        <span class="font-medium text-yellow-400 text-lg">Conflict Expands to Lebanon</span>
+        <span class="text-yellow-400 text-lg">⚠️</span>
+        <span class="font-medium text-yellow-400 text-lg">Iran Threatens Europe</span>
       </div>
-      <p class="text-text-secondary text-sm">Israel launched airstrikes on Lebanon, opening a new front in the conflict. The war is no longer confined to the Iran–Israel–Gulf axis — it now spans at least six countries.</p>
+      <p class="text-text-secondary text-sm">Iranian Foreign Minister Abbas Araghchi warned that any military involvement in the war by European nations would be considered <strong class="text-white">"an act of war"</strong> — a direct response to European mobilisation in Cyprus and involvement in the broader war effort.</p>
     </div>
 
-    <!-- Day 3 Key Shift -->
+    <!-- Key Shift -->
     <div class="bg-bg-card border border-primary/30 rounded-xl p-5 fade-in">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-primary text-lg">⚠️</span>
-        <span class="font-medium text-primary">Key Shift</span>
+        <span class="font-medium text-primary">Key Shift — Day 4</span>
       </div>
-      <p class="text-text-secondary text-sm">Day 3 marks two critical developments: <strong class="text-white">diplomacy is dead</strong> (Tehran explicitly rejects talks) and the <strong class="text-white">conflict is widening</strong> (Lebanon, Iraq, Kuwait added to active strike zones). Neither side has signaled any interest in de-escalation.</p>
+      <p class="text-text-secondary text-sm">By 3 March 2026, the conflict had expanded far beyond Iran: <strong class="text-white">Israel invaded Lebanon</strong>, <strong class="text-white">Iran threatened Europe</strong>, <strong class="text-white">AWS data centres were hit</strong>, and <strong class="text-white">Iran's navy was largely destroyed</strong>. The war now spans at least eight countries with no ceasefire in sight.</p>
     </div>
 
     <div class="mb-8 md:mb-12"></div>
@@ -715,7 +795,15 @@ const rb = '}';
         </div>
         <div class="flex items-start gap-3">
           <span class="text-yellow-400 text-lg">🛡️</span>
-          <p class="text-text-secondary text-sm"><strong class="text-white">UAE intercepted multiple waves</strong> — Air defenses successfully engaged several Iranian missile waves, with fragments falling in Abu Dhabi and Dubai.</p>
+          <p class="text-text-secondary text-sm"><strong class="text-white">UAE intercepted multiple waves</strong> — Air defenses successfully engaged several Iranian missile waves, with fragments falling in Abu Dhabi and Dubai. On 3 March, ballistic missiles were detected at 3:30 AM.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-red-400 text-lg">🛢️</span>
+          <p class="text-text-secondary text-sm"><strong class="text-white">Fujairah Oil Zone hit</strong> — On 3 March, an Iranian drone struck the Fujairah Oil Industry Zone, causing debris to fall and starting a fire.</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-red-400 text-lg">☁️</span>
+          <p class="text-text-secondary text-sm"><strong class="text-white">AWS data centres damaged</strong> — Amazon Web Services facilities in the UAE suffered significant damage from Iranian strikes on 3 March.</p>
         </div>
         <div class="flex items-start gap-3">
           <span class="text-yellow-400 text-lg">🎯</span>
@@ -861,7 +949,7 @@ const rb = '}';
         <span class="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center text-red-400 font-bold text-sm flex-shrink-0">7</span>
         <div>
           <h3 class="font-medium text-white">The conflict is ongoing</h3>
-          <p class="text-text-muted text-sm mt-1">As of 2 March 2026, strikes continued from both sides with no ceasefire in sight. The conflict has widened — Israel bombing Lebanon, Iran striking Iraq and Kuwait. Tehran has rejected all diplomatic channels. The Houthis resumed Red Sea attacks. The region remains in an active, expanding state of war.</p>
+          <p class="text-text-muted text-sm mt-1">As of 3 March 2026, the conflict entered its fourth day with no ceasefire in sight. Israel invaded Lebanon, Iran's navy was largely destroyed, Iran threatened European nations with retaliation, and AWS data centres in the Gulf were damaged. Tehran rejected all diplomatic channels. The region remains in an active, expanding state of war spanning at least eight countries.</p>
         </div>
       </div>
     </div>
@@ -871,11 +959,11 @@ const rb = '}';
   <section class="mb-12 md:mb-20 fade-in">
     <h2 class="text-2xl font-bold mb-6">Sources & References</h2>
     <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8">
-      <p class="text-text-muted text-sm mb-4">This explainer draws from multiple sources. All events described are based on published reporting as of 2 March 2026.</p>
+      <p class="text-text-muted text-sm mb-4">This explainer draws from multiple sources. All events described are based on published reporting as of 3 March 2026.</p>
       <ul class="space-y-2 text-text-secondary text-sm">
         <li class="flex items-start gap-2">
           <span class="text-text-muted">•</span>
-          <span>Wikipedia: 2026 Israeli–United States strikes on Iran</span>
+          <span>Wikipedia: 2026 Iran conflict (formerly 2026 Israeli–United States strikes on Iran)</span>
         </li>
         <li class="flex items-start gap-2">
           <span class="text-text-muted">•</span>
@@ -891,15 +979,19 @@ const rb = '}';
         </li>
         <li class="flex items-start gap-2">
           <span class="text-text-muted">•</span>
-          <span>BBC News — multiple articles, 28 Feb – 1 Mar 2026</span>
+          <span>BBC News, BBC Verify — multiple articles, 28 Feb – 3 Mar 2026</span>
         </li>
         <li class="flex items-start gap-2">
           <span class="text-text-muted">•</span>
-          <span>Reuters, CNN, The Times of Israel, Iran International — 28 Feb – 1 Mar 2026</span>
+          <span>Reuters, CNN, The Times of Israel, Iran International — 28 Feb – 3 Mar 2026</span>
         </li>
         <li class="flex items-start gap-2">
           <span class="text-text-muted">•</span>
-          <span>The Washington Post, The Guardian, Al Jazeera — 28 Feb – 1 Mar 2026</span>
+          <span>The New York Times, The Guardian, Al Jazeera, AP News — 28 Feb – 3 Mar 2026</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-text-muted">•</span>
+          <span>CBS News, France 24, Naval News, The War Zone — 2–3 Mar 2026</span>
         </li>
         <li class="flex items-start gap-2">
           <span class="text-text-muted">•</span>

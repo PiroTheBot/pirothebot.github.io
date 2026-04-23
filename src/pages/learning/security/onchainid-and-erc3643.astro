@@ -1,0 +1,539 @@
+---
+import LearningLayout from '../../../layouts/LearningLayout.astro';
+import BulletList from '../../../components/BulletList.astro';
+const lb = '{';
+const rb = '}';
+---
+
+<LearningLayout
+  title="ONCHAINID and ERC-3643"
+  description="How ONCHAINID brings identity, claims, and verification to permissioned ERC-3643 token systems."
+  category="Security"
+  categoryHref="/learning/security"
+  difficulty="Advanced"
+  readTime="20 min read"
+>
+  <section class="mb-12 md:mb-20 fade-in">
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-5 md:p-8 text-center">
+      <p class="text-xl md:text-2xl font-medium text-text-secondary mb-2">Think of it as a</p>
+      <p class="text-3xl md:text-4xl font-bold text-primary mb-4">passport system for permissioned tokens</p>
+      <p class="text-text-secondary text-sm md:text-base">ONCHAINID stores identity keys and claims, while ERC-3643 asks, before minting or transferring, whether a wallet belongs to an identity that has the right attestations.</p>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20 fade-in">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">Why this exists</h2>
+    <p class="text-text-secondary text-sm md:text-base mb-6">Plain ERC-20 tokens only know balances and allowances. Permissioned real-world-asset tokens usually need more: who the holder is, which claims they have, which issuers are trusted, and whether token rules should allow minting or transfer. ERC-3643 solves that by pairing a token with identity and compliance contracts. ONCHAINID is the identity layer inside that stack.</p>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-bg-card border border-red-500/30 rounded-xl p-6 fade-in flex flex-col">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-red-500 text-lg">✗</span>
+          <span class="font-medium text-red-400">Without ONCHAINID + ERC-3643</span>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1">
+          <pre><code><span class="comment">// token only sees addresses</span>
+<span class="keyword">function</span> <span class="function">mint</span>(address to, uint256 amount) <span class="keyword">external</span> <span class="keyword">onlyOwner</span> <span class="lb">{</span>
+  _mint(to, amount);
+<span class="rb">}</span></code></pre>
+        </div>
+        <div class="mt-4">
+          <BulletList color="red" items={[
+            'No built-in concept of verified investor identity',
+            'No standard place for KYC or accreditation attestations',
+            'No issuer trust list, claim topic list, or regulated transfer gate'
+          ]} />
+        </div>
+      </div>
+
+      <div class="bg-bg-card border border-primary/30 rounded-xl p-6 fade-in flex flex-col">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-primary text-lg">✓</span>
+          <span class="font-medium text-primary">With ONCHAINID + ERC-3643</span>
+        </div>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto flex-1">
+          <pre><code><span class="comment">// ERC-3643 token checks identity registry first</span>
+<span class="keyword">function</span> <span class="function">mint</span>(address to, uint256 amount) <span class="keyword">public</span> <span class="keyword">onlyAgent</span> <span class="lb">{</span>
+  <span class="function">require</span>(identityRegistry.<span class="function">isVerified</span>(to), <span class="string">"Identity is not verified."</span>);
+  _mint(to, amount);
+<span class="rb">}</span></code></pre>
+        </div>
+        <div class="mt-4">
+          <BulletList color="primary" items={[
+            'Every wallet can map to an ONCHAINID contract',
+            'Claims can prove facts like KYC passed or investor accredited',
+            'Only claims from trusted issuers on required topics count'
+          ]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20 fade-in">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">The stack at a glance</h2>
+    <div class="overflow-x-auto bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6">
+      <svg viewBox="0 0 600 360" class="w-full h-auto min-w-[480px]" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="210" y="18" width="180" height="52" rx="10" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="300" y="40" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">ERC-3643 Token</text>
+        <text x="300" y="57" text-anchor="middle" fill="#a3a3a3" font-size="10">mint / transfer call isVerified()</text>
+
+        <rect x="45" y="112" width="150" height="64" rx="10" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="120" y="136" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Identity Registry</text>
+        <text x="120" y="152" text-anchor="middle" fill="#a3a3a3" font-size="10">wallet → ONCHAINID</text>
+        <text x="120" y="166" text-anchor="middle" fill="#a3a3a3" font-size="10">country metadata</text>
+
+        <rect x="225" y="112" width="150" height="64" rx="10" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="300" y="136" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Claim Topics Registry</text>
+        <text x="300" y="152" text-anchor="middle" fill="#a3a3a3" font-size="10">which claim topics</text>
+        <text x="300" y="166" text-anchor="middle" fill="#a3a3a3" font-size="10">are required</text>
+
+        <rect x="405" y="112" width="150" height="64" rx="10" fill="#1a1a1a" stroke="#ef4444" stroke-width="2"/>
+        <text x="480" y="136" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Trusted Issuers Registry</text>
+        <text x="480" y="152" text-anchor="middle" fill="#a3a3a3" font-size="10">which issuers may certify</text>
+        <text x="480" y="166" text-anchor="middle" fill="#a3a3a3" font-size="10">which topics</text>
+
+        <rect x="210" y="236" width="180" height="76" rx="10" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="300" y="260" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">ONCHAINID</text>
+        <text x="300" y="277" text-anchor="middle" fill="#a3a3a3" font-size="10">ERC-734 keys + ERC-735 claims</text>
+        <text x="300" y="292" text-anchor="middle" fill="#a3a3a3" font-size="10">for one investor or token</text>
+
+        <path d="M300 70 L300 112" stroke="#00FF88" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M120 176 L250 236" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M300 176 L300 236" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M480 176 L350 236" stroke="#ef4444" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+
+        <circle cx="300" cy="90" r="5" fill="#00FF88" class="pulse-dot"/>
+        <circle cx="220" cy="222" r="5" fill="#3b82f6" class="pulse-dot" style="animation-delay: 0.4s"/>
+        <circle cx="300" cy="206" r="5" fill="#fbbf24" class="pulse-dot" style="animation-delay: 0.8s"/>
+        <circle cx="380" cy="222" r="5" fill="#ef4444" class="pulse-dot" style="animation-delay: 1.2s"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 fade-in">Core components</h2>
+    <div class="grid md:grid-cols-2 gap-4 stagger-children">
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-2">1. Identity</h3>
+        <p class="text-text-muted text-sm">A contract that implements ERC-734 key management and ERC-735 claims.</p>
+      </div>
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-2">2. ClaimIssuer</h3>
+        <p class="text-text-muted text-sm">A specialized identity that can validate and revoke claims signed by its claim keys.</p>
+      </div>
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-2">3. IdFactory</h3>
+        <p class="text-text-muted text-sm">Deploys user or token ONCHAINIDs via CREATE2 and tracks wallet bindings.</p>
+      </div>
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-2">4. IdentityRegistry</h3>
+        <p class="text-text-muted text-sm">Maps wallets to ONCHAINID contracts and answers whether a wallet is verified.</p>
+      </div>
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-2">5. ClaimTopicsRegistry</h3>
+        <p class="text-text-muted text-sm">Stores the claim topics a token requires, up to 15 topics.</p>
+      </div>
+      <div class="benefit-card bg-bg-card border border-border-subtle rounded-xl p-5">
+        <h3 class="font-medium text-white mb-2">6. TrustedIssuersRegistry</h3>
+        <p class="text-text-muted text-sm">Stores which claim issuers are trusted for which topics.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 fade-in">How ONCHAINID itself works</h2>
+
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+        <h3 class="font-medium text-text-secondary">Keys define who can control or use the identity</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <p class="text-text-secondary text-sm mb-4">In the ONCHAINID <code>Identity</code> contract, keys are stored by purpose. The important built-in purposes are 1 = management, 2 = action, 3 = claim signer, 4 = encryption.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// example: Alice's hardware wallet controls her ONCHAINID</span>
+bytes32 managementKey = keccak256(abi.encode(aliceSafe));
+identity.addKey(managementKey, <span class="string">1</span>, <span class="string">1</span>);
+
+<span class="comment">// example: a service wallet can perform actions</span>
+bytes32 actionKey = keccak256(abi.encode(aliceOpsWallet));
+identity.addKey(actionKey, <span class="string">2</span>, <span class="string">1</span>);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+        <h3 class="font-medium text-text-secondary">Claims attach attestations to the identity</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <p class="text-text-secondary text-sm mb-4">A claim has a topic, issuer, signature, data, and URI. The claim ID is <code>keccak256(abi.encode(issuer, topic))</code>, so there is effectively one stored claim per issuer-topic pair on a given identity.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment">// example: KYC provider attests topic 7 for Alice</span>
+uint256 topic = <span class="string">7</span>;
+address issuer = address(kycClaimIssuer);
+bytes memory data = abi.encode(
+  <span class="string">"KYC passed on 2026-04-23"</span>,
+  <span class="string">"country=AE"</span>
+);
+bytes memory signature = sign(keccak256(abi.encode(aliceIdentity, topic, data)));
+
+identity.addClaim(topic, <span class="string">1</span>, issuer, signature, data, <span class="string">"ipfs://..."</span>);</code></pre>
+        </div>
+        <BulletList color="primary" items={[
+          'The issuer is usually a ClaimIssuer contract, not just a bare EOA',
+          'The signature must match the hash of identity address, topic, and data',
+          'For external issuers, addClaim checks validity by calling issuer.isClaimValid(...)'
+        ]} />
+      </div>
+    </div>
+
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+        <h3 class="font-medium text-text-secondary">ClaimIssuer verifies or revokes those attestations</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <p class="text-text-secondary text-sm mb-4">A <code>ClaimIssuer</code> contract extends <code>Identity</code>. It checks that the recovered signer address has purpose 3, meaning it is a valid claim signer key of the issuer identity. It also tracks revoked signatures.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// concrete example</span>
+<span class="comment">// RegCorp has a ClaimIssuer contract with signer key signer1</span>
+bytes32 signerKey = keccak256(abi.encode(signer1));
+claimIssuer.addKey(signerKey, <span class="string">3</span>, <span class="string">1</span>);
+
+<span class="comment">// if signer1 signed Alice's KYC claim, this returns true</span>
+bool ok = claimIssuer.isClaimValid(aliceIdentity, <span class="string">7</span>, signature, data);
+
+<span class="comment">// later, RegCorp can revoke the same signature</span>
+claimIssuer.revokeClaimBySignature(signature);</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20 fade-in">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">Does ONCHAINID mint claims?</h2>
+    <p class="text-text-secondary text-sm md:text-base mb-6">Not really. It is more accurate to say ONCHAINID <strong>stores claims</strong>, while an issuer <strong>creates and signs</strong> the claim off-chain, and then someone with a claim key adds that signed claim on-chain to the identity.</p>
+
+    <div class="overflow-x-auto bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6">
+      <svg viewBox="0 0 600 220" class="w-full h-auto min-w-[480px]" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="24" y="78" width="110" height="60" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="79" y="102" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Issuer org</text>
+        <text x="79" y="118" text-anchor="middle" fill="#a3a3a3" font-size="10">checks KYC docs</text>
+
+        <rect x="172" y="78" width="110" height="60" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="227" y="102" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Signer key</text>
+        <text x="227" y="118" text-anchor="middle" fill="#a3a3a3" font-size="10">signs topic + data</text>
+
+        <rect x="320" y="78" width="110" height="60" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="375" y="102" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">ONCHAINID</text>
+        <text x="375" y="118" text-anchor="middle" fill="#a3a3a3" font-size="10">stores claim</text>
+
+        <rect x="468" y="78" width="110" height="60" rx="8" fill="#1a1a1a" stroke="#ef4444" stroke-width="2"/>
+        <text x="523" y="102" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">ERC-3643 IR</text>
+        <text x="523" y="118" text-anchor="middle" fill="#a3a3a3" font-size="10">validates claim</text>
+
+        <path d="M134 108 L172 108" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M282 108 L320 108" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M430 108 L468 108" stroke="#00FF88" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 fade-in">How IdFactory works</h2>
+    <p class="text-text-secondary text-sm md:text-base mb-6 fade-in">The <code>IdFactory</code> deploys <code>IdentityProxy</code> contracts using <code>CREATE2</code>. It keeps track of used salts, wallet-to-identity links, token-to-identity links, and linked wallets for each identity.</p>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+        <h3 class="font-medium text-white mb-3">User identity example</h3>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment">// factory owner creates Alice's ONCHAINID</span>
+address aliceId = idFactory.createIdentity(
+  aliceWallet,
+  <span class="string">"alice-2026-04"</span>
+);
+
+<span class="comment">// internally, the factory prefixes the salt with "OID"</span>
+<span class="comment">// and deploys IdentityProxy via CREATE2</span></code></pre>
+        </div>
+        <BulletList color="primary" items={[
+          'The initial management key is Alice wallet by default',
+          'The factory records wallet → identity',
+          'Later, linked wallets can be added with linkWallet()'
+        ]} />
+      </div>
+
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+        <h3 class="font-medium text-white mb-3">Token identity example</h3>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto mb-4">
+          <pre><code><span class="comment">// TREXFactory can create a token ONCHAINID too</span>
+address tokenId = idFactory.createTokenIdentity(
+  address(token),
+  tokenOwner,
+  <span class="string">"us-tbill-series-a"</span>
+);
+
+token.setOnchainID(tokenId);</code></pre>
+        </div>
+        <BulletList color="primary" items={[
+          'The token identity is separate from investor identities',
+          'ERC-3643 token metadata can point to this ONCHAINID',
+          'The token owner becomes the initial management key'
+        ]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 fade-in">How ERC-3643 uses ONCHAINID</h2>
+
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">1</span>
+        <h3 class="font-medium text-text-secondary">Register the wallet and ONCHAINID</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <p class="text-text-secondary text-sm mb-4">The Identity Registry stores the investor wallet, its ONCHAINID contract, and a country code. In the ERC-3643 implementation, <code>registerIdentity</code> delegates storage to <code>IdentityRegistryStorage</code>.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code>identityRegistry.registerIdentity(
+  aliceWallet,
+  IIdentity(aliceId),
+  <span class="string">784</span> <span class="comment">// UAE for example, using ISO numeric-style metadata in project conventions</span>
+);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">2</span>
+        <h3 class="font-medium text-text-secondary">Define which claim topics matter</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <p class="text-text-secondary text-sm mb-4">The Claim Topics Registry tells the token which topics must be present. The registry itself does not know semantics, only topic numbers.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="comment">// example semantics chosen by your deployment</span>
+uint256 TOPIC_KYC = <span class="string">7</span>;
+uint256 TOPIC_ACCREDITED = <span class="string">42</span>;
+
+claimTopicsRegistry.addClaimTopic(TOPIC_KYC);
+claimTopicsRegistry.addClaimTopic(TOPIC_ACCREDITED);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">3</span>
+        <h3 class="font-medium text-text-secondary">Define which issuers are trusted for which topics</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <p class="text-text-secondary text-sm mb-4">The Trusted Issuers Registry binds claim issuers to allowed topics. For example, one issuer may be trusted for KYC, another for accredited-investor status.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code>trustedIssuersRegistry.addTrustedIssuer(
+  IClaimIssuer(address(regCorpIssuer)),
+  [TOPIC_KYC]
+);
+
+trustedIssuersRegistry.addTrustedIssuer(
+  IClaimIssuer(address(brokerDealerIssuer)),
+  [TOPIC_ACCREDITED]
+);</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8 fade-in">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">4</span>
+        <h3 class="font-medium text-text-secondary">Token checks verification during mint and transfer</h3>
+      </div>
+      <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+        <p class="text-text-secondary text-sm mb-4">The ERC-3643 token calls <code>identityRegistry.isVerified(to)</code> in <code>mint</code>, <code>transfer</code>, and <code>transferFrom</code>. If verification fails, the action reverts.</p>
+        <div class="bg-bg-code rounded-lg p-3 md:p-4 text-xs sm:text-sm overflow-x-auto">
+          <pre><code><span class="keyword">function</span> <span class="function">mint</span>(address to, uint256 amount) <span class="keyword">public</span> <span class="keyword">onlyAgent</span> <span class="lb">{</span>
+  <span class="function">require</span>(identityRegistry.<span class="function">isVerified</span>(to), <span class="string">"Identity is not verified."</span>);
+  <span class="function">require</span>(compliance.<span class="function">canTransfer</span>(address(0), to, amount), <span class="string">"Compliance not followed"</span>);
+  _mint(to, amount);
+<span class="rb">}</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20 fade-in">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">What exactly does isVerified() do?</h2>
+    <p class="text-text-secondary text-sm md:text-base mb-6">This is the key ERC-3643 check. For each required topic, the Identity Registry gets all trusted issuers allowed for that topic, computes the expected claim IDs, loads the claims from the user’s ONCHAINID, and asks the issuer whether the signature is still valid.</p>
+
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <BulletList color="primary" items={[
+        'If the wallet has no identity registered, verification fails immediately',
+        'If no claim topics are configured, verification passes trivially',
+        'For each required topic, there must be at least one trusted issuer for that topic',
+        'For each required topic, at least one matching stored claim must exist and validate',
+        'If a claim is missing, signed by the wrong issuer key, or revoked, verification fails'
+      ]} />
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 fade-in">Concrete example for each component</h2>
+    <div class="space-y-4 stagger-children">
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+        <div>
+          <h3 class="font-medium text-white">Identity</h3>
+          <p class="text-text-muted text-sm mt-1">Alice has ONCHAINID <code>0xAliceId</code>. Her Safe is a management key, and her backend signer is an action key.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+        <div>
+          <h3 class="font-medium text-white">ClaimIssuer</h3>
+          <p class="text-text-muted text-sm mt-1">RegCorp has issuer contract <code>0xRegIssuer</code>. It trusts signer <code>0xSigner1</code> as a claim key for topic 7, KYC passed.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+        <div>
+          <h3 class="font-medium text-white">IdFactory</h3>
+          <p class="text-text-muted text-sm mt-1">Issuer admin deploys Alice ONCHAINID with salt <code>alice-2026-04</code>. Factory remembers that wallet <code>0xAliceWallet</code> maps to <code>0xAliceId</code>.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+        <div>
+          <h3 class="font-medium text-white">ClaimTopicsRegistry</h3>
+          <p class="text-text-muted text-sm mt-1">The token requires topic 7 for KYC and topic 42 for accreditation.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">5</span>
+        <div>
+          <h3 class="font-medium text-white">TrustedIssuersRegistry</h3>
+          <p class="text-text-muted text-sm mt-1">RegCorp is trusted for topic 7. BrokerDealerCo is trusted for topic 42.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">6</span>
+        <div>
+          <h3 class="font-medium text-white">IdentityRegistry</h3>
+          <p class="text-text-muted text-sm mt-1">Wallet <code>0xAliceWallet</code> is registered to <code>0xAliceId</code> with country metadata. The token queries this registry whenever Alice receives tokens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20 fade-in">
+    <h2 class="text-2xl md:text-3xl font-bold mb-4">End-to-end example</h2>
+    <div class="overflow-x-auto bg-bg-card border border-border-subtle rounded-xl p-4 md:p-6 mb-6">
+      <svg viewBox="0 0 600 430" class="w-full h-auto min-w-[480px]" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="28" y="24" width="544" height="48" rx="10" fill="#111" stroke="#262626" stroke-width="2"/>
+        <text x="300" y="45" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Example: Alice buys tokenized treasury shares</text>
+        <text x="300" y="61" text-anchor="middle" fill="#a3a3a3" font-size="10">KYC + Accredited Investor topics required</text>
+
+        <rect x="50" y="104" width="220" height="54" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="160" y="126" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">1. IdFactory deploys Alice ONCHAINID</text>
+        <text x="160" y="142" text-anchor="middle" fill="#a3a3a3" font-size="10">wallet 0xAlice → identity 0xAliceId</text>
+
+        <rect x="330" y="104" width="220" height="54" rx="8" fill="#1a1a1a" stroke="#fbbf24" stroke-width="2"/>
+        <text x="440" y="126" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">2. Issuers sign claims</text>
+        <text x="440" y="142" text-anchor="middle" fill="#a3a3a3" font-size="10">topic 7 KYC, topic 42 accredited</text>
+
+        <rect x="50" y="198" width="220" height="54" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="160" y="220" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">3. Claims stored on 0xAliceId</text>
+        <text x="160" y="236" text-anchor="middle" fill="#a3a3a3" font-size="10">issuer-topic claim IDs now exist</text>
+
+        <rect x="330" y="198" width="220" height="54" rx="8" fill="#1a1a1a" stroke="#ef4444" stroke-width="2"/>
+        <text x="440" y="220" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">4. IdentityRegistry registers wallet</text>
+        <text x="440" y="236" text-anchor="middle" fill="#a3a3a3" font-size="10">0xAliceWallet → 0xAliceId</text>
+
+        <rect x="50" y="292" width="220" height="54" rx="8" fill="#1a1a1a" stroke="#3b82f6" stroke-width="2"/>
+        <text x="160" y="314" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">5. Token agent calls mint()</text>
+        <text x="160" y="330" text-anchor="middle" fill="#a3a3a3" font-size="10">mint to 0xAliceWallet</text>
+
+        <rect x="330" y="292" width="220" height="54" rx="8" fill="#1a1a1a" stroke="#00FF88" stroke-width="2"/>
+        <text x="440" y="314" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">6. isVerified() returns true</text>
+        <text x="440" y="330" text-anchor="middle" fill="#a3a3a3" font-size="10">all required topics valid, so mint succeeds</text>
+
+        <path d="M270 131 L330 131" stroke="#525252" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M160 158 L160 198" stroke="#525252" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M440 158 L440 198" stroke="#525252" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M270 225 L330 225" stroke="#525252" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M160 252 L160 292" stroke="#525252" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+        <path d="M270 319 L330 319" stroke="#525252" stroke-width="2" stroke-dasharray="6 6" class="flow-path"/>
+      </svg>
+    </div>
+
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6">
+      <BulletList color="primary" items={[
+        'If Alice later loses her wallet, a new wallet can be linked to the same ONCHAINID, preserving identity continuity',
+        'If RegCorp revokes the KYC claim signature, future transfers or mints to Alice can fail verification',
+        'If the token changes its required topics, the same ONCHAINID may become insufficient until new claims are added'
+      ]} />
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 fade-in">Trade-offs and gotchas</h2>
+    <div class="bg-bg-card border border-border-subtle rounded-xl p-6 fade-in">
+      <div class="flex flex-col md:flex-row gap-6">
+        <div class="flex-1">
+          <h3 class="font-medium text-primary mb-3">Pros</h3>
+          <BulletList bullet="+" color="primary" items={[
+            'Reusable identity across multiple permissioned tokens',
+            'Clear issuer trust model instead of hard-coding one verifier',
+            'Revocable claims, not permanent one-time approvals',
+            'Wallet continuity via linked wallets and identity mapping'
+          ]} />
+        </div>
+        <div class="w-px bg-border-subtle hidden md:block"></div>
+        <div class="flex-1">
+          <h3 class="font-medium text-yellow-500 mb-3">Cons</h3>
+          <BulletList bullet="−" color="yellow" items={[
+            'Topic numbers are deployment conventions, not self-describing semantics',
+            'Claim creation still depends on an off-chain attestation workflow',
+            'More contracts and governance complexity than a plain token',
+            'Verification can fail if issuer keys rotate or claims are revoked without careful ops'
+          ]} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-12 md:mb-20">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 fade-in">Key takeaways</h2>
+    <div class="space-y-4 stagger-children">
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">1</span>
+        <div>
+          <h3 class="font-medium text-white">ONCHAINID is an on-chain identity contract, not just a whitelist row</h3>
+          <p class="text-text-muted text-sm mt-1">It combines ERC-734 keys and ERC-735 claims so identities can be controlled, updated, and attested over time.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">2</span>
+        <div>
+          <h3 class="font-medium text-white">Claims are signed by issuers, then stored on the identity</h3>
+          <p class="text-text-muted text-sm mt-1">The identity does not invent facts. It stores attestations signed by claim issuer keys and can later prove or revoke them.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">3</span>
+        <div>
+          <h3 class="font-medium text-white">ERC-3643 uses ONCHAINID through registries</h3>
+          <p class="text-text-muted text-sm mt-1">IdentityRegistry, ClaimTopicsRegistry, and TrustedIssuersRegistry together decide whether a wallet is verified for minting or transfers.</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 bg-bg-card border border-border-subtle rounded-xl p-5">
+        <span class="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">4</span>
+        <div>
+          <h3 class="font-medium text-white">The real power is reusable identity + revocable attestations</h3>
+          <p class="text-text-muted text-sm mt-1">That is what makes permissioned tokens feel more like regulated systems and less like static whitelists.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</LearningLayout>

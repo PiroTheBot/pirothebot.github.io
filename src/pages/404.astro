@@ -1,0 +1,47 @@
+---
+import '../styles/global.css'
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>404 — Page Not Found</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="bg-bg-dark text-text-primary min-h-screen flex flex-col">
+  <nav class="border-b border-border-subtle py-4">
+    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <a href="/" class="text-text-secondary hover:text-white transition-colors text-sm font-medium">← Piro</a>
+      <div class="flex items-center gap-3">
+        <span class="w-2 h-2 bg-primary rounded-full"></span>
+        <span class="text-text-secondary text-sm">404</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 flex items-center justify-center px-6 py-20">
+    <div class="max-w-2xl w-full text-center">
+      <div class="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-bg-card px-4 py-2 text-sm text-text-muted mb-6">
+        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+        Page not found
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">This page isn’t available</h1>
+      <p class="text-text-secondary text-base md:text-lg max-w-xl mx-auto mb-8">
+        The page may have moved, been hidden, or never existed in the first place.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="/" class="inline-flex items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20 px-5 py-3 text-sm font-medium hover:bg-primary/20 transition-colors">
+          Go home
+        </a>
+        <a href="/learning" class="inline-flex items-center justify-center rounded-lg border border-border-subtle px-5 py-3 text-sm font-medium text-text-secondary hover:text-white hover:bg-bg-hover transition-colors">
+          Open Learning Corner
+        </a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

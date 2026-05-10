@@ -1,8 +1,9 @@
 ---
 import '../../styles/global.css'
 import { isLearningPageListed } from '../../lib/learningVisibility'
+import { LEARNING_PAGE_PATHS, LEARNING_PAGE_SLUGS } from '../../lib/learningPages'
 
-const showIranConflictPage = isLearningPageListed('world-events/us-iran-israel-conflict');
+const showIranConflictPage = isLearningPageListed(LEARNING_PAGE_SLUGS.iranConflict);
 ---
 
 <!DOCTYPE html>
@@ -47,7 +48,7 @@ const showIranConflictPage = isLearningPageListed('world-events/us-iran-israel-c
       {showIranConflictPage ? (
         <div class="space-y-4">
           <!-- US-Iran-Israel Conflict -->
-          <a href="/learning/world-events/us-iran-israel-conflict" class="group block bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
+          <a href={LEARNING_PAGE_PATHS.iranConflict} class="group block bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
             <div class="flex items-center justify-between">
               <div class="flex-1">
                 <div class="flex items-center gap-3 mb-2">

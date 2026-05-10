@@ -1,5 +1,4 @@
-export type LearningPageSlug =
-  | 'world-events/us-iran-israel-conflict';
+import { LEARNING_PAGE_SLUGS, type LearningPageSlug } from './learningPages';
 
 export type LearningVisibility = {
   listed: boolean;
@@ -12,7 +11,7 @@ const defaultVisibility: LearningVisibility = {
 };
 
 const visibilityBySlug: Partial<Record<LearningPageSlug, LearningVisibility>> = {
-  'world-events/us-iran-israel-conflict': {
+  [LEARNING_PAGE_SLUGS.iranConflict]: {
     listed: false,
     accessible: false,
   },

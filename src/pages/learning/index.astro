@@ -1,5 +1,8 @@
 ---
 import '../../styles/global.css'
+import { isLearningPageListed } from '../../lib/learningVisibility'
+
+const showIranConflictPage = isLearningPageListed('world-events/us-iran-israel-conflict');
 ---
 
 <!DOCTYPE html>
@@ -74,19 +77,19 @@ import '../../styles/global.css'
         <!-- World Events -->
         <a href="/learning/world-events" class="group bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
           <div class="flex items-start justify-between mb-4">
-            <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Hidden</span>
+            <span class={`text-xs font-medium px-2 py-1 rounded ${showIranConflictPage ? 'text-primary bg-primary/10' : 'text-text-muted bg-bg-hover'}`}>{showIranConflictPage ? '1 topic' : 'Hidden'}</span>
             <svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
           </div>
           <h3 class="text-lg font-semibold mb-2 text-white group-hover:text-primary transition-colors">World Events</h3>
-          <p class="text-text-muted text-sm">This category is temporarily hidden from the public listings</p>
+          <p class="text-text-muted text-sm">{showIranConflictPage ? 'Geopolitics, conflicts, and global affairs explained' : 'This category is temporarily hidden from the public listings'}</p>
         </a>
 
         <!-- Science -->
         <a href="/learning/science" class="group bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
           <div class="flex items-start justify-between mb-4">
-            <span class="text-xs font-medium text-text-muted bg-bg-hover px-2 py-1 rounded">Hidden</span>
+            <span class={`text-xs font-medium px-2 py-1 rounded ${showIranConflictPage ? 'text-primary bg-primary/10' : 'text-text-muted bg-bg-hover'}`}>{showIranConflictPage ? '1 topic' : 'Hidden'}</span>
             <svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>

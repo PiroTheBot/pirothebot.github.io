@@ -1,9 +1,14 @@
 ---
 import LearningLayout from '../../../layouts/LearningLayout.astro';
 import BulletList from '../../../components/BulletList.astro';
+import { isLearningPageAccessible } from '../../../lib/learningVisibility';
 
 const lb = '{';
 const rb = '}';
+
+if (!isLearningPageAccessible('world-events/us-iran-israel-conflict')) {
+  return Astro.redirect('/404');
+}
 ---
 
 <LearningLayout 

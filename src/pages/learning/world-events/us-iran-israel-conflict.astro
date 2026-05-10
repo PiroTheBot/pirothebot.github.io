@@ -1,24 +1,25 @@
 ---
 import LearningLayout from '../../../layouts/LearningLayout.astro';
 import BulletList from '../../../components/BulletList.astro';
-import { isLearningPageAccessible } from '../../../lib/learningVisibility';
-import { LEARNING_PAGE_SLUGS } from '../../../lib/learningPages';
+import { LEARNING_PAGES, isLearningPageAccessible } from '../../../lib/learningPages';
 
 const lb = '{';
 const rb = '}';
 
-if (!isLearningPageAccessible(LEARNING_PAGE_SLUGS.iranConflict)) {
+const page = LEARNING_PAGES.iranConflict;
+
+if (!isLearningPageAccessible('iranConflict')) {
   return Astro.redirect('/404');
 }
 ---
 
 <LearningLayout 
-  title="The US, Iran & Israel Conflict Explained"
-  description="From the 1953 CIA coup to the 8 May 2026 exchange of fire in the Strait of Hormuz, disabled Iranian tankers, and the still-fragile draft end-war talks, the full timeline of how the US, Iran, and Israel ended up at war."
+  title={page.title}
+  description={page.description!}
   category="World Events"
   categoryHref="/learning/world-events"
-  difficulty="Intermediate"
-  readTime="15 min read"
+  difficulty={page.difficulty}
+  readTime={page.readTime}
 >
 
   <!-- Hook -->

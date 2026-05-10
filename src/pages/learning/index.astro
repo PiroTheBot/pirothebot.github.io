@@ -1,9 +1,9 @@
 ---
 import '../../styles/global.css'
-import { isLearningPageListed } from '../../lib/learningVisibility'
-import { LEARNING_PAGE_SLUGS } from '../../lib/learningPages'
+import { LEARNING_PAGES, isLearningPageListed } from '../../lib/learningPages'
 
-const showIranConflictPage = isLearningPageListed(LEARNING_PAGE_SLUGS.iranConflict);
+const iranConflictPage = LEARNING_PAGES.iranConflict;
+const showIranConflictPage = isLearningPageListed('iranConflict');
 ---
 
 <!DOCTYPE html>

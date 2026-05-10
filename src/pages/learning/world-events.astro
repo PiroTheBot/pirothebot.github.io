@@ -1,9 +1,9 @@
 ---
 import '../../styles/global.css'
-import { isLearningPageListed } from '../../lib/learningVisibility'
-import { LEARNING_PAGE_PATHS, LEARNING_PAGE_SLUGS } from '../../lib/learningPages'
+import { LEARNING_PAGES, isLearningPageListed } from '../../lib/learningPages'
 
-const showIranConflictPage = isLearningPageListed(LEARNING_PAGE_SLUGS.iranConflict);
+const iranConflictPage = LEARNING_PAGES.iranConflict;
+const showIranConflictPage = isLearningPageListed('iranConflict');
 ---
 
 <!DOCTYPE html>
@@ -48,15 +48,15 @@ const showIranConflictPage = isLearningPageListed(LEARNING_PAGE_SLUGS.iranConfli
       {showIranConflictPage ? (
         <div class="space-y-4">
           <!-- US-Iran-Israel Conflict -->
-          <a href={LEARNING_PAGE_PATHS.iranConflict} class="group block bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
+          <a href={iranConflictPage.path} class="group block bg-bg-card border border-border-subtle rounded-xl p-6 transition-all duration-300 hover:bg-bg-hover hover:border-primary/40">
             <div class="flex items-center justify-between">
               <div class="flex-1">
                 <div class="flex items-center gap-3 mb-2">
                   <span class="text-xs font-medium text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">Intermediate</span>
-                  <span class="text-text-muted text-sm">15 min read</span>
+                  <span class="text-text-muted text-sm">{iranConflictPage.readTime}</span>
                 </div>
-                <h3 class="text-lg font-semibold text-white group-hover:text-primary transition-colors">The US, Iran & Israel Conflict Explained</h3>
-                <p class="text-text-muted text-sm mt-1">From the 1953 CIA coup to today's Operation Epic Fury — the full timeline of how the US, Iran, and Israel ended up at war</p>
+                <h3 class="text-lg font-semibold text-white group-hover:text-primary transition-colors">{iranConflictPage.title}</h3>
+                <p class="text-text-muted text-sm mt-1">{iranConflictPage.listDescription}</p>
               </div>
               <div class="ml-4">
                 <svg class="w-5 h-5 text-text-muted group-hover:text-primary transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
